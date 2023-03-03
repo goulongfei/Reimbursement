@@ -1,0 +1,27 @@
+﻿<div class="staff-service">
+    <div class="appil-container">
+        <table class="table table-bordered table-condensed" style="font-size:12px;table-layout:fixed;">
+            <thead>
+                <tr>
+                    <th style="width:20px;"></th>
+                    <th style="font-weight:400;text-align:center;width:70px">类型</th>
+                    <th style="font-weight:400;width:30px;text-align: center;">数量</th>
+                    <th style="font-weight:400;width:40px;text-align: center;">金额(万元)</th>
+                    <th style="font-weight:400;width:40px;text-align: center;">金额占比</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in model">
+                    <td style="width:20px;padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':item.colorCode}"></div></td>
+                    <td style="width:60px;text-align:center;">{{item.name}}</td>
+                    <td style="width:40px;text-align:right;">{{item.quantity}}</td>
+                    <td style="width:40px;text-align:right;">{{item.value/10000 |number:2}}</td>
+                    <td style="width:40px;text-align:right;" class="text-right">{{item.amountRate * 100 |number:2}}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" style="margin-right:47%" ng-click="closeThisDialog();">确定</button>
+</div>

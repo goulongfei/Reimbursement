@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mcs.Web</name>
+    </assembly>
+    <members>
+        <member name="M:Mcs.Auditing.WebClientInfoProvider.#ctor">
+            <summary>
+            Creates a new <see cref="T:Mcs.Auditing.WebClientInfoProvider"/>.
+            </summary>
+        </member>
+        <member name="T:Mcs.Configuration.Startup.McsWebConfigurationExtensions">
+            <summary>
+            Defines extension methods to <see cref="T:Mcs.Configuration.Startup.IModuleConfigurations"/> to allow to configure MCS Web module.
+            </summary>
+        </member>
+        <member name="M:Mcs.Configuration.Startup.McsWebConfigurationExtensions.McsWeb(Mcs.Configuration.Startup.IModuleConfigurations)">
+            <summary>
+            Used to configure MCS Web module.
+            </summary>
+        </member>
+        <member name="T:Mcs.Web.EntityHistory.HttpRequestEntityChangeSetReasonProvider">
+            <summary>
+            Implements <see cref="T:Mcs.EntityHistory.IEntityChangeSetReasonProvider"/> to get reason from HTTP request.
+            </summary>
+        </member>
+        <member name="P:Mcs.Web.Configuration.IMcsWebLocalizationConfiguration.CookieName">
+            <summary>
+            Default: "Mcs.Localization.CultureName".
+            </summary>
+        </member>
+        <member name="T:Mcs.Web.McsWebApplication`1">
+            <summary>
+            This class is used to simplify starting of MCS system using <see cref="P:Mcs.Web.McsWebApplication`1.McsBootstrapper"/> class..
+            Inherit from this class in global.asax instead of <see cref="T:System.Web.HttpApplication"/> to be able to start MCS system.
+            </summary>
+            <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="T:Mcs.Modules.McsModule"/>.</typeparam>
+        </member>
+        <member name="P:Mcs.Web.McsWebApplication`1.McsBootstrapper">
+            <summary>
+            Gets a reference to the <see cref="P:Mcs.Web.McsWebApplication`1.McsBootstrapper"/> instance.
+            </summary>
+        </member>
+        <member name="T:Mcs.Web.McsWebModule">
+            <summary>
+            This module is used to use MCS in ASP.NET web applications.
+            </summary>
+        </member>
+        <member name="M:Mcs.Web.McsWebModule.PreInitialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mcs.Web.McsWebModule.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mcs.Web.Security.AntiForgery.IMcsAntiForgeryWebConfiguration">
+            <summary>
+            Common configuration shared between ASP.NET MVC and ASP.NET Web API.
+            </summary>
+        </member>
+        <member name="P:Mcs.Web.Security.AntiForgery.IMcsAntiForgeryWebConfiguration.IsEnabled">
+            <summary>
+            Used to enable/disable Anti Forgery token security mechanism of MCS.
+            Default: true (enabled).
+            </summary>
+        </member>
+        <member name="P:Mcs.Web.Security.AntiForgery.IMcsAntiForgeryWebConfiguration.IgnoredHttpVerbs">
+            <summary>
+            A list of ignored HTTP verbs for Anti Forgery token validation.
+            Default list: Get, Head, Options, Trace.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,92 @@
+﻿<div class="form-inline">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-6 col-md-2 control-label text-right" title="采购名称">采购名称</label>
+        <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+            <div ng-if="settings.isApproval">
+                <span ng-show="!viewModel.isUseCostCenter || (viewModel.isUseCostCenter && !viewModel.isMutiUseCostCenter)">{{viewModel.purchaseBase.purchaseName}}</span>
+                <div mulit-workflow data="viewModel.purchaseBase" opts="settings.linkName" ng-show="viewModel.isUseCostCenter && viewModel.isMutiUseCostCenter"></div>
+            </div>
+            <div ng-if="!settings.isApproval">
+                <div ng-if="!settings.isDraftReadOnly || (settings.isDraftReadOnly && !viewModel.isUseCostCenter) || (settings.isDraftReadOnly && viewModel.isUseCostCenter && !viewModel.isMutiUseCostCenter)">{{viewModel.purchaseBase.purchaseName}}</div>
+                <div ng-if="settings.isDraftReadOnly && viewModel.isUseCostCenter && viewModel.isMutiUseCostCenter">
+                    <div mulit-workflow data="viewModel.purchaseBase" opts="settings.linkName"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div>
+        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+            <label class="col-xs-6 control-label text-right" title="项目名称">项目名称</label>
+            <div class="col-xs-6 form-group baseifo-input" sog-valide-status="项目名称">
+                {{viewModel.purchaseOfMaintenance.projectName}}
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label text-right" title="采购主责人">采购主责人</label>
+        <div class="col-xs-6 form-group baseifo-input" sog-valide-status="采购主责人">
+            <span wf-user-presence="viewModel.purchaseOfMaintenance.purchaseMainUser"></span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label text-right" title="法人公司">法人公司</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.corporationScopeList"><span ng-hide="$index===0">，</span>{{item.corporationName}}</span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="指合同的列支记账公司" style="text-align:right" ng-show="viewModel.isUseCostCenter">记账公司<span style="color:red;">*</span></label>
+        <label class="col-xs-6 control-label" title="记账公司" style="text-align:right" ng-show="!viewModel.isUseCostCenter">记账公司<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfMaintenance.chargeCompanyName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="指合同的列支成本中心" style="text-align:right" ng-show="viewModel.isUseCostCenter">成本中心<span style="color:red;">*</span></label>
+        <label class="col-xs-6 control-label" title="成本中心" style="text-align:right" ng-show="!viewModel.isUseCostCenter">成本中心<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfMaintenance.costCenterName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label text-right" title="本次采购范围和内容">本次采购范围和内容</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input ">
+            <p ng-bind-html="viewModel.purchaseOfMaintenance.purchaseContent | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label text-right" title="直接委托理由">直接委托理由</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input ">
+            <p ng-bind-html="viewModel.purchaseOfMaintenance.directDelegationReason | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label text-right" title="本次拟采购金额（元）">本次拟采购金额（元）</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseBase.purchaseAmount|number:2}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="settings.isApproval">
+        <label class="col-xs-6 control-label text-right" title="支出类型">支出类型</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.expenditureTypeName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="settings.isApproval && viewModel.isUseProject">
+        <label class="col-xs-6 control-label text-right" title="使用项目">使用项目</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.useProjectName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

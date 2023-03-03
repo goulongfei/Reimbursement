@@ -1,0 +1,156 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingBusinessOperationsStartupContractWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+            <!--左侧导航-->
+            <div ng-if="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3" left-nav opts="settings.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div ng-include="'views/bidding/businessOperations/htmlTemplate/biddingBusinessOperationsBaseInfo.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 合约规划<span style="color:red;">*</span></h4>
+            <div contract-agreement-business opts="settings.contractAgreementOpts" data="viewModel.contractAgreementScopeList"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--合同签订情况-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 合同签订情况</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                            <th style="text-align:center;" class="table-thead">拟定供应商名称</th>
+                            <th style="text-align:center;" class="table-thead">合同甲方</th>
+                            <th style="text-align:center;" class="table-thead">签订金额</th>
+                            <th style="text-align:center;" class="table-thead">拟定合同名称</th>
+                            <th style="text-align:center;" class="table-thead">所属合约</th>
+                            <th style="text-align:center;" class="table-thead">合同经办人</th>
+                            <th style="text-align:center;" class="table-thead">合同状态</th>
+                            <th style="text-align:center;" class="table-thead">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="contract in viewModel.perSignContractInfoList">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td><span open-supplier-info supplier="contract"></span></td>
+                            <td style="text-align: center;"><span>{{contract.corporationName}}</span></td>
+                            <td style="text-align: right;"><span>{{contract.perSignContractAmount|number:2}}</span></td>
+                            <td style="text-align: center;"><span>{{contract.contractName}}</span></td>
+                            <td style="text-align:center;">
+                                <a style="color:blue" ng-click="baseInfo.relatinCotractAgreement(contract)">查看</a>
+                            </td>
+                            <td>
+                                <span ng-if="contract.contractStateCode!==2 && contract.contractStateCode!==0" wf-user-presence="contract.operatorUser"></span>
+                                <span ng-if="contract.contractStateCode==2 || contract.contractStateCode==0" opts="settings.peopleSelect" sog-ogu-input="contract.operatorUser"></span>
+                            </td>
+                            <td class="text-center">
+                                <span>{{contract.contractStateName}}</span>
+                            </td>
+                            <td class="text-center">
+                                <a ng-if="contract.contractStateCode!==2 && contract.contractStateCode!==0" style="color:blue;" ng-click="baseInfo.lookContarctInfo(contract)">查看详情</a>
+                                <button ng-if="contract.contractStateCode==2 || contract.contractStateCode==0" class="btn btn-primary" style="cursor:pointer;color:white;" ng-click="baseInfo.resetStartContract(contract)">重新发起</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--附件标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+            <!--附件内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="技术评标报告">技术评标报告</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <p ng-repeat="evaluateFile in viewModel.technologyEvaluateFileList">
+                            <span ng-repeat="file in evaluateFile.clientFileInformationList">
+                                <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span><br />
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="商务评标报告">商务评标报告</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <p ng-repeat="evaluateFile in viewModel.businessEvaluateFileList">
+                            <span ng-repeat="file in evaluateFile.clientFileInformationList">
+                                <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span><br />
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="定标报告">定标报告</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <p ng-repeat="file in viewModel.awardReportFile">
+                            <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span><br />
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="其他附件">其他附件</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <p ng-repeat="file in viewModel.awardOtherFile">
+                            <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span><br />
+                        </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 审批意见列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt" id=""></i> 审批</h4>
+            <div class="form-inline">
+                <span sog-simple-opinions="opinions"></span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>

@@ -1,0 +1,246 @@
+﻿<div class="staff-service">
+
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/DirectCommissionedMarketingDraftWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <!--信息项组标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group" ng-show="viewModel.pageShow.isShowUpstreamProcessMarketingUrl">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="上游流程" style="text-align:right;">上游流程</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span>{{viewModel.purchaseOfMarketing.upstreamProcessGuideName}}</span>
+                    <span ng-if="viewModel.purchaseOfMarketing.upstreamProcessURL != ''">/</span>
+                    <div ng-if="viewModel.purchaseOfMarketing.upstreamProcessURL != ''" open-extra-link extra-link="viewModel.purchaseOfMarketing.upstreamProcessURL" extra-name="viewModel.purchaseOfMarketing.upstreamProcessName"></div>
+                </div>
+            </div>
+
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="采购名称" style="text-align:right;">采购名称<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <input style="width:60%;" class="meeting" title="{{viewModel.purchaseBase.purchaseName}}" ng-model="viewModel.purchaseBase.purchaseName" />
+                    <span style="color:red;">提示：采购名称不允许超过30个字符</span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="项目名称" style="text-align:right">项目名称<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div ng-show="!viewModel.pageShow.isShowUpstreamProcessMarketingUrl"><div rc-select-project opts="api.projectOpts"></div></div>
+                    <span ng-show="viewModel.pageShow.isShowUpstreamProcessMarketingUrl">{{viewModel.purchaseOfMarketing.projectName}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="采购主责人" style="text-align:right;">采购主责人<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div class="list-group-item-text"><span sog-ogu-input="viewModel.purchaseMainUser" opts="baseInfo.peopleSelect"></span></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="是否涉及工程" style="text-align:right">是否涉及工程<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div>
+                        <span class="btn checkbox-label-not" ng-class="{'checkbox-label-this':viewModel.purchaseOfMarketing.isInvolveEngineering == true}" ng-click="IsInvolveEngineering(true)">涉及</span>
+                        <span class="btn checkbox-label-not" ng-class="{'checkbox-label-this':viewModel.purchaseOfMarketing.isInvolveEngineering == false}" ng-click="IsInvolveEngineering(false)">不涉及</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="公司" style="text-align:right">公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div select-corporation opts="api.corporationOpts" data="viewModel.corporationScope"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="记账公司" style="text-align:right">记账公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select style="width:100%;" class="meeting" ng-click="validOpts('记账公司')" ng-init="initChargeCompany(viewModel.corporationScope[0].corporationCode, false)" ng-model="viewModel.purchaseOfMarketing.chargeCompanyCode" ng-change="chargeCompanyChange();" ng-options="p.code as p.name for p in viewModel.option.chargeCompany" ng-selected="p.code == viewModel.purchaseOfMarketing.chargeCompanyCode">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="成本中心" style="text-align:right">成本中心<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select style="width:100%;" class="meeting" ng-click="validOpts('成本中心')" ng-init="loadCostCenter(viewModel.purchaseOfMarketing.chargeCompanyCode)" ng-model="viewModel.purchaseOfMarketing.costCenterCode" ng-change="costCenterChange();" ng-options="p.code as p.name for p in  viewModel.option.costCenter" ng-selected="p.code == viewModel.purchaseOfMarketing.costCenterCode">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="本次采购范围和内容" style="text-align:right;display:block;height:55px;line-height:55px;">本次采购范围和内容<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <textarea ng-model="viewModel.purchaseOfMarketing.purchaseContent" style="width:100%;height:54px;"></textarea>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="直接委托理由" style="text-align:right">直接委托理由<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select style="width:100%;" class="meeting" ng-model="viewModel.purchaseOfMarketing.directDelegationReasonCode" ng-options="p.code as p.name for p in viewModel.option.directDelegationReasonList" ng-selected="p.code == viewModel.purchaseOfMarketing.directDelegationReasonCode" ng-change="commissionReasonChange()">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="营销采购分类" style="text-align:right">营销采购分类<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div ng-show="!viewModel.pageShow.isShowUpstreamProcessMarketingUrl">
+                        <select style="width:100%;" class="meeting" ng-model="viewModel.purchaseOfMarketing.marketingPurchaseTypeCode" ng-options="p.code as p.name for p in viewModel.option.marketingPurchaseType" ng-selected="p.code == viewModel.purchaseOfMarketing.marketingPurchaseTypeCode" ng-change="marketingPurchaseTypeChange()">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                    <span ng-show="viewModel.pageShow.isShowUpstreamProcessMarketingUrl">{{viewModel.purchaseOfMarketing.marketingPurchaseTypeName}}</span>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="营销费用预算" style="text-align:right">营销费用预算<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div ng-show="viewModel.purchaseOfMarketing.upstreamProcessURL== null || viewModel.purchaseOfMarketing.upstreamProcessURL== ''">
+                        <input sog-valide-status="营销费用预算" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyopts" ng-model="viewModel.purchaseOfMarketing.marketingBudgetAmount" placeholder="请输入" ng-blur="refreshMarketingBudgetAmount()">
+                    </div>
+                    <div ng-show="viewModel.purchaseOfMarketing.upstreamProcessURL != null && viewModel.purchaseOfMarketing.upstreamProcessURL != ''">
+                        <span>{{viewModel.purchaseOfMarketing.marketingBudgetAmount | number:2}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label text-right" title="支出类型">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" title="本项目支出：正常的合同签订方式，是指本项目/本单位使用，并在本项目/本单位列支；
+跨项目列支：是指A项目使用的费用，要在B项目列支；
+平台在项目列支：是指集团或者事业部平台使用的费用，要在项目上列支。" style="color:red"></span>
+                    支出类型<span style="color:red;">*</span>
+                </label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select sog-valide-status="支出类型" style="width:100%;" class="meeting" ng-model="viewModel.purchaseBase.expenditureTypeCode" ng-options="p.code as p.name for p in viewModel.option.expenditureTypeList" ng-selected="p.code == viewModel.purchaseBase.expenditureTypeCode" ng-change="baseInfo.expenditureTypeChange();">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseProject">
+                <label class="col-xs-6 control-label text-right" title="使用项目">使用项目<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input text-right">
+                    <div rc-select-project opts="api.useProjectOpts"></div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseCostCenter">
+                <label class="col-xs-6 control-label" title="使用记账公司" style="text-align:right">使用记账公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div select-chargecompany opts="baseInfo.useChargeCompanyOpts" data="viewModel.useNcCorporation"></div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseCostCenter">
+                <label class="col-xs-6 control-label" title="使用成本中心" style="text-align:right">使用成本中心<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select style="width:100%;" class="meeting" ng-click="validOpts('使用成本中心')" ng-model="viewModel.purchaseBase.useCostCenterCode" ng-change="baseInfo.useCostCenterChange();" ng-options="p.code as p.name for p in  viewModel.option.useCostCenterList" ng-selected="p.code == viewModel.purchaseBase.useCostCenterCode">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="本次拟采购金额（元）" style="text-align:right">本次拟采购金额（元）<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div>
+                        <span>{{viewModel.purchaseBase.purchaseAmount | number:2}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 委托信息</h4>
+        <div purchase-delegation-info data="viewModel.purchaseDelegationInfoList" opts="baseInfo.delegationOpts"
+             sog-valide-status="委托信息"></div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="直接委托报告" style="text-align:right;">直接委托报告</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div wf-uploader files="viewModel.reportFile.clientFileInformationList" opts="baseInfo.fileopts" ready="fileReady" read-only="fillFileReadOnly"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="垄断文件/证明" style="text-align:right;">垄断文件/证明<span ng-if="viewModel.isMustMonopolyFile"  style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div wf-uploader files="viewModel.monopolyFile" opts="baseInfo.fileopts" ready="fileReady" read-only="fillFileReadOnly"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="其他附件" style="text-align:right;">其他附件</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div wf-uploader files="viewModel.otherFile.clientFileInformationList" opts="baseInfo.fileopts" ready="fileReady" read-only="fillFileReadOnly"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!--传阅-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>传阅人</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label " title="传阅人 ">传阅人</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span sog-ogu-input="viewModel.circularizePersons " opts="baseInfo.selectCheckBoxPeople"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+        <div class="form-inline">
+            <div class="form-inline">
+                <span sog-comment="opinions"></span>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- 审批意见列表-->
+        <h4 class="control-heading bg-info" ng-show="isOpinionsShow"><i class="glyphicon glyphicon-list-alt"></i>审批意见列表</h4>
+        <div class="form-inline" ng-show="isOpinionsShow">
+            <span sog-simple-opinions="opinions"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

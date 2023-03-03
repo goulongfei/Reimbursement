@@ -1,0 +1,261 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <!--wf-tool-bars	双向绑定的model
+    wf-tool-bars-url-base	服务Route地址, 接续apiUrlBase+platformUrlBase后的部分
+    wf-collect-data-fn	收集数据挂载的方法, 详见 [wfCollectDataFn说明]-->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BusinessOperationsApplicationWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--<div sog-abort-opinion opinions="opinions"></div>-->
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <!--信息项组标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign">
+                <span ng-if="!viewModel.isNonContractAdditional" style="color:red">
+                    请提前与各方确认此费用应通过直接付款的方式支出，该流程一旦生效，不予作废
+                </span>
+                <span ng-if="viewModel.isNonContractAdditional" style="color:red">
+                    该流程仅用于已支付费用补录，不会发起支付单，请确认是否适用
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-12 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-2 control-label text-right" title="采购名称" style="text-align:right">采购名称<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                    <input sog-valide-status="采购名称" placeholder="格式提示：事业部+项目+专业+事件概述" type="text" class="meeting" ng-model="viewModel.purchaseBase.purchaseName" maxlength="250">
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="项目名称" style="text-align:right">项目名称<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <div rc-select-project opts="baseInfo.projectOpts"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="专业" style="text-align:right">专业<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input ">
+                    <select sog-valide-status="专业" class="meeting" ng-model="viewModel.purchaseOfBusinessOperations.specialtyCode"
+                            ng-options="p.code as p.name for p in viewModel.option.specialtyList"
+                            ng-change="baseInfo.specialtyChange()">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="法人公司" style="text-align:right">法人公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <div select-corporation opts="baseInfo.corporationOpts" data="viewModel.corporationScope"></div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="记账公司" style="text-align:right">记账公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <select sog-valide-status="记账公司" class="meeting" ng-model="viewModel.purchaseOfBusinessOperations.chargeCompanyCode"
+                            ng-options="p.code as p.name for p in viewModel.option.chargeCompany"
+                            ng-selected="p.code == viewModel.purchaseOfBusinessOperations.chargeCompanyCode"
+                            ng-change="baseInfo.chargeCompanyChange()">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="成本中心" style="text-align:right">成本中心<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <select sog-valide-status="成本中心" class="meeting" ng-model="viewModel.purchaseOfBusinessOperations.costCenterCode"
+                            ng-options="p.code as p.name for p in viewModel.option.costCenter"
+                            ng-selected="p.code == viewModel.purchaseOfBusinessOperations.costCenterCode"
+                            ng-change="baseInfo.costCenterChange()">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="本次采购金额" style="text-align:right">本次采购金额</label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <span>{{viewModel.purchaseBase.purchaseAmount| number:2}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="收款单位" style="text-align:right">收款单位<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <div auto-complete-mult opts="baseInfo.governmentOpts" str="viewModel.purchaseOfBusinessOperations.chargeUnitName"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign">
+                <label class="col-xs-3 col-sm-3 col-md-2 control-label labelheight" title="本次采购范围和内容" style="text-align:right">本次采购范围和内容<span style="color:red;">*</span></label>
+                <div class="col-xs-9 col-sm-9 col-md-10 form-group baseifo-input border-none">
+                    <textarea sog-valide-status="本次采购范围和内容" class="textarea" ng-model="viewModel.purchaseOfBusinessOperations.purchaseContent" maxlength="4000"></textarea>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign">
+                <label class="col-xs-3 col-sm-6 col-md-2 control-label text-right" title="收费标准描述" style="text-align:right">收费标准描述</label>
+                <div class="col-xs-9 col-sm-6 col-md-10 form-group baseifo-input border-none">
+                    <textarea sog-valide-status="收费标准描述" class="textarea" ng-model="viewModel.purchaseOfBusinessOperations.chargeStandardDescribe" maxlength="4000"></textarea>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 合约规划<span style="color:red;">*</span></h4>
+        <div contract-agreement-business opts="baseInfo.contractAgreementOpts" data="viewModel.contractAgreementScopeList"></div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>成本科目<span style="color:red;">*</span></h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign">
+                <div class="table-responsive flow-table-box">
+                    <table class="table table-bordered table-striped" style="width: 200%;">
+                        <thead>
+                            <tr>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle">序号</th>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle;width:200px !important;">科目</th>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle">
+                                    <span>年份</span>
+                                </th>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle">
+                                    <span>科目成本【A】</span>
+                                </th>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle;width:110px !important;">
+                                    <span>本单分摊金额【B】</span>
+                                </th>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle">
+                                    <span>已发生采购【C】</span>
+                                </th>
+                                <th class="table-thead" style="text-align:center;vertical-align:middle">
+                                    <span>余量【D=A-B-C】</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="agree in viewModel.contractAgreementScopeList">
+                            <tr ng-repeat="item in agree.contractAgreementSplitInfoList |orderBy : ['costCourseName','year']">
+                                <td style="text-align:center;">
+                                    {{$index+1}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.costCourseName}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.year}}
+                                </td>
+                                <td class="text-center">{{item.costTargetAmount | number:2}}</td>
+                                <td style="text-align:center;">
+                                    <input ng-hide="item.isCanApportion" readonly="readonly" style="background-color: #ddd;" type="text" class="meeting input-type ng-pristine ng-valid" />
+                                    <input ng-show="item.isCanApportion" style="text-align:center;" sog-valide-status="本单分摊金额" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                                           wf-money opts="moneyOpts" ng-model="item.actualAmount" ng-blur="baseInfo.amountChange()" placeholder="输入金额" />
+                                </td>
+                                <td class="text-center">{{item.accumulativeHappenedAmountWithTax | number:2}}</td>
+                                <td class="text-center">{{item.surplusValueWithTax = item.costTargetAmount-item.accumulativeHappenedAmountWithTax - item.actualAmount | number:2}}</td>
+                            </tr>
+                            <tr class="text-center">
+                                <td colspan="2" class="text-center">合计</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">{{baseInfo.costTargetAmountHeji | number:2}}</td>
+                                <td class="text-center">{{baseInfo.actualAmountHeji | number:2}}</td>
+                                <td class="text-center">{{baseInfo.accumulativeHappenedHeji | number:2}}</td>
+                                <td class="text-center">{{baseInfo.surplusValueWithTaxHeji | number:2}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flow-table-icon"> </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>附件</h4>
+        <div class="form-inline">
+            <div ng-show="viewModel.isNonContractAdditional" class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label text-right">无合同采购补录报告(商写)<span style="color:red">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span class="attachment right" wf-uploader ready="viewModel.purchaseOfNoContractApplicationFileReady" files="viewModel.purchaseOfNoContractApplicationFiles" opts="baseInfo.purchaseOfNoContractApplicationFileOpts" read-only="false"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label text-right" title="付款计算明细">付款计算明细<span style="color:red">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input" sog-valide-status="付款计算明细">
+                    <span class="attachment right" wf-uploader ready="viewModel.payCaculationDetailFileReady" files="viewModel.payCaculationDetailFiles" opts="baseInfo.payCaculationDetailFileOpts" read-only="false"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label text-right" title="收费依据文件">收费依据文件</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span class="attachment right" wf-uploader ready="viewModel.chargeAccordingFileReady" files="viewModel.chargeAccordingFiles" opts="baseInfo.chargeAccordingFileOpts" read-only="false"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>传阅人</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="传阅人" style="text-align:right">传阅人</label>
+                <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                    <span sog-ogu-input="viewModel.circularizePersons" opts="selectorTransOpts" sog-valide-status="传阅人">{{viewModel.circularizePersons}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <!-- 简单意见列表, 与意见控件二选一 -->
+        <h4 class="control-heading bg-info" ng-show="opinions.length!=0"><i class="glyphicon glyphicon-list-alt"></i>简单意见列表</h4>
+        <div class="form-inline" ng-if="opinions.length!=0">
+            <span sog-simple-opinions="opinions"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+    <!--右侧通栏结束-->
+    <!--右侧在线文档-->
+    <div right-docs type="1"></div>
+</div>
+<style>
+    .textarea {
+        height: 44px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        text-indent: 1em;
+        width: 100%;
+    }
+
+    @media (max-width: 767px) {
+        .form-group label {
+            text-align: left !important;
+        }
+    }
+</style>

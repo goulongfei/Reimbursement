@@ -1,0 +1,27 @@
+﻿.opinion-bar-top {
+    background-color: #5DC4E8;
+    padding: 4px;
+    color: white;
+}
+
+.opinion-border {
+    border: 1px solid #E4E4E4;
+}
+
+.opinion-left {
+    line-height: 30px;
+}
+
+.opinion-right {
+    border-left: 2px solid #E4E4E4;
+    padding-left: 1%;
+}
+
+.opinion-radio {
+    padding: 3px;
+    display: block;
+}
+.opinion-content-readonly {
+    padding: 3px;
+    display: block;
+}

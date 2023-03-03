@@ -1,0 +1,32 @@
+﻿<div class="tab-content-result" style="font-size:12px;">
+    <div class="tab-content-tbl">
+        <table class="table table-striped fc-table">
+            <thead>
+                <tr>
+                    <th class="fc-th-name text-center">&nbsp;&nbsp;序号</th>
+                    <th class="fc-th-name text-center">采购名称</th>
+                    <th class="fc-th-title text-center">开始时间</th>
+                    <th class="fc-th-org text-center">当前环节</th>
+                    <th class="fc-th-state text-center">当前待办人&nbsp;&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in taskList">
+                    <td class="text-center">
+                        {{(paginationRunning.currentPage -1 )* paginationRunning.itemsPerPage + $index + 1}}
+                    </td>
+                    <td class="text-left" style="white-space:normal;">
+                        <a ng-click="mainPage.openUserTask(item.purchaseUrl)" style="white-space:normal;color:#0000FF">{{item.purchaseName}} </a>
+                    </td>
+                    <td class="text-center">{{item.purchaseStartDate|date:'yyyy-MM-dd'}}</td>
+                    <td class="text-center">{{item.currentTaskLink}}</td>
+                    <td class="text-center"><span style="white-space:normal">{{item.currentTastUser}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix tab-content-pagination">
+        <div ng-if="paginationRunning.itemsPerPage < paginationRunning.totalItems" tm-pagination="paginationRunning" class="fc-pagination pull-center"></div>
+        <div ng-if="taskCount.runningTaskNum == 0" class="text-center">暂无数据</div>
+    </div>
+</div>

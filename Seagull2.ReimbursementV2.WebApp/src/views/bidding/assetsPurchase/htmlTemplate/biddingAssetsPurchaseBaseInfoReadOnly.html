@@ -1,0 +1,90 @@
+﻿<div class="form-inline">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="上游流程" style="text-align:right;">上游流程</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            {{viewModel.purchaseOfFixedAssets.upstreamProcessTypeName}}&nbsp;|&nbsp;
+            <div open-extra-link extra-link="viewModel.purchaseOfFixedAssets.upstreamProcessURL" extra-name="viewModel.purchaseOfFixedAssets.upstreamProcessName"></div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="是否涉及项目" style="text-align:right">是否涉及项目</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <div class="switch-btn-box" sog-valide-status="是否涉及项目">
+                <div class="btn checkbox-label-not" style="width:49%;"
+                     ng-class="{'checkbox-label-this':viewModel.purchaseOfFixedAssets.isInvolveProject===true}">是</div>
+                <div class="btn checkbox-label-not" style="width:49%;"
+                     ng-class="{'checkbox-label-this':viewModel.purchaseOfFixedAssets.isInvolveProject===false}">否</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="项目名称" style="text-align:right">项目名称</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span>{{viewModel.purchaseOfFixedAssets.projectName}}</span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="预计采购金额" style="text-align:right">预计采购金额</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            <span>{{viewModel.purchaseBase.perPurchaseAmount | number:2}}</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="settings.isApproval">
+        <label class="col-xs-6 control-label text-right" title="支出类型">支出类型<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <div>{{viewModel.purchaseBase.expenditureTypeName}}</div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="招标人" style="text-align:right">招标人</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.corporationScopeList">{{item.corporationName}} <br /></span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="指合同的列支记账公司" style="text-align:right" ng-show="viewModel.isUseCostCenter">记账公司<span style="color:red;">*</span></label>
+        <label class="col-xs-6 control-label" title="记账公司" style="text-align:right" ng-show="!viewModel.isUseCostCenter">记账公司<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span>{{viewModel.purchaseOfFixedAssets.chargeCompanyName}}</span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="指合同的列支成本中心" style="text-align:right" ng-show="viewModel.isUseCostCenter">成本中心<span style="color:red;">*</span></label>
+        <label class="col-xs-6 control-label" title="成本中心" style="text-align:right" ng-show="!viewModel.isUseCostCenter">成本中心<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span>{{viewModel.purchaseOfFixedAssets.costCenterName}}</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="采购名称" style="text-align:right;">采购名称</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <div ng-if="settings.isApproval">
+                <span ng-show="!viewModel.isUseCostCenter || (viewModel.isUseCostCenter && !viewModel.isMutiUseCostCenter)">{{viewModel.purchaseBase.purchaseName}}</span>
+                <div mulit-workflow data="viewModel.purchaseBase" opts="settings.linkName" ng-show="viewModel.isUseCostCenter && viewModel.isMutiUseCostCenter"></div>
+            </div>
+            <div ng-if="!settings.isApproval">
+                <div ng-if="!settings.isDraftReadOnly || (settings.isDraftReadOnly && !viewModel.isUseCostCenter) || (settings.isDraftReadOnly && viewModel.isUseCostCenter && !viewModel.isMutiUseCostCenter)">{{viewModel.purchaseBase.purchaseName}}</div>
+                <div ng-if="settings.isDraftReadOnly && viewModel.isUseCostCenter && viewModel.isMutiUseCostCenter">
+                    <div mulit-workflow data="viewModel.purchaseBase" opts="settings.linkName"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="本次招标范围和内容" style="text-align:right;display:block;height:55px;line-height:55px;">本次招标范围和内容</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-bind-html="viewModel.purchaseOfFixedAssets.purchaseContent | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

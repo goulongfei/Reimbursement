@@ -1,0 +1,42 @@
+﻿<div class="tab-content-result" style="font-size:12px;">
+    <div class="tab-content-tbl">
+        <table class="table table-striped fc-table">
+            <thead>
+                <tr>
+                    <th class="fc-th-name text-center"></th>
+                    <th class="fc-th-name text-center">序号</th>
+                    <th class="fc-th-title text-center">采购名称</th>
+                    <th class="fc-th-org text-center">预计开始时间</th>
+                    <th class="fc-th-person text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in taskList">
+                    <td>
+                        <div class="pdl-light-red" ng-if="item.unStartLight == 1"></div>
+                        <div class="pdl-light-yellow" ng-if="item.unStartLight == 2"></div>
+                        <div class="pdl-light-green" ng-if="item.unStartLight == 3"></div>
+                    </td>
+                    <td class="text-center">
+                        {{(paginationUnstart.currentPage -1 )* paginationUnstart.itemsPerPage + $index + 1}}
+                    </td>
+                    <td class="text-left" >
+                        <a href="#" onclick="return false" target="_blank" ng-click="openUserTask(item)" style="white-space:normal">
+                            {{item.purchaseName}}
+                        </a>
+                    </td>
+                    <td>
+                        <span>{{item.preStartDate|date:'yyyy-MM-dd'}}</span>
+                    </td>
+                    <td class="text-center">
+                        <a class="pdl-a-color" ng-click="unStartView.showPurchaseType(item, $event)">发起</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix tab-content-pagination">
+        <div ng-if="paginationUnstart.itemsPerPage < paginationUnstart.totalItems" tm-pagination="paginationUnstart" class="fc-pagination pull-center"></div>
+        <div ng-if="taskCount.unStratTaskNum == 0" class="text-center">暂无数据</div>
+    </div>
+</div>

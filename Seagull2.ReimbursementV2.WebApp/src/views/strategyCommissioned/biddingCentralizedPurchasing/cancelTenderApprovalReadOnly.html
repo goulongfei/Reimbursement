@@ -1,0 +1,83 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/CancelTenderApprovalWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航栏-->
+        <div ng-show="viewModel.formAction.actionStateCode==3" left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>招投标（集中采购）</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 废标</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group" ng-show="viewModel.p_StrategyPurchasePlanCase.isAbandonBidding">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:right;line-height:50px;" title="废标原因">废标原因<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-bind-html="viewModel.p_StrategyPurchasePlanCase.abandonBiddingReason | htmlContent"></p>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/strategyCommissioned/biddingCentralizedPurchasing/htmlTemplate/biddingCentralizedPurchasingBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 回标情况</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">供应商行业领域</th>
+                        <th style="text-align:center;" class="table-thead">行业领域等级</th>
+                        <th style="text-align:center;" class="table-thead">回标状态</th>
+                        <th style="text-align:center;" class="table-thead">回标时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;">{{supplier.industryDomainName}}</td>
+                        <td style="text-align:center;">{{supplier.industryDomainLevelName}}</td>
+                        <td style="text-align:center;" ng-show="supplier.isReplyBidding">已回标</td>
+                        <td style="text-align:center;" ng-show="!supplier.isReplyBidding">未回标</td>
+                        <td style="text-align:center;">{{supplier.replyBiddingDate| date:'yyyy-MM-dd HH:mm'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <!-- 评论列表-->
+        <h4 class="control-heading bg-info" ng-show="isOpinionsShow"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+        <div class="form-inline" ng-show="isOpinionsShow">
+            <div class="form-inline">
+                <span sog-comment="opinions"></span>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!-- 审批意见列表-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>审批意见列表</h4>
+        <div class="form-inline">
+            <span sog-simple-opinions="opinions"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

@@ -1,0 +1,143 @@
+<style>
+    .selectContent:hover {
+        background-color: #ddd;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    #selectDiv {
+        height: 200px;
+        display: none;
+        overflow-y: auto;
+        position: absolute;
+        z-index: 1000;
+        background-color: #fff;
+    }
+
+    #selectGuideDiv {
+        height: 200px;
+        display: none;
+        overflow-y: auto;
+        position: absolute;
+        z-index: 1000;
+        background-color: #fff;
+    }
+
+    img.guide {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        margin-left: -25px;
+        margin-top: -25px;
+    }
+
+    .table tbodt tr td {
+        word-break: keep-all;
+    }
+
+    .disabled-bg {
+        background-color: #eee;
+        cursor: not-allowed;
+    }
+
+    .keep {
+        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        overflow: hidden;
+    }
+</style>
+<div class="staff-service">
+    <div class="container appil-container" style="width: 95%;">
+        <!--ng-hide="isAuthing"-->
+        <h3 class="control-heading"
+            style="padding-top:5px;padding-bottom:5px;background-color:#F5F5F5;margin-bottom:0;">&nbsp;项目采购计划上报跟踪表</h3>
+        <div class="form-inline"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>查询条件</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="事业部">事业部</label>
+                <div class="col-xs-6 form-group baseifo-input" style="height:25px;" sog-valide-status="事业部">
+                    <div class="col-xs-10 form-group baseifo-input" style="padding-left:2px">
+                        <input type="text" readonly="readonly" class="meeting"
+                            ng-model="model.queryCondition.businessDivisionName">
+                    </div>
+                    <div class="col-xs-2 form-group baseifo-input">
+                        <span style="cursor:pointer" ng-click="SelectBusinessDivision()"><i
+                                class="glyphicon glyphicon-folder-open"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="项目名称"
+                    style="text-align:right">项目名称</label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <div rc-select-project opts="baseInfo.projectOpts"></div>
+                </div>
+            </div>
+            <button class="btn btn-primary"
+                style="padding-left:20px;padding-right:20px;margin-right:80px;background-color: white;color:black"
+                ng-click="model.reset()">重置条件</button>
+            <button class="btn btn-primary" style="padding-left:20px;padding-right:20px;margin-right:80px;"
+                ng-click="model.clickquery()">查&nbsp;&nbsp;&nbsp;&nbsp;询</button>
+            <div class="clearfix"></div>
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 查询结果</h4>
+            <div class="table-responsive tb-header">
+                <table class="table table-striped table-bordered"
+                    style="font-size:5px; background-color:rgb(221,237,247);" position="sticky; 
+                    top:0;">
+                    <thead class="topthead">
+                        <tr>
+                            <th class="text-center" style="width:2%;">序号</th>
+                            <th style="text-align:center;width:15%; ">所属事业部</th>
+                            <th style="text-align:center; width:25%;">项目名称</th>
+                            <th style="text-align:center;width:10%; ">期区</th>
+                            <th style="text-align:center; width:10%;">末次上报时间</th>
+                            <th style="text-align:center; width:5%;">末次上报人</th>
+                            <th style="text-align:center;width:5%; ">今年已上报次数</th>
+                            <th style="text-align:center; width:5%;">去年已上报次数</th>
+                            <th style="text-align:center; width:5%;">截止目前共上报次数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in model.PurchasePlanReportDatas">
+                            <td style="text-align:center; "> {{$index + 1}}</td>
+                            <td style="text-align:center; ">{{item.cnName}}</td>
+                            <td style="text-align:center; ">{{item.projectName }}</td>
+                            <td style="text-align:center; ">{{item.stageAreaName}}</td>
+                            <td style="text-align:center; ">{{item.modifyTime|date:'yyyy-MM-dd'}}</td>
+                            <td style="text-align:center; ">{{item.creatorName}}</td>
+                            <td style="text-align:center;">
+                                <a href="javascript:void(0);" style="color:blue;"
+                                    ng-click="GetPurchasePlanEditRecord(model.version.thisYear,item.projectCode,item.stageAreaCode);">{{item.timesThisYear}}</a>
+                            </td>
+                            <td style="text-align:center; ">
+                                <a href="javascript:void(0);" style="color:blue;"
+                                    ng-click="GetPurchasePlanEditRecord(model.version.lastYear,item.projectCode,item.stageAreaCode);">{{item.timesLastYear}}</a>
+                            </td>
+                            <td style="text-align:center; ">
+                                <a href="javascript:void(0);" style="color:blue;"
+                                    ng-click="GetPurchasePlanEditRecord(model.version.all,item.projectCode,item.stageAreaCode);">{{item.timesUpNow}}</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <div tm-pagination="model.paginationConf" class="pull-right btn-sm mt-15 clearfix">
+                </div>
+            </div>
+            <div id="div" style="display:none">暂无数据</div>
+        </div>
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/pageFooter.html'"></div>
+        <div ng-include="'views/common/foot-copyright.html'" style="width:100%"></div>
+        <!--页脚结束-->
+    </div>
+</div>

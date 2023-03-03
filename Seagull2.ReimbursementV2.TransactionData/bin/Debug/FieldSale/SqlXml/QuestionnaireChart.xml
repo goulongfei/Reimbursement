@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+
+    <Sql id="GetCJCustomAnalysis">
+      WITH P AS 
+      ( 
+      SELECT pc.CODE FROM Sale.SaleProductView v 
+      INNER JOIN sale.SaleRecord_SaleProduct ssp ON ssp.SaleProductCode =v.ProductCode 
+      INNER JOIN sale.SaleRecord sr ON sr.Code =ssp.SaleRecordCode 
+      INNER JOIN Signs.PurchaseContract pc ON pc.SaleRecordCode =sr.Code AND pc.VersionEndTIme IS NULL 
+      INNER JOIN Qn.INSTANCE s ON s.CODE =pc.Code AND s.VALID_STATUS=1 
+      WHERE v.StageAreaCode='{0}'
+
+      ),T AS ( 
+      SELECT q.CODE AS Code,q.CN_NAME AS AnalysisName,op.CN_NAME AS OptionName,
+      q.QUESTION_NO AS [Index],q.QUESTION_TYPE,op.CODE AS OptionCode
+      FROM P AS v 
+      INNER JOIN QN.QUESTION_COPY q ON q.INSTANCE_CODE =v.CODE 
+      INNER JOIN QN.OPTION_COPY op ON op.INSTANCE_CODE =v.CODE AND op.QUESTION_CODE=q.CODE ) 
+      SELECT 
+      a.Code,a.AnalysisName,a. OptionName, 
+      a. [Index],SUM(a.c) as CountValue FROM ( SELECT
+      v.Code,v.AnalysisName,v. OptionName, 
+      v. [Index],
+      ISNULL(st.[COUNT],0) AS c
+      FROM T AS v LEFT OUTER JOIN QN.OPTION_STATISTICS st ON st.OPTION_CODE =v.OptionCode AND st.QUESTION_CODE =v.Code 
+      WHERE v.QUESTION_TYPE IN (1,2)
+      UNION
+      SELECT 
+      v.Code,v. AnalysisName,st.OPTION_CONTENT AS OptionName, v.[Index],
+      (CASE st.CODE WHEN NULL THEN 0 ELSE 1 END) AS c
+      FROM T AS v LEFT OUTER JOIN QN.OPTION_ANSWER st ON st.OPTION_CODE =v.OptionCode AND st.QUESTION_CODE =v.Code 
+      WHERE v.QUESTION_TYPE IN (64)) AS a
+      GROUP BY
+      a.Code,a.AnalysisName,a. OptionName, 
+      a. [Index]
+
+    </Sql>
+
+
+</Root>

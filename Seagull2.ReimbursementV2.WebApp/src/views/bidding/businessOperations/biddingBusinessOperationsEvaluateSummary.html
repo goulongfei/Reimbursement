@@ -1,0 +1,244 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingBusinessOperationsEvaluateSummaryWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+            <!--左侧导航-->
+            <div ng-if="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3" left-nav opts="settings.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div ng-include="'views/bidding/businessOperations/htmlTemplate/biddingBusinessOperationsBaseInfo.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--评标信息-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt" id=""></i> 评标信息</h4>
+            <!--综合评标法-->
+            <div class="table-responsive" ng-if="viewModel.purchaseOfBusinessOperations.enquiryTypeCode == 2">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                            <th style="text-align:center;" class="table-thead">供应商名称</th>
+                            <th style="text-align:center;" class="table-thead">最新回标金额</th>
+                            <th style="text-align:center;" class="table-thead">商务标原始得分</th>
+                            <th style="text-align:center;" class="table-thead">商务标最终得分</th>
+                            <th style="text-align:center;" class="table-thead">技术标原始得分</th>
+                            <th style="text-align:center;" class="table-thead">技术标最终得分</th>
+                            <th style="text-align:center;" class="table-thead">最终总得分</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="supplier in viewModel.summerEvaluateBiddingInfoList">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td><span open-supplier-info supplier="supplier"></span></td>
+                            <td style="text-align:center;">
+                                <span ng-show="supplier.finalQuoteAmountWithTax>0">{{supplier.finalQuoteAmountWithTax|number:2}}</span>
+                            </td>
+                            <td style="text-align:center;"><span>{{supplier.businessScore}}</span></td>
+                            <td style="text-align:center;"><span>{{supplier.businessScale * supplier.businessScore * 0.01|number:2}}</span></td>
+                            <td style="text-align:center;"><span>{{supplier.technologyScore}}</span></td>
+                            <td style="text-align:center;"><span>{{supplier.technologyScale * supplier.technologyScore * 0.01|number:2}}</span></td>
+                            <td style="text-align:center;"><span>{{supplier.sumScore|number:2}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--低价中标法-->
+            <div class="table-responsive" ng-if="viewModel.purchaseOfBusinessOperations.enquiryTypeCode == 1">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                            <th style="text-align:center;" class="table-thead">供应商名称</th>
+                            <th style="text-align:center;" class="table-thead">最新回标金额</th>
+                            <th style="text-align:center;" class="table-thead">名次</th>
+                            <th style="text-align:center;" class="table-thead">商务评标备注</th>
+                            <th style="text-align:center;" class="table-thead">是否合格</th>
+                            <th style="text-align:center;" class="table-thead">技术评标备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="supplier in viewModel.summerEvaluateBiddingInfoList">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td><span open-supplier-info supplier="supplier"></span></td>
+                            <td style="text-align:center;">
+                                <span ng-show="supplier.finalQuoteAmountWithTax>0">{{supplier.finalQuoteAmountWithTax|number:2}}</span>
+                            </td>
+                            <td style="text-align:center;"><span>{{supplier.ranking}}</span></td>
+                            <td style="text-align:left;"><span>{{supplier.businessRemark}}</span></td>
+                            <td style="text-align:center;">
+                                <span ng-if="supplier.isQualified ==true">是</span>
+                                <span ng-if="supplier.isQualified ==false">否</span>
+                            </td>
+                            <td style="text-align:left;"><span>{{supplier.technologyRemark}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <!--评标报告-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt" id=""></i> 评标报告</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style=" width:5%;" class="table-thead text-center">序号</th>
+                            <th class="table-thead text-center">评标人</th>
+                            <th class="table-thead text-center">评标类型</th>
+                            <th class="table-thead text-center">历史评标报告</th>
+                            <th class="table-thead text-center">评标报告</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="obj in viewModel.evaluationUserOpinion">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td>{{obj.evaluationUser}}</td>
+                            <td>{{obj.evaluationType}}</td>
+                            <td>
+                                <div ng-repeat="evaluateFile in obj.historyEvaluateFileList" ng-if="obj.evaluationType=='商务标'">
+                                    <p ng-repeat="file in evaluateFile.clientFileInformationList">
+                                        <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                                        <br />
+                                    </p>
+                                </div>
+                                <div class="text-center" ng-if="obj.evaluationType=='技术标'">---</div>
+                            </td>
+                            <td>
+                                <p ng-repeat="file in obj.evaluateFile.clientFileInformationList">
+                                    <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                                    <br />
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <div ng-if="!viewModel.isInvalidTender && !viewModel.purchaseOfBusinessOperations.isAbandonBidding">
+                <!--发放让利询价标题-->
+                <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt" id=""></i> 发放让利询价</h4>
+                <!--发放让利询价内容-->
+                <div class="form-inline">
+                    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                        <label class="text-right col-xs-6 control-label" title="是否发放让利询价">
+                            是否发放让利询价<span style="color:red;">*</span>
+                        </label>
+                        <div class="col-xs-6 form-group baseifo-input " sog-valide-status="是否发放让利询价">
+                            <div class="switch-btn-box">
+                                <span class="btn checkbox-label-not"
+                                      ng-class="{'checkbox-label-this':viewModel.purchaseOfBusinessOperations.isGrantDiscountEnquiry===true}"
+                                      ng-click="baseInfo.setIsGrantDiscountEnquiry(true)">是</span>
+                                <span class="btn checkbox-label-not"
+                                      ng-class="{'checkbox-label-this':viewModel.purchaseOfBusinessOperations.isGrantDiscountEnquiry===false}"
+                                      ng-click="baseInfo.setIsGrantDiscountEnquiry(false)">否</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="viewModel.purchaseOfBusinessOperations.isGrantDiscountEnquiry===true" class="col-xs-12 col-sm-6 col-md-4 form-group">
+                        <label class="text-right col-xs-4 control-label" title="让利回复截止时间">让利回复截止时间<span style="color:red;">*</span></label>
+                        <div class="col-xs-8 form-group baseifo-input ">
+                            <div date-time-picker sog-valide-status="让利回复截止时间" date-time="viewModel.purchaseOfBusinessOperations.discountDeadline"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix visible-xs-block visible-sm-block"></div>
+                <div class="clearfix"></div>
+
+                <div class="table-responsive" ng-show="viewModel.purchaseOfBusinessOperations.isGrantDiscountEnquiry===true">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style=" width:5%;" class="table-thead text-center">序号</th>
+                                <th class="table-thead text-center">供应商名称</th>
+                                <th class="table-thead text-center">验证码</th>
+                                <th class="table-thead text-center">联系人邮箱</th>
+                                <th class="table-thead text-center">历史让利询价文件</th>
+                                <th class="table-thead text-center">让利询价文件</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="info in viewModel.grantDiscountEnquiryInfoList|orderBy : 'supplierName' : false">
+                                <td class="text-center">{{$index+1}}</td>
+                                <td><span open-supplier-info supplier="info"></span></td>
+                                <td>{{info.verificationCode}}</td>
+                                <td>{{info.linkEmail}}</td>
+                                <td>
+                                    <p ng-repeat="file in info.historyBusinessGrantDiscountEnquiryReplyFileList">
+                                        <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                                        <br />
+                                    </p>
+                                </td>
+                                <td>
+                                    <div ng-if="info.isNeedBidProfitSharingReply===true" wf-uploader files="info.businessGrantDiscountEnquiryFileList" read-only="false" opts="settings.fileOpts" ready="settings.fileReady"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clearfix visible-xs-block visible-sm-block"></div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!--废标标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 废标</h4>
+            <!--废标内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <input sog-valide-status="废标" type="checkbox" ng-disabled="viewModel.isInvalidTender" ng-model="viewModel.purchaseOfBusinessOperations.isAbandonBidding" ng-change="baseInfo.cancelBidding()" />废标
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div ng-if="viewModel.purchaseOfBusinessOperations.isAbandonBidding" class="col-xs-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="废标原因">废标原因<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <textarea sog-valide-status="废标原因" type="text" class="meeting" style="height:60px;" placeholder="" ng-model="viewModel.purchaseOfBusinessOperations.abandonBiddingReason"></textarea>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>

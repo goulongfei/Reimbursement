@@ -1,0 +1,166 @@
+﻿<div class="staff-service">
+
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/DirectCommissionedLandDevelopStartContractWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <!--信息项组标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3  col-md-2 control-label" title="采购名称" style="text-align:right;">采购名称<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span>{{viewModel.purchaseBase.purchaseName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="项目名称" style="text-align:right">项目名称<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    {{viewModel.purchaseOfLandDevelop.projectName}}
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="采购主责人" style="text-align:right;">采购主责人<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span ng-if="viewModel.purchaseOfLandDevelop.purchaseMainUser" wf-user-presence="viewModel.purchaseOfLandDevelop.purchaseMainUser"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="是否涉及工程" style="text-align:right">是否涉及工程<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span ng-if="viewModel.purchaseOfLandDevelop.isInvolveEngineering">涉及</span>
+                    <span ng-if="!viewModel.purchaseOfLandDevelop.isInvolveEngineering">不涉及</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="法人公司" style="text-align:right">法人公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    {{viewModel.corporationScopeList[0].corporationName}}
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="记账公司" style="text-align:right">记账公司<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span>{{viewModel.purchaseOfLandDevelop.chargeCompanyName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="成本中心" style="text-align:right">成本中心<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span>{{viewModel.purchaseOfLandDevelop.costCenterName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="本次采购范围和内容" style="text-align:right;display:block;height:54px;line-height:54px;">本次采购范围和内容<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-bind-html="viewModel.purchaseOfLandDevelop.purchaseContent | htmlContent"></p>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="直接委托理由" style="text-align:right">直接委托理由<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span>{{viewModel.purchaseOfLandDevelop.directDelegationReasonName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="col-xs-6 control-label" title="本次拟采购金额（元）" style="text-align:right">本次拟采购金额（元）<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <span>{{viewModel.purchaseBase.purchaseAmount | number:2}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i> 委托信息
+            <small><span style="color:red;">&nbsp;&nbsp;提示：下表每行对应一个合同，如需签订多个合同，请添加多行。</span></small>
+        </h4>
+        <div purchase-delegation-info data="viewModel.purchaseDelegationInfoList" readonly="true" opts="settings.delegationOpts"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="直接委托报告" style="text-align:right;">直接委托报告</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-repeat="item in viewModel.purchaseOfLandDevelop.directCommissionedReportFile">
+                        <span wf-uploader files="[item]" opts="baseInfo.fileopts" ready="fileReady" read-only="true"></span><br />
+                    </p>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="其他附件" style="text-align:right;">其他附件</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-repeat="item in viewModel.purchaseOfLandDevelop.commissionedOtherFile">
+                        <span wf-uploader files="[item]" opts="baseInfo.fileopts" ready="fileReady" read-only="true"></span><br />
+                    </p>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!--传阅-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>传阅人</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label " title="传阅人 ">传阅人</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span ng-repeat="user in viewModel.circularizePersons" wf-user-presence="user" style="margin-left:10px;"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+        <div class="form-inline">
+            <div class="form-inline">
+                <span sog-comment="opinions"></span>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!-- 审批意见列表-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>审批意见列表</h4>
+        <div class="form-inline">
+            <span sog-simple-opinions="opinions"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

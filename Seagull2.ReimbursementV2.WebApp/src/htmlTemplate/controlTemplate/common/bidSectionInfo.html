@@ -1,0 +1,848 @@
+﻿ <!--编辑模式-->
+<div class="table-responsive" ng-show="opts.scene==='Draft' &&  readOnly===false">
+    <button ng-click="addDetail()" class="btn btn-primary" style="cursor:pointer">+增加</button>
+    <button ng-click="deleteDetail()" class="btn btn-danger" style="cursor:pointer">-删除</button>
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <td class="table-thead text-center">
+                    <input id="flag" type="checkbox" ng-checked="sel" ng-model="select_all" ng-change="selectAll(select_all)">
+                </td>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td style="text-align:center;vertical-align:middle;">
+                    <input type="checkbox" ng-model="item.checked" ng-change="selectOne(item.checked)">
+                </td>
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--只读模式-->
+<div class="table-responsive" ng-show="opts.scene==='Draft' && readOnly===true">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showDetail($index,item)" style="color: blue;text-decoration: underline;">详情</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--发放标书-->
+<div class="table-responsive" ng-show="opts.scene==='IssueBiddingDocument' &&  readOnly===false">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">标段信息</th>
+                <th class="table-thead text-center">回复情况</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editIssueBiddingDocumentDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showInviteReplyDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--发放标书只读-->
+<div class="table-responsive" ng-show="opts.scene==='IssueBiddingDocument' && readOnly===true">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">标段信息</th>
+                <th class="table-thead text-center">回复情况</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showInviteReplyDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--答疑-->
+<div class="table-responsive" ng-show="opts.scene==='Answer' && readOnly===false">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">答疑详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editAnswerDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--答疑只读-->
+<div class="table-responsive" ng-show="opts.scene==='Answer' && readOnly===true">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">答疑详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showAnswerDetail($index,item)" style="color: blue;text-decoration: underline;">详情</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--开标-->
+<div class="table-responsive" ng-show="opts.scene==='OpenTender'">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">标段信息</th>
+                <th class="table-thead text-center">回标情况</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{item.biddingSectionName}}
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showReplyDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--商务清标-->
+<div class="table-responsive" ng-show="opts.scene==='BusinessClarigy'">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详细信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showBusinessClarigyDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--技术清标-->
+<div class="table-responsive" ng-show="opts.scene==='TechnologyClarigy'">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详细信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showTechnologyClarigyDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--商务评标-->
+<div class="table-responsive" ng-show="opts.scene==='BusinessEvaluate' && readOnly===false">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详细信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editBusinessEvaluateDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--商务评标只读-->
+<div class="table-responsive" ng-show="opts.scene==='BusinessEvaluate' && readOnly===true">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详细信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showBusinessEvaluateDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--技术评标-->
+<div class="table-responsive" ng-show="opts.scene==='TechnologyEvaluate' && readOnly===false">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详细信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editTechnologyEvaluateDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--技术评标只读-->
+<div class="table-responsive" ng-show="opts.scene==='TechnologyEvaluate' && readOnly===true">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">详细信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showTechnologyEvaluateDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--评标汇总-->
+<div class="table-responsive" ng-show="opts.scene==='EvaluateSummary'">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">本标段拟开工日期</th>
+                <th class="table-thead text-center">本标段拟竣工日期</th>
+                <th class="table-thead text-center">{{biddingOrEnquiry}}文件</th>
+                <th class="table-thead text-center">商务评标详情</th>
+                <th class="table-thead text-center">技术评标详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td>
+                    {{item.perStartWorkDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    {{item.perCompletedDate|date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <p ng-repeat="file in item.inviteDidFileList">
+                        <span wf-uploader files="[file]" opts="fileOpts" ready="settings.fileReady" read-only="true"></span>
+                        <br />
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showBusinessEvaluateDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="showTechnologyEvaluateDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--定标-->
+<div class="table-responsive" ng-show="opts.scene==='Award' && readOnly===false">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">标段名称</th>
+                <th class="table-thead text-center">标段招标范围和内容</th>
+                <th class="table-thead text-center">标段成本目标</th>
+                <th class="table-thead text-center">中标价</th>
+                <th class="table-thead text-center">中标单位</th>
+                <th class="table-thead text-center">中标信息</th>
+                <th class="table-thead text-center">定标结论</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data">
+                <td class="text-center">
+                    {{$index+1}}
+                </td>
+                <td>
+                    <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                </td>
+                <td>
+                    <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td class="text-right">
+                    <div ng-if="opts.isNeedAgreement!==true">
+                        <input sog-valide-status="本次采购成本目标" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                               ng-blur="costTargetAmountChange()"
+                               wf-money opts="moneyOpts" ng-model="item.biddingCostTargetAmount" placeholder="请输入">
+                    </div>
+                    <div ng-if="opts.isNeedAgreement===true">
+                        {{item.biddingCostTargetAmount|number:2}}
+                        <a ng-click="editBidCostTargetDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    {{item.biddingTotalPrice|number:2}}
+                </td>
+                <td>
+                    <p ng-repeat="scope in item.supplierBiddingSectionList|filter:{isWinTheBidding:true}|orderBy : 'supplierName' : false">
+                        {{scope.supplierName}}
+                    </p>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editWinBiddingDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+                </td>
+                <td class="text-center" style="width:50px;">
+                    <a ng-click="editAwardBiddingDetail($index,item)" style="color: blue;text-decoration: underline;">编辑</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--定标只读-->
+<div class="table-responsive" ng-show="opts.scene==='Award' && readOnly===true">
+    <div ng-repeat="scope in data">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 标段信息-{{scope.biddingSectionName}}</h4>
+        <table class="table table-striped table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th class="table-thead text-center">序号</th>
+                    <th class="table-thead text-center">标段名称</th>
+                    <th class="table-thead text-center">标段招标范围和内容</th>
+                    <th class="table-thead text-center">标段成本目标</th>
+                    <th class="table-thead text-center">中标价</th>
+                    <th class="table-thead text-center">中标单位</th>
+                    <th class="table-thead text-center">中标信息</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in data|filter:{code:scope.code}">
+                    <td class="text-center">
+                        {{$index+1}}
+                    </td>
+                    <td>
+                        <a ng-click="showApprovalDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingSectionName}}</a>
+                    </td>
+                    <td>
+                        <span title="{{item.biddingSectionContent}}">{{item.biddingSectionContent|txtLimitLength:true:15:' ...'}}</span>
+                    </td>
+                    <td class="text-right">
+                        <div ng-if="opts.isNeedAgreement!==true">
+                            {{item.biddingCostTargetAmount|number:2}}
+                        </div>
+                        <div ng-if="opts.isNeedAgreement===true">
+                            <a ng-click="showBidCostTargetDetail($index,item)" style="color: blue;text-decoration: underline;">{{item.biddingCostTargetAmount|number:2}}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        {{item.biddingTotalPrice|number:2}}
+                    </td>
+                    <td>
+                        <p ng-repeat="scope in item.supplierBiddingSectionList|filter:{isWinTheBidding:true}|orderBy : 'supplierName' : false">
+                            {{scope.supplierName}}
+                        </p>
+                    </td>
+                    <td class="text-center" style="width:50px;">
+                        <a ng-click="showWinBiddingDetail($index,item)" style="color: blue;text-decoration: underline;">查看</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 定标结论-{{scope.biddingSectionName}}</h4>
+        <div ng-repeat="item in data|filter:{code:scope.code}">
+            <table class="table table-striped table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        <th class="table-thead text-center" width="10px">序号</th>
+                        <th class="table-thead text-center" width="270px">定标结论</th>
+                        <th class="table-thead text-center">备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">
+                            1
+                        </td>
+                        <td>
+                            弃标&nbsp; <input type="radio" ng-checked="item.giveUpUnitCount>0" disabled="disabled" />有&nbsp; <input type="radio" ng-checked="item.giveUpUnitCount===0" disabled="disabled" />无
+                        </td>
+                        <td>
+                            <span ng-if="item.giveUpUnitCount>0">弃标单位是：{{item.giveUpUnitNames}}，惩罚措施是： {{item.giveUpUnitOpinion}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            2
+                        </td>
+                        <td>
+                            最低价中标&nbsp; <input type="radio" ng-checked="item.isBottomPriceWin===true" disabled="disabled" />是&nbsp; <input type="radio" ng-checked="item.isBottomPriceWin===false" disabled="disabled" />否
+                        </td>
+                        <td>
+                            <span ng-if="item.isBottomPriceWin===false">原因： {{item.notBottomPriceWinReason}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            3
+                        </td>
+                        <td>
+                            成本目标&nbsp; <input type="radio" ng-checked="item.isAdjustCostTarget===true" disabled="disabled" />已调整&nbsp; <input type="radio" ng-checked="item.isAdjustCostTarget===false" disabled="disabled" />未调整
+                        </td>
+                        <td>
+                            <span ng-if="item.isAdjustCostTarget===true">调整原因： {{item.adjustCostTargetReason}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            4
+                        </td>
+                        <td>
+                            优先中标权中标&nbsp; <input type="radio" ng-checked="item.isPrecedenceUnitWin===true" disabled="disabled" />已中标&nbsp; <input type="radio" ng-checked="item.isPrecedenceUnitWin===false" disabled="disabled" />未中标
+                        </td>
+                        <td>
+                            <span ng-if="item.isPrecedenceUnitWin===false">原因： {{item.notPrecedenceUnitWinReason}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            5
+                        </td>
+                        <td>
+                            招标范围修改&nbsp; <input type="radio" ng-checked="item.isBiddingConditionaAmend===true" disabled="disabled" />有&nbsp; <input type="radio" ng-checked="item.isBiddingConditionaAmend===false" disabled="disabled" />无
+                        </td>
+                        <td>
+                            <span ng-if="item.isBiddingConditionaAmend===true">具体修改内容： {{item.biddingConditionaAmendContent}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            6
+                        </td>
+                        <td>
+                            超过对标价格&nbsp; <input type="radio" ng-checked="item.isExceedBenchmarkingPrice===true" disabled="disabled" />是&nbsp; <input type="radio" ng-checked="item.isExceedBenchmarkingPrice===false" disabled="disabled" />否
+
+                        </td>
+                        <td>
+                            <span ng-if="item.isExceedBenchmarkingPrice===true">超过原因： {{item.exceedBenchmarkingPriceReason}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            7
+                        </td>
+                        <td>
+                            本标段招标其他说明
+
+                        </td>
+                        <td>
+                            {{item.biddingSectionOtherRemark}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+    </div>
+
+
+</div>

@@ -1,0 +1,66 @@
+﻿<div class="staff-service">
+    <div class="appil-container">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;搜索条件</h4>
+        <div class="form-inline clearfix" style="margin-top:2px;">
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label">合同名称</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <input class="meeting" ng-model="model.condition.contractName">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label">合同号</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <input class="meeting" ng-model="model.condition.contractNo">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label">经办人</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span sog-ogu-input="model.condition.operatorUser" opts="model.peopleSelect"></span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-12 form-group">
+                <div class="col-xs-12 form-group baseifo-input text-center">
+                    <button class="btn btn-sm btn-default" style="padding-left:15px;padding-right:15px;" ng-click="model.query()">查询</button>
+                    <button class="btn btn-sm btn-default" style="padding-left:15px;padding-right:15px;" ng-click="model.clear()">条件重置</button>
+                </div>
+            </div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;合同列表</h4>
+        <div class="form-inline clearfix">
+            <div class="table-responsive" style="max-height: 300px;overflow: auto;">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width:40px;"></th>
+                            <th class="text-center">序号</th>
+                            <th class="text-center">合同名称</th>
+                            <th class="text-center">合同号</th>
+                            <th class="text-center">成本中心</th>
+                            <th class="text-center">经办人</th>
+                            <th class="text-center">合同状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center" ng-repeat="item in model.list">
+                            <td><input type="radio" name="projectItem" ng-click="model.chooseItem(item)" ng-checked="model.selectedItem!=null&&model.selectedItem.contractCode===item.contractCode"></td>
+                            <td>{{$index+1}}</td>
+                            <td><span style="display:inline-block;white-space:nowrap;">{{item.contractName}}</span></td>
+                            <td><span style="display:inline-block;white-space:nowrap;">{{item.contractNo}}</span></td>
+                            <td><span style="display:inline-block;white-space:nowrap;">{{item.costCenterName}}</span></td>
+                            <td><span style="display:inline-block;white-space:nowrap;">{{item.operatorUserName}}</span></td>
+                            <td><span style="display:inline-block;white-space:nowrap;">{{item.contractStateName}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--分页-->
+            <div tm-pagination="cooperation.pagination" class="text-right"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeThisDialog();">关闭</button>
+</div>

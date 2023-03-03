@@ -1,0 +1,43 @@
+﻿<!--退回记录-->
+<div class="staff-service">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;">序号</th>
+                    <th style="text-align:center;">反馈资料</th>
+                    <th style="text-align:center;">退回理由</th>
+                    <th style="text-align:center;">相关附件</th>
+                    <th style="text-align:center;">退回时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in rebackRecordList">
+                    <td style="text-align:center;">
+                        {{item.sortNo + 1}}
+                    </td>
+                    <td style="text-align:left;">
+                        <div ng-if="item.feedbackFile.length > 0">
+                            <span wf-uploader files="item.feedbackFile" opts="settings.feedbackFileOpt" ready="auditReportFileReady" read-only="true"></span>
+                        </div>
+                    </td>
+                    <td style="text-align:left;">
+                        <span>{{item.rebackReason}}</span>
+                    </td>
+                    <td style="text-align:left;">
+                        <div ng-if="item.rebackReasonFile.length > 0">
+                            <span wf-uploader files="item.rebackReasonFile" opts="settings.feedbackFileOpt" ready="auditReportFileReady" read-only="true"></span>
+                        </div>
+                    </td>
+                    <td style="text-align:left;">
+                        <span>{{item.rebackDate |date:'yyyy-MM-dd HH:mm' }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeThisDialog();">取消</button>
+</div>
+

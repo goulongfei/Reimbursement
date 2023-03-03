@@ -1,0 +1,84 @@
+﻿<div class="staff-service">
+    <div class="appil-container">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;设置查询条件</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-6 form-group" style="margin-top:2px;">
+                <label class="text-right col-xs-6 control-label">项目</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div ng-show="opts.multipleSelect===true">
+                        <select class="meeting" ng-model="model.queryCondition.projectCode"
+                                ng-options="type.code as type.name for type in projectList"
+                                ng-change="projectChange(model.queryCondition.projectCode)">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <div ng-show="opts.multipleSelect===false">{{model.queryCondition.projectName}}</div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 form-group" style="margin-top:2px;">
+                <label class="text-right col-xs-6 control-label">专业</label>
+                <div class="col-xs-6 form-group baseifo-input">{{model.queryCondition.specialtyName}}</div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-6 form-group" style="margin-top:2px;">
+                <label class="text-right col-xs-6 control-label">编制年度&nbsp;</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select class="meeting" ng-model="model.yearCode" ng-change="yearchecked()" ng-options="type.code as type.name for type in model.yearList">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 form-group" style="margin-top:2px;">
+                <label class="text-right col-xs-6 control-label">合约规划名称&nbsp;</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <input class="meeting" ng-model="model.planContractName" placeholder="支持模糊查询">
+                </div>
+            </div>
+            <div class="col-xs-12 form-group" style="margin-top:2px;">
+                <div class="col-xs-12 form-group baseifo-input text-right">
+                    <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="model.query()">搜&nbsp;索</button>
+                </div>
+            </div>
+        </div> 
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;合约规划列表
+            <small ng-show="!model.isNonContractbusinessOperationsAdditional" style="color:red;">可选择本年及明年的合约规划，不可选择以往年的合约</small>
+            <small ng-show="model.isNonContractbusinessOperationsAdditional" style="color:red;">可选择本年与补录的合约规划</small>
+        </h4>
+        <div class="form-inline clearfix">
+            <div class="table-responsive" style="max-height: 300px;overflow: auto;">
+                <table class="table table-hover table-bordered table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width:40px;"></th>
+                            <th class="text-center">合约名称</th>
+                            <th class="text-center">所属年份</th>
+                            <th class="text-center">成本科目</th>
+                            <th class="text-center">成本目标</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        <tr class="text-center" ng-repeat="item in model.contractPlanList">
+                            <td style="width:40px;"><input type="radio" name="planContract" ng-click="model.chooseItem(item)" ng-checked="item.code===model.selectedItem.planContractCode"></td>
+                            <td class="text-left">
+                                <span style="display:inline-block;white-space:nowrap;">
+                                    {{item.contractAgreementName}}
+                                </span>
+                            </td>
+                            <td><span ng-init="model.getBelongsYear(item)">{{item.belongsYear}}</span></td>
+                            <td><span ng-init="model.getStringInfo(item)">{{item.costCourseName}}</span></td>
+                            <td><span style="display:inline-block;white-space:nowrap;" ng-init="model.getCostTargetAmount(item)">{{item.costTargetAmountWithTax | number:2}}</span></td>
+                        </tr>
+                        <tr class="text-center" ng-show="model.contractPlanList.length===0&&model.isLoaded"><td colspan="8">暂无相关数据！</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--分页-->
+            <div tm-pagination="model.paginationConf" class="pull-right clearfix" style="margin-right:10px;"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeThisDialog();">取消</button>
+    <button type="button" class="btn btn-primary" ng-click="model.confirm();">确定</button>
+</div>

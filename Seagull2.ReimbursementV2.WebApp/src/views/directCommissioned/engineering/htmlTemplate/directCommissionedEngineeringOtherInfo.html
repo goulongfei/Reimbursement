@@ -1,0 +1,26 @@
+﻿<div class="form-inline">
+    <div class="col-xs-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 text-right control-label" title="直接委托报告">直接委托报告</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-repeat="item in viewModel.reportFile">
+                <span wf-uploader files="[item]" opts="reportFileOpts" ready="settings.reportFileReady" read-only="true"></span><br />
+            </p>
+        </div>
+    </div>
+    <div class="col-xs-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 text-right control-label" title="直接委托说明">直接委托说明</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-repeat="item in viewModel.manualFile">
+                <span wf-uploader files="[item]" opts="manualFileOpts" ready="settings.manualFileReady" read-only="true"></span><br />
+            </p>
+        </div>
+    </div>
+    <div class="col-xs-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 text-right control-label" title="其他附件">其他附件</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-repeat="item in viewModel.otherFile">
+                <span wf-uploader files="[item]" opts="otherFileOpts" ready="settings.otherFileReady" read-only="true"></span><br />
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingNotProjectCompilingTenderApprovalWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3 " left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/bidding/notProject/htmlTemplate/biddingNotProjectBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购时间安排<span style="color:red;">*</span></h4>
+        <div purchase-datearrange-info data="viewModel.purchaseDateArrangeInfo" opts="baseInfo.purchaseDateArrangeOpts" readonly="true"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购小组成员</h4>
+        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+            <label class="col-xs-6 control-label" title="采购主责人" style="text-align:right;">采购主责人<span style="color:red;">*</span></label>
+            <div class="col-xs-6 form-group baseifo-input" sog-valide-status="采购主责人">
+                <span ng-if="viewModel.purchaseMainUser" wf-user-presence="viewModel.purchaseMainUser" style="margin-left:10px;"></span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+            <label class="col-xs-6 control-label" title="商务负责人" style="text-align:right;">商务负责人<span style="color:red;">*</span></label>
+            <div class="col-xs-6 form-group baseifo-input">
+                <span ng-if="viewModel.businessMainUser" wf-user-presence="viewModel.businessMainUser" style="margin-left:10px;"></span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+            <label class="col-xs-6 control-label" title="技术负责人" style="text-align:right;">技术负责人<span style="color:red;">*</span></label>
+            <div class="col-xs-6 form-group baseifo-input">
+                <span ng-if="viewModel.technologyMainUser" wf-user-presence="viewModel.technologyMainUser" style="margin-left:10px;"></span>
+            </div>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+
+        <!--使用成本中心-->
+        <div select-usecostcenter data="viewModel.useCostCenterInfoList" readonly="true" ng-show="viewModel.isUseCostCenter"></div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 入围供应商<span style="color:red;">*</span></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">行业领域</th>
+                        <th style="text-align:center;" class="table-thead">行业领域等级</th>
+                        <th style="text-align:center;" class="table-thead">该行业领域中标率</th>
+                        <th style="text-align:center;" class="table-thead">供应商总中标率</th>
+                        <th style="text-align:center;" class="table-thead">入围说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in viewModel.supplierScopeList | orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{item.supplierName}}</td>
+                        <td class="text-center">{{item.industryDomainName}}</td>
+                        <td class="text-center">{{item.industryDomainLevelName}}</td>
+                        <td style="text-align:center;">
+                            <p><span>{{item.industryDomainHistoryBiddingCount/item.industryDomainHistoryTenderCount*100 | number:0}}</span><span ng-if="item.industryDomainHistoryTenderCount != 0">%</span></p>
+                            <p><span style="font-size:10px !important;color:#9B9C9C">(中标{{item.industryDomainHistoryBiddingCount}}次/投标{{item.industryDomainHistoryTenderCount}}次)</span></p>
+                        </td>
+                        <td style="text-align:center;">
+                            <p><span>{{item.supplierHistoryBiddingCount/item.supplierHistoryTenderCount*100 | number:0}}</span><span ng-if="item.supplierHistoryTenderCount != 0">%</span></p>
+                            <p><span style="font-size:10px !important;color:#9B9C9C">(中标{{item.supplierHistoryBiddingCount}}次/投标{{item.supplierHistoryTenderCount}}次)</span></p>
+                        </td>
+                        <td class="text-center" style="text-align:left">
+                            {{item.shortlistedExplain}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+
+        <!--企查查展示-->
+        <div enterprise-show data="viewModel.supplierScopeList" ng-if="viewModel.supplierScopeList.length > 1"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="{{viewModel.biddingOrEnquiry}}文件" style="text-align:right;">{{viewModel.biddingOrEnquiry}}文件<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-repeat="item in viewModel.biddingReportFile">
+                        <span wf-uploader files="[item]" opts="baseInfo.fileopts" read-only="true" ready="baseInfo.fileReady"></span><br />
+                    </p>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="其他附件" style="text-align:right;">其他附件</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-repeat="item in viewModel.otherFile">
+                        <span wf-uploader files="[item]" opts="baseInfo.fileopts" read-only="true" ready="baseInfo.fileReady"></span><br />
+                    </p>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>传阅</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:right" title="传阅人">传阅人</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span ng-repeat="user in viewModel.circularizePersons" wf-user-presence="user" style="margin-left:10px;"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!-- 评论列表-->
+        <h4 class="control-heading bg-info" ng-show="isOpinionsShow"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+        <div class="form-inline" ng-show="isOpinionsShow">
+            <div class="form-inline">
+                <span sog-comment="opinions"></span>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!--其他审批流-->
+        <div ng-show="viewModel.isUseCostCenter">
+            <h4 class="control-heading bg-info">
+                <i class="glyphicon glyphicon-list-alt"></i> 其他审批流
+                <input type="button" style="margin-left:82%;font-weight:900;background-color:#d9edf7;" name="name" value="{{settings.spreadButtonName}}" class="btn" ng-click="settings.spreadInfoFn()" />
+            </h4>
+            <div class="form-inline" ng-show="settings.isSpreadInfo">
+                <span sog-simple-opinions="viewModel.otherOpinions"></span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- 审批意见列表-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批意见列表</h4>
+        <div class="form-inline">
+            <input wf-opinions opinions-opts="opinionOpts" opinions="opinions" predefined-opinions="predefinedOpinions" user-predefined-opinions="userPredefinedOpinions"
+                   current-opinion="currentOpinion" url-base="/BiddingNotProjectCompilingTenderApprovalWf" />
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

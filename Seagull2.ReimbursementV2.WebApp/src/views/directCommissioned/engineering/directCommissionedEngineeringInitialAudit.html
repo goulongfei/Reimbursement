@@ -1,0 +1,178 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/DirectCommissionedEngineeringInitialAuditWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div ng-include="'views/directCommissioned/engineering/htmlTemplate/directCommissionedEngineeringBaseInfo.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <div ng-show="viewModel.isNeedAgreement===true">
+                <!--合约规划标题-->
+                <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 合约规划</h4>
+                <!--合约规划内容-->
+                <div contract-agreement-split-info opts="settings.contractAgreementOpts" data="viewModel.contractAgreementScopeList"></div>
+                <div class="clearfix visible-xs-block visible-sm-block"></div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!--委托信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 委托信息</h4>
+            <!--委托信息内容-->
+            <div purchase-delegation-info data="viewModel.purchaseDelegationInfoList" opts="settings.delegationOpts" readonly="true"
+                 price-file="viewModel.pirceFile"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--预算审核信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 预算审核信息</h4>
+            <!--预算审核信息内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="初审一致部分(元)">初审一致部分(元)<span style="color:red">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+
+                        <input type="text" sog-valide-status="初审一致部分(元)"
+                               class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyopts"
+                               ng-model="viewModel.purchaseOfEngineering.firstTrialAgreedPartAmount"
+                               ng-blur="baseInfo.firstTrialAmountChange()"
+                               placeholder="请输入">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="初审争议部分(元)">初审争议部分(元)</label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <input sog-valide-status="初审争议部分(元)" type="text"
+                               class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyopts"
+                               ng-model="viewModel.purchaseOfEngineering.firstTrialDisputePartAmount"
+                               ng-blur="baseInfo.firstTrialAmountChange()"
+                               placeholder="请输入">
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="成本偏差金额(元)">成本偏差金额(元)</label>
+                    <div class="col-xs-6 form-group baseifo-input text-right">
+                        {{viewModel.purchaseOfEngineering.firstTrialCostTargetDeviationAmount|number:2}}
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-8 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-3 control-label" title="成本偏差比例(%)">成本偏差比例(%)</label>
+                    <div class="col-xs-6 col-sm-6 col-md-3 form-group baseifo-input text-right">
+                        {{viewModel.purchaseOfEngineering.firstTrialCostTargetDeviationRate|number:2}}%
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="成本目标偏差说明">成本目标偏差说明<span style="color:red">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <textarea type="text" class="meeting indiv" ng-model="viewModel.purchaseOfEngineering.firstTrialCostTargetDeviationExplain" sog-valide-status="成本目标偏差说明"></textarea>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="预算初审报告">预算初审报告<span style="color:red">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input" sog-valide-status="预算初审报告">
+                        <span wf-uploader files="viewModel.budgetReportFile" opts="budgetReportFileOpts" ready="budgetReportFileReady" read-only="false"></span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="预算定案表">预算定案表<span style="color:red">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input" sog-valide-status="预算定案表">
+                        <span wf-uploader files="viewModel.budgetFinalFormFile" opts="budgetFinalFormFileOpts" ready="budgetFinalFormFileReady" read-only="false"></span>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="初审附件盖章">初审附件盖章<span style="color:red">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input"  > 
+                        <div class="switch-btn-box" style="width:118px;" sog-valide-status="初审附件盖章">
+                            <span class="btn checkbox-label-not"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseOfEngineering.firstTrialIsNeedSeal===true}"
+                                  ng-click="viewModel.purchaseOfEngineering.firstTrialIsNeedSeal=true">需要</span>
+                            <span class="btn checkbox-label-not"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseOfEngineering.firstTrialIsNeedSeal===false}"
+                                  ng-click="viewModel.purchaseOfEngineering.firstTrialIsNeedSeal=false">不需要</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="初审单位">初审单位<span style="color:red">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <input sog-valide-status="初审单位" type="text" class="meeting input-type ng-pristine ng-valid" ng-model="viewModel.purchaseOfEngineering.firstTrialUnitName">
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--负面清单标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 负面清单</h4>
+            <!--负面清单内容-->
+            <div negative-list data="viewModel.negativeList" read-only="true"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+            <!--其他附件标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 其他附件</h4>
+            <!--其他附件内容-->
+            <div ng-include="'views/directCommissioned/engineering/htmlTemplate/directCommissionedEngineeringOtherInfo.html'"></div>
+
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 审批意见列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批</h4>
+            <div class="form-inline">
+                <input wf-opinions opinions-opts="opinionOpts" opinions="opinions" predefined-opinions="predefinedOpinions" user-predefined-opinions="userPredefinedOpinions"
+                       current-opinion="currentOpinion" url-base="/DirectCommissionedEngineeringApplicationWf" />
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>  

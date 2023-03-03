@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CmiChildrenSql" xml:space="preserve">
+    <value>SELECT [Code]
+      ,[EmployeeCode]
+      ,[GenderCode]
+      ,[CnName]
+      ,[Birthday]
+  FROM {1}
+  where VersionEndTime is null and Code in({0})</value>
+  </data>
+  <data name="CmiEmpBankInfoSql" xml:space="preserve">
+    <value>SELECT    eba.BankAccount,eba.EmployeeCode,b.CnName as BankName,ebap.CardPurposeTypeCode
+FROM  {3} as eba INNER JOIN
+                       {4} as ebap ON eba.Code = ebap.EmployeeBankAccountCode
+                      inner join  {5} as b on b.Code =eba.BankCode
+WHERE     ebap.CardPurposeTypeCode in ('{0}','{1}') AND (eba.VersionEndTime IS NULL) AND 
+                      (ebap.VersionEndTime IS NULL) and b.ValidStatus=1 and  eba.EmployeeCode IN ({2})</value>
+    <comment>获取员工银行账户信息</comment>
+  </data>
+  <data name="CmiEmpInfoExtSql" xml:space="preserve">
+    <value>SELECT     e.Code as EmployeeCode, e.WorkEmail, 
+p.GenderCode, p.Birthday, 
+p.IdentityCardCode, e.WorkAddress,
+(    select top 1 a.CnName from 
+                    {10} AC
+                   inner join  {5}  a
+                   on a.code = AC.WelfarePaymentAddressCode
+                   inner join  {6} ec
+                   on ec.CorporationCode = AC.CorporationCode
+                   inner join  {7} hc
+                   on hc.CorporationCode =ec.CorporationCode
+				   INNER JOIN {3} unit ON hc.OrganizationUnitCode = unit.Code
+                    where a.VersionEndTime IS NULL
+        AND AC.VersionEndTime IS NULL
+        AND ec.VersionEndTime IS NULL                    
+                    and hc.OrganizationUnitCode={2}
+                    and hc.ValidStatus=1
+                    and ec.EmployeeCode =e.Code
+					
+					)as WelffareCity
+
+FROM         {8} e INNER JOIN
+                      {9} as p ON e.PersonCode = p.Code
+WHERE     (e.VersionEndTime IS NULL) AND (e.ValidStatus = 1) AND (p.VersionEndTime IS NULL) AND (p.ValidStatus = 1) and  e.Code IN ({0})</value>
+    <comment>员工 商保其他信息</comment>
+  </data>
+  <data name="FormartOuterJoin" xml:space="preserve">
+    <value>SELECT A.*,B.PaymentBase as LastPaymentBase FROM ({0}) as A Left outer join ({1}) as B ON B.EmployeeCode =A.EmployeeCode</value>
+  </data>
+  <data name="GetEmpCmiListByYearMonthCmiType_Sql" xml:space="preserve">
+    <value>select 
+eci.EmployeeCode,
+ecc.InsuranceCost,
+cic.CnName as CmiCategory,
+cic.Code  as CmiCategoryCode
+,cit.Code  
+,cit.CnName  
+,cit.CostStandard 
+,ecc.VersionStartTime
+from
+EmpService.EmployeeCommercialInsuranceInfo AS eci 
+INNER JOIN EmpService.Employee_CommercialInsuranceInsureType_CommercialInsuranceCategory ecc 
+ON ecc.EmployeeCommercialInsuranceInfoCode = eci.Code
+inner join EmpService.CommercialInsuranceInsureType_CommercialInsuranceCategory cc
+on cc.Code=ecc.CommercialInsuranceInsureType_CommercialInsuranceCategoryCode
+inner  join EmpService.CommercialInsuranceInsureType cit
+on cit.Code =cc.CommercialInsuranceInsureTypeCode
+inner join 
+ EmpService.CommercialInsuranceCategory
+ cic 
+on cic.Code =cc.CommercialInsuranceCategoryCode
+where cit.BatchMonth ={1}
+and cit.BatchYear={0} and eci.EmployeeCode {4}
+and cit.HRMgmtUnitCode={2}
+and cit.CommercialInsuranceEmployeeTypeCode={3}
+and ecc.InsuranceValidStatus=1</value>
+    <comment>查询某一年的商保人员配置信息</comment>
+  </data>
+  <data name="HRUnitOfEmployeeInWalfeFunction_Sql" xml:space="preserve">
+    <value>SELECT  ec.EmployeeCode, hc.HRMgmtUnitCode,ec.CorporationCode,c.CnName as CorporationName
+FROM {2} as  ec INNER JOIN
+  {3} as e ON ec.EmployeeCode = e.Code INNER JOIN
+  {4} as c ON ec.CorporationCode = c.Code INNER JOIN
+  {5} as hc ON c.Code = hc.CorporationCode
+WHERE ec.ValidStatus = 1 AND c.ValidStatus = 1 AND ec.VersionEndTime is null AND e.VersionEndTime is null AND hc.ValidStatus = 1 AND 
+hc.HRMgmtUnitCode = {0} AND ec.HRManageUnitFunctionCode = '{1}'</value>
+    <comment>获取某人力单元下某智能下的所管辖的所有员工，为了提高效率请加上如下索引USE [SubjectDB]
+GO
+CREATE NONCLUSTERED INDEX [&lt;Name of Missing Index, sysname,&gt;]
+ON [EmpService].[Employee_Corporation1] ([EmployeeCode],[HRManageUnitFunctionCode],[ValidStatus])
+INCLUDE ([CorporationCode])
+GO</comment>
+  </data>
+  <data name="LoadCompanyAndEmployeeDataSql" xml:space="preserve">
+    <value>SELECT e.EmployeeCode,e.EmployeeName,e.VocationLevel,hc.CorporationName, 
+hc.CorporationCode,e.LoginName, /*hc.HRManageUnitFunctionCode,*/ e.EmployeeNo,
+    hc.WelfareChangeInType, hc.WelfareChangeOutType
+    WelfareChangeInType, hc.WelfareChangeOutType
+ FROM      ( Select e.Code As EmployeeCode,u.LOGON_NAME As LoginName,isnull(p.CnName,u.DISPLAY_NAME) As EmployeeName
+                      ,e.VocationLevel,e.EmployeeIDNumber as EmployeeNo                     
+                      From  {3} e 
+                      Left Outer Join 
+                      (
+                         Select p.code,P.cnname From 
+                          {4} p
+                         Where p.VersionEndTime is Null
+                         ) 
+                         p On p.Code=e.PersonCode
+                      
+                      left Outer Join 
+                      (
+                      select USER_GUID,LOGON_NAME,DISPLAY_NAME From 
+                       User_syn   Where SIDELINE=0 ) as u
+                       On U.USER_GUID=e.Code
+                       Where e.VersionEndTime is Null   and e.WorkStatus=2 ) e
+                   INNER JOIN
+                   (
+                  Select /*ec.HRManageUnitFunctionCode,*/ ec.EmployeeCode,ec.CorporationCode,h.OrganizationUnitCode,c.CnName as CorporationName,
+                          ec.WelfareChangeInType, ec.WelfareChangeOutType
+                  From 
+                     {5} ec
+                   Inner Join  {6} h
+                   On h.CorporationCode=ec.CorporationCode
+                    inner join  {2} c on c.Code =h.CorporationCode
+                   Where c.ValidStatus=1 And h.ValidStatus=1 And ec.VersionEndTime Is Null
+                   ) hc ON hc.EmployeeCode=e.EmployeeCode WHERE  hc.OrganizationUnitCode={0} /*and  hc.HRManageUnitFunctionCode='{1}'*/</value>
+    <comment>查找某人力管理单元下所有符合商保条件的员工信息</comment>
+  </data>
+  <data name="UpdateEmpCmiTypeCategoryVersionEndTimeSql" xml:space="preserve">
+    <value> 
+ update   {4} set 
+ {4} .VersionEndTime='{2}'
+ from
+ (
+ select cc.Code from
+   {5} as cc
+ inner join  {6} as c
+ on c.Code =cc.CommercialInsuranceInsureTypeCode
+ where cc.VersionEndTime is null and {3}
+ ) as a
+where a.Code=
+{4}.CommercialInsuranceInsureType_CommercialInsuranceCategoryCode 
+and  {4}.VersionEndTime is null AND  EmployeeCode in (select ec.EmployeeCode from  {7} as ec INNER JOIN  {8}  as  hc 
+                      ON ec.CorporationCode = hc.CorporationCode where hc.HRMgmtUnitCode={0} and ec.HRManageUnitFunctionCode='{1}' AND ec.VersionEndTime is null AND hc.validstatus=1)</value>
+  </data>
+  <data name="WelfareReportCpAdapter_Last_Sql" xml:space="preserve">
+    <value>select distinct
+eeci.EmployeeCode
+,eeci.PaymentBase
+from EmpService.EmployeeExtendCommercialInsuranceInfo as eeci
+
+where (eeci.HasQuit=0 or eeci.HasQuit is null)
+and eeci.ValidStatus=1
+and eeci.EffectiveDate&lt;{0}
+ AND NOT exists(select 1 FROM  EmpService.EmployeeExtendCommercialInsuranceInfo
+  as a1 WHERE a1.EmployeeCode =eeci.EmployeeCode AND a1.VersionStartTime&gt;eeci.VersionStartTime
+and a1.EffectiveDate&lt;{0}
+ and (a1.HasQuit=0 or a1.HasQuit is null)
+ )</value>
+  </data>
+  <data name="WelfareReportCpAdapter_Load_Sql" xml:space="preserve">
+    <value>select distinct
+eeci.Code
+,ec.CorporationCode,
+c.CnName as CorporationName
+,eeci.EmployeeCode
+,ISNULL(p.CnName,u.DISPLAY_NAME) as EmployeeName
+,eeci.CostCenterCode
+,eeci.InsuranceCompanyCode
+,eeci.WelfareTypeCode
+,eeci.WelfareChangetTypeCode
+,eeci.PaymentBase
+,eeci.PaymentPercent
+,eeci.PaymentStartDate
+,eeci.PaymentEndDate
+,eeci.ChangeDate
+,eeci.EffectiveDate
+,eeci.VersionStartTime
+,eeci.VersionEndTime
+from EmpService.EmployeeExtendCommercialInsuranceInfo as eeci
+inner join EmpService.Employee as e 
+on ( e.Code = eeci.EmployeeCode and  (e.VersionEndTime is null or e.VersionEndTime&gt;=eeci.VersionStartTime) and e.VersionStartTime&lt;=eeci.VersionStartTime)
+inner join EmpService.Employee_Corporation1 ec
+on (ec.EmployeeCode =e.Code and  (ec.VersionEndTime is null or ec.VersionEndTime&gt;=eeci.VersionStartTime) and ec.VersionStartTime&lt;=eeci.VersionStartTime)
+inner join Common.Corporation c on c.Code =ec.CorporationCode and c.ValidStatus=1
+left outer join Common.Person p on 
+(p.Code =e.PersonCode and  (p.VersionEndTime is null or p.VersionEndTime&gt;=eeci.VersionStartTime) and p.VersionStartTime&lt;=eeci.VersionStartTime)
+left outer join User_Syn u on (u.USER_GUID =e.PersonCode and u.SIDELINE=0)
+where (eeci.HasQuit=0 or eeci.HasQuit is null)
+and c.ValidStatus=1 and eeci.ValidStatus=1
+and eeci.EffectiveDate&lt;{0}
+ AND NOT exists(select 1 FROM  EmpService.EmployeeExtendCommercialInsuranceInfo
+  as a1 WHERE a1.EmployeeCode =eeci.EmployeeCode AND a1.VersionStartTime&gt;eeci.VersionStartTime
+and a1.EffectiveDate&lt;{0} 
+and (a1.HasQuit=0 or a1.HasQuit is null)
+ )
+ AND NOT exists(select 1 FROM  EmpService.EmployeeExtendCommercialInsuranceInfo
+  as a2 WHERE a2.EmployeeCode =eeci.EmployeeCode AND a2.EffectiveDate&gt;eeci.EffectiveDate
+and (a2.HasQuit=0 or a2.HasQuit is null)
+ )</value>
+    <comment>获取员工某种类型扩展商业保险信息</comment>
+  </data>
+</root>

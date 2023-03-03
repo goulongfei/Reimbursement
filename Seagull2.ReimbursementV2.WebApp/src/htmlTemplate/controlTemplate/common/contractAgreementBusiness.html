@@ -1,0 +1,64 @@
+﻿ <!--编辑模式-->
+<div class="table-responsive" ng-show="opts.model==='edit'">
+    <button ng-click="addDetail()" class="btn btn-primary" style="cursor:pointer">+增加</button>
+    <button ng-click="deleteDetail()" class="btn btn-danger" style="cursor:pointer">-删除</button>
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <td class="table-thead text-center">
+                    <input id="flag" type="checkbox" ng-checked="sel" ng-model="select_all" ng-change="selectAll(select_all)">
+                </td>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">合约名称</th>
+                <th class="table-thead text-center">项目</th>
+                <th class="table-thead text-center">所属年份</th>
+                <th class="table-thead text-center">成本科目</th>
+                <th class="table-thead text-center" ng-show="opts.isAdmin===true">成本目标</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data|filter:{validStatus:true}">
+                <td style="text-align:center;vertical-align:middle;">
+                    <input type="checkbox" ng-model="item.checked" ng-change="selectOne(item.checked)">
+                </td>
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center">{{item.contractAgreementName}}</td>
+                <td class="text-center">{{item.projectName}}</td>
+                <td class="text-center">{{item.belongsYear}}</td>
+                <td class="text-center">
+                    <span ng-if="item.costCourseName" title="{{item.costCourseName}}">{{item.costCourseName|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td class="text-right" ng-if="opts.isAdmin===true">{{item.costTargetAmount | number:2}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!--只读模式-->
+<div class="table-responsive" ng-show="opts.model==='readOnly'">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center">序号</th>
+                <th class="table-thead text-center">合约名称</th>
+                <th class="table-thead text-center">项目</th>
+                <th class="table-thead text-center">所属年份</th>
+                <th class="table-thead text-center">成本科目</th>
+                <th class="table-thead text-center" ng-if="opts.isAdmin===true">成本目标</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in data|filter:{validStatus:true}">
+                <td class="text-center">{{$index+1}}</td>
+                <td class="text-center">{{item.contractAgreementName}}</td>
+                <td class="text-center">{{item.projectName}}</td>
+                <td class="text-center">{{item.belongsYear}}</td>
+                <td class="text-center">
+                    <span ng-if="item.costCourseName" title="{{item.costCourseName}}">{{item.costCourseName|txtLimitLength:true:15:' ...'}}</span>
+                </td>
+                <td class="text-right" ng-if="opts.isAdmin===true">
+                    {{item.costTargetAmount | number:2}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

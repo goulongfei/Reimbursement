@@ -1,0 +1,118 @@
+﻿<!--商务-清标澄清页面-->
+<div class="form-inline">
+    <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 开标信息</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                    <th style="text-align:center;" class="table-thead">供应商名称</th>
+                    <th style="text-align:center;" class="table-thead">回标总价</th>
+                    <th style="text-align:center;" class="table-thead">商务标</th>
+                    <th style="text-align:center;" class="table-thead">技术标</th>
+                    <th style="text-align:center;" class="table-thead">其他附件</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="supplier in viewModel.supplierReplyBiddingInfoSubmitList">
+                    <td class="text-center">{{$index+1}}</td>
+                    <td><span open-supplier-info supplier="supplier"></span></td>
+                    <td style="text-align:center;">{{supplier.totalAmountWithTax|number:2}}</td>
+                    <td style="text-align:center;">
+                        <div wf-uploader files="supplier.businessFileList" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></div>
+                    </td>
+                    <td style="text-align:center;">
+                        <div wf-uploader files="supplier.technologyFileList" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></div>
+                    </td>
+                    <td style="text-align:center;">
+                        <div wf-uploader files="supplier.otherFileList" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+
+    <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 商务澄清答复信息</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width:5%;" class="table-thead text-center">序号</th>
+                    <th class="table-thead text-center">环节</th>
+                    <th class="table-thead text-center">信息项</th>
+                    <th style="font-weight:normal;color:blue;" class="table-thead text-center" ng-repeat="supplier in viewModel.supplierScopeList|orderBy : 'supplierName' : false">{{supplier.supplierName}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="clarify in viewModel.clarifyList">
+                    <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="3">{{$index+1}}</td>
+                    <td class="text-left" style="display:table-cell; vertical-align:middle;" rowspan="3">第{{settings.numberToChinese(clarify.round)}}轮澄清</td>
+                    <td class="text-left">澄清总价</td>
+                    <td class="text-right" ng-repeat="info in clarify.supplierReplyBiddingInfoList|orderBy : 'supplierName' : false">
+                        <span ng-if="info.totalAmountWithTax > 0">{{ info.totalAmountWithTax| number:2}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left">商务澄清问卷</td>
+                    <td class="text-left" ng-repeat="info in clarify.supplierReplyBiddingInfoList|orderBy : 'supplierName' : false">
+                        <p ng-repeat="file in info.businessClarigyQuestionnaireFileList">
+                            <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                            <br />
+                        </p>
+                    </td>
+                </tr>
+                <tr ng-repeat-end>
+                    <td class="text-left">商务澄清答复文件</td>
+                    <td class="text-left" ng-repeat="info in clarify.supplierReplyBiddingInfoList|orderBy : 'supplierName' : false">
+                        <p ng-repeat="file in info.businessClarigyReplyFileList">
+                            <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                            <br />
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+
+    <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 技术澄清答复信息</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width:5%;" class="table-thead text-center">序号</th>
+                    <th class="table-thead text-center">环节</th>
+                    <th class="table-thead text-center">信息项</th>
+                    <th style="font-weight:normal;color:blue;" class="table-thead text-center" ng-repeat="supplier in viewModel.supplierScopeList|orderBy : 'supplierName' : false">{{supplier.supplierName}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="clarify in viewModel.clarifyList">
+                    <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="2">{{$index+1}}</td>
+                    <td class="text-left" style="display:table-cell; vertical-align:middle;" rowspan="2">第{{settings.numberToChinese(clarify.round)}}轮澄清</td>
+                    <td class="text-left">技术澄清问卷</td>
+                    <td class="text-right" ng-repeat="info in clarify.supplierReplyBiddingInfoList|orderBy : 'supplierName' : false">
+                        <p ng-repeat="file in info.technologyClarigyQuestionnaireFileList">
+                            <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                            <br />
+                        </p>
+                    </td>
+                </tr>
+                <tr ng-repeat-end>
+                    <td class="text-left">技术澄清答复文件</td>
+                    <td class="text-left" ng-repeat="info in clarify.supplierReplyBiddingInfoList|orderBy : 'supplierName' : false">
+                        <p ng-repeat="file in info.technologyClarigyReplyFileList">
+                            <span wf-uploader files="[file]" opts="settings.fileOpts" ready="settings.fileReady" read-only="true"></span>
+                            <br />
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+</div>

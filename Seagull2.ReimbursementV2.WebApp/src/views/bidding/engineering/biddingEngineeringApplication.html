@@ -1,0 +1,452 @@
+﻿<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingEngineeringApplicationWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+            <!--左侧导航-->
+            <div ng-if="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3" left-nav opts="settings.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="采购名称">采购名称<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <input sog-valide-status="采购名称" type="text" ng-model="viewModel.purchaseBase.purchaseName" placeholder="格式提示：事业部+项目+期区+事件概述，不能大于30个字符" class="form-control meeting" />
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label ng-if="!viewModel.isUseProject" class="text-right col-xs-6 control-label" title="项目名称">项目名称<span style="color:red;">*</span></label>
+                    <label ng-if="viewModel.isUseProject" class="text-right col-xs-6 control-label" title="合约的列支项目">项目名称<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input" sog-valide-status="项目名称">
+                        <div ng-if="!viewModel.purchaseOfEngineering.projectCode"> <div select-multiple-project opts="settings.projectOpts" data="viewModel.projectScopeList"></div></div>
+                        <div ng-if="viewModel.purchaseOfEngineering.projectCode"> {{viewModel.purchaseOfEngineering.projectName}}</div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label ng-if="!viewModel.isUseProject" class="text-right col-xs-6 control-label" title="期区">期区<span style="color:red;">*</span></label>
+                    <label ng-if="viewModel.isUseProject" class="text-right col-xs-6 control-label" title="合约的列支期区">期区<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input " sog-valide-status="期区">
+                        <div ng-if="!viewModel.purchaseOfEngineering.stageAreaCode" select-multiple-stage-area opts="settings.stageAreaOpts" data="viewModel.stageAreaScopeList"></div>
+                        <div ng-if="viewModel.purchaseOfEngineering.stageAreaCode">{{viewModel.purchaseOfEngineering.stageAreaName}}</div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="招标人">招标人<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input" sog-valide-status="招标人">
+                        <div select-multiple-corporation data="viewModel.corporationScopeList" opts="settings.corporationOpts"></div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label ng-if="!viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="记账公司">记账公司<span style="color:red;">*</span></label>
+                    <label ng-if="viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="合同的列支记账公司">记账公司<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <select sog-valide-status="记账公司" class="meeting" ng-model="viewModel.purchaseOfEngineering.chargeCompanyCode"
+                                ng-options="type.code as type.name for type in viewModel.option.chargeCompany"
+                                ng-change="baseInfo.chargeCompanyChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label ng-if="!viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="成本中心">成本中心<span style="color:red;">*</span></label>
+                    <label ng-if="viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="合同的列支成本中心">成本中心<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <select sog-valide-status="成本中心" class="meeting" ng-model="viewModel.purchaseOfEngineering.costCenterCode"
+                                ng-options="type.code as type.name for type in viewModel.option.costCenter"
+                                ng-selected="type.code == viewModel.purchaseOfEngineering.costCenterCode"
+                                ng-change="baseInfo.costCenterChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="供应商类别">供应商类别<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input" sog-valide-status="供应商类别">
+                        <span supplier-category data="viewModel.industryDomainScope" opts="settings.tradeCatagoryOpts" single="true"></span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="采购类别">采购类别<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <select sog-valide-status="采购类别" class="meeting" ng-model="viewModel.purchaseOfEngineering.purchaseCategoryCode"
+                                ng-options="type.code as type.name for type in viewModel.option.projectPurchaseCategory"
+                                ng-selected="type.code == viewModel.purchaseOfEngineering.purchaseCategoryCode"
+                                ng-change="baseInfo.projectPurchaseCategoryChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="是否示范区采购">是否示范区采购<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <div class="switch-btn-box" sog-valide-status="是否示范区采购">
+                            <span class="btn checkbox-label-not"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseOfEngineering.isExampleArea===true}"
+                                  ng-click="baseInfo.setIsExampleArea(true)">是</span>
+                            <span class="btn checkbox-label-not"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseOfEngineering.isExampleArea===false}"
+                                  ng-click="baseInfo.setIsExampleArea(false)">否</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="isShowTenderFile">
+                    <label class="text-right col-xs-6 control-label" title="招标清单">招标清单<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <div class="switch-btn-box" sog-valide-status="招标清单" style="width:116px;text-align:center;">
+                            <span class="btn checkbox-label-not" style="width:49%;"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseBase.isUsedTenderFile===true}"
+                                  ng-click="baseInfo.setIsUsedTenderFile(true)">使用</span>
+                            <span class="btn checkbox-label-not" style="width:49%;"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseBase.isUsedTenderFile===false}"
+                                  ng-click="baseInfo.setIsUsedTenderFile(false)">不使用</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="建设地点">建设地点<span style="color:red;">*</span></label>
+                    <div sog-valide-status="地区" class="col-xs-3 col-sm-3 col-md-4 form-group baseifo-input">
+                        <span region-input="viewModel.purchaseOfEngineering.cityInput" opts="settings.regionOpts"></span>
+                    </div>
+                    <div class="col-xs-3 col-sm-3 col-md-6 form-group baseifo-input">
+                        <input sog-valide-status="建设地点" type="text" ng-model="viewModel.purchaseOfEngineering.buildDetailAddress" class="form-control meeting" />
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div ng-show="viewModel.isNeedAgreement===false || viewModel.isAdmin===true">
+                    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                        <label class="text-right col-xs-6 control-label" title="本次采购成本目标">本次采购成本目标<span style="color:red;">*</span></label>
+                        <div class="col-xs-6 form-group baseifo-input text-right">
+                            <div ng-show="viewModel.isNeedAgreement===true && viewModel.isAdmin===true">
+                                {{viewModel.purchaseOfEngineering.purchaseCostTargetAmount|number:2}}
+                            </div>
+                            <div ng-show="viewModel.isNeedAgreement===false">
+                                <input sog-valide-status="本次采购成本目标" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                                       wf-money opts="moneyOpts" ng-model="viewModel.purchaseOfEngineering.purchaseCostTargetAmount" ng-blur="baseInfo.purchaseCostTargetAmountChange()" placeholder="请输入">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="是否需要缴纳保证金">是否需要缴纳保证金<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input text-right">
+                        <div class="switch-btn-box" sog-valide-status="是否需要缴纳保证金">
+                            <span class="btn checkbox-label-not"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseOfEngineering.isNeedPaymentDeposit===true}"
+                                  ng-click="baseInfo.setIsNeedPaymentDeposit(true)">是</span>
+                            <span class="btn checkbox-label-not"
+                                  ng-class="{'checkbox-label-this':viewModel.purchaseOfEngineering.isNeedPaymentDeposit===false}"
+                                  ng-click="baseInfo.setIsNeedPaymentDeposit(false)">否</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-show="viewModel.purchaseOfEngineering.isNeedPaymentDeposit===true">
+                    <label class="text-right col-xs-6 control-label" title="各供应商应缴纳保证金金额">各供应商应缴纳保证金金额<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <input sog-valide-status="各供应商应缴纳保证金金额" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyOpts" ng-model="viewModel.purchaseOfEngineering.needPaymentDepositAmount" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="合约分类">合约分类<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <select sog-valide-status="合约分类" class="meeting" ng-model="viewModel.purchaseOfEngineering.contractAgreementTypeCode"
+                                ng-options="type.code as type.name for type in viewModel.option.contractAgreementType"
+                                ng-selected="type.code == viewModel.purchaseOfEngineering.contractAgreementTypeCode"
+                                ng-change="baseInfo.contractAgreementTypeChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="合同价格形式">合同价格形式<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <select sog-valide-status="合同价格形式" class="meeting" ng-model="viewModel.purchaseOfEngineering.contractPriceTypeCode"
+                                ng-options="type.code as type.name for type in viewModel.option.contractPriceType"
+                                ng-selected="type.code == viewModel.purchaseOfEngineering.contractPriceTypeCode"
+                                ng-change="baseInfo.contractPriceTypeChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="计价方式">计价方式<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <select sog-valide-status="计价方式" class="meeting" ng-model="viewModel.purchaseOfEngineering.valuationWayCode"
+                                ng-options="type.code as type.name for type in viewModel.option.valuationWay"
+                                ng-selected="type.code == viewModel.purchaseOfEngineering.valuationWayCode"
+                                ng-change="baseInfo.valuationWayChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-show="viewModel.isShowExpenditureType">
+                    <label class="col-xs-6 control-label text-right" title="支出类型">支出类型<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <select sog-valide-status="支出类型" style="width:100%;" class="meeting" ng-model="viewModel.purchaseBase.expenditureTypeCode" ng-options="p.code as p.name for p in viewModel.option.expenditureTypeList" ng-selected="p.code == viewModel.purchaseBase.expenditureTypeCode" ng-change="baseInfo.expenditureTypeChange();">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isShowExpenditureType && viewModel.isUseProject">
+                    <label class="col-xs-6 control-label text-right" title="使用项目">使用项目<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input text-right">
+                        <div rc-select-project opts="settings.useProjectOpts"></div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isShowExpenditureType && viewModel.isUseProject">
+                    <label class="text-right col-xs-6 control-label" title="使用期区">使用期区<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <select sog-valide-status="使用期区" class="meeting" ng-model="viewModel.purchaseBase.useStageAreaCode"
+                                ng-options="type.code as type.name for type in viewModel.option.useStageArea"
+                                ng-change="baseInfo.useStageAreaChange()">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isShowExpenditureType && viewModel.isUseCostCenter">
+                    <label class="col-xs-6 control-label" title="使用记账公司" style="text-align:right">使用记账公司<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <div select-chargecompany opts="baseInfo.useChargeCompanyOpts" data="viewModel.useNcCorporation"></div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isShowExpenditureType && viewModel.isUseCostCenter">
+                    <label class="col-xs-6 control-label" title="使用成本中心" style="text-align:right">使用成本中心<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <select style="width:100%;" class="meeting" ng-click="validOpts('使用成本中心')" ng-model="viewModel.purchaseBase.useCostCenterCode" ng-change="baseInfo.useCostCenterChange();" ng-options="p.code as p.name for p in  viewModel.option.useCostCenterList" ng-selected="p.code == viewModel.purchaseBase.useCostCenterCode">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="建筑面积">建筑面积<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input">
+                        <input sog-valide-status="建筑面积" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyOpts" ng-model="viewModel.purchaseOfEngineering.buildingArea" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="单价（元）">单价（元）</label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <input sog-valide-status="单价（元）" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyOpts" ng-model="viewModel.purchaseOfEngineering.price" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="建设单方成本目标">建设单方成本目标<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input ">
+                        <input sog-valide-status="建设单方成本目标" type="text" class="meeting input-type ng-pristine ng-valid text-right"
+                               wf-money opts="moneyOpts" ng-model="viewModel.purchaseOfEngineering.buildingCostTargetPerArea" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="本次招标范围和内容 ">
+                        本次招标范围和内容<span style="color:red;">*</span>
+                    </label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <textarea sog-valide-status="本次招标范围和内容" type="text" class="meeting" style="height:60px;" placeholder="" ng-model="viewModel.purchaseOfEngineering.purchaseContent"></textarea>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-xs-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="付款方式">付款方式<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <textarea sog-valide-status="付款方式" type="text" class="meeting" style="height:60px;" placeholder="" ng-model="viewModel.purchaseOfEngineering.paymentWayDescribe"></textarea>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--采购时间安排标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购时间安排<span style="color:red;">*</span></h4>
+            <!--采购时间安排标题-->
+            <div purchase-datearrange-info data="viewModel.purchaseDateArrangeInfoList" opts="settings.purchaseDateArrangeOpts" readonly="false"
+                 sog-valide-status="采购时间安排"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--采购小组成员标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购小组成员</h4>
+            <!--采购小组成员内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="采购负责人">采购负责人<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input" sog-valide-status="采购负责人">
+                        <span sog-ogu-input="viewModel.purchaseOfEngineering.purchaseMainUser" opts="settings.peopleSelect"></span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="商务负责人">商务负责人<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input" sog-valide-status="商务负责人">
+                        <span sog-ogu-input="viewModel.purchaseOfEngineering.businessMainUser" opts="settings.peopleSelect"></span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                    <label class="text-right col-xs-6 control-label" title="技术负责人">技术负责人<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 form-group baseifo-input" sog-valide-status="技术负责人">
+                        <span sog-ogu-input="viewModel.purchaseOfEngineering.technologyMainUser" opts="settings.peopleSelect"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <div ng-show="viewModel.isNeedAgreement===true" sog-valide-status="合约规划">
+                <!--合约规划标题-->
+                <h4 class="control-heading bg-info">
+                    <i class="glyphicon glyphicon-list-alt"></i> 合约规划<span style="color:red;">*</span>
+                </h4>
+                <div class="form-inline">
+                    <div style="color: red; line-height: 10px;">
+                        <p>提示：</p>
+                        <p>1、一条合约对应一个合同，如需发起多个合同，请选择多条合约；</p>
+                        <p>2、采购开始后合约规划金额无法调小，如需调小请在采购开始前调整并完成审批；</p>
+                    </div>
+                </div>
+                <!--合约规划内容-->
+                <div contract-agreement-split-info opts="settings.contractAgreementOpts" data="viewModel.contractAgreementScopeList"></div>
+                <div class="clearfix visible-xs-block visible-sm-block"></div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!--标段信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 标段信息<span style="color:red;">*</span></h4>
+            <!--标段信息内容-->
+            <div bid-section-info data="viewModel.biddingSectionInfoList" opts="settings.bidSectionInfoOpts" read-only="false" sog-valide-status="标段信息"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--入围供应商标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 入围供应商<span style="color:red;">*</span></h4>
+            <!--入围供应商内容-->
+            <div supplier-scope data="viewModel.supplierScopeList" opts="settings.supplierScopeOpts"
+                 sog-valide-status="入围供应商"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--负面清单标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 负面清单</h4>
+            <!--负面清单内容-->
+            <div negative-list data="viewModel.negativeList" read-only="false"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--开标要素记录表标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 开标要素记录表</h4>
+            <!--开标要素记录表内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="请选择开标要素">请选择开标要素<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <span ng-repeat="item in viewModel.option.openBiddingElement">
+                            <input type="checkbox" ng-model="item.checked" ng-disabled="item.code===1 || item.code===2" ng-change="baseInfo.selectOpenBiddingElement(item)" />{{item.name}}
+                            &nbsp;&nbsp;
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--附件标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+            <!--附件内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="确定入围单位相关附件">确定入围单位相关附件</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <span wf-uploader files="viewModel.entrySupplierFile" opts="fileOpts" ready="settings.entrySupplierFileReady" read-only="false"></span>
+                        <div class="clearfix"></div>
+                        <i style="color:red;">提示：如有需要，请您上传招标入围单位的请示报告、入围单位对照分析表、入围会议纪要等，这些附件仅用于内部审批，入围供应商无法查看</i>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="其他附件">其他附件</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <span wf-uploader files="viewModel.otherFile" opts="fileOpts" ready="settings.otherFileReady" read-only="false"></span>
+                        <div class="clearfix"></div>
+                        <i style="color:red;">提示：可上传其他相关附件，仅用于内部审批，入围供应商无法查看。</i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--传阅标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 传阅</h4>
+            <!--传阅内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="传阅人">传阅人</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input" sog-valide-status="传阅人">
+                        <span sog-ogu-input="viewModel.circularizePersons" opts="userOpts"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <div ng-show="baseInfo.notAllOfInputOpinion">
+                <!-- 审批意见列表-->
+                <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批</h4>
+                <div class="form-inline">
+                    <span sog-simple-opinions="opinions"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+        <!--右侧在线文档-->
+        <div right-docs type="1"></div>
+    </div>
+</div>  

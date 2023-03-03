@@ -1,0 +1,53 @@
+﻿<div class="staff-service">
+    <div class="container appil-container">
+        <div class="page-header clearfix"><span>战略采购</span></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;设置采购类型</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12  form-group">
+                <label class="col-xs-3 control-label text-right" title="战采操作">战采操作 <span style="color:red;">*</span></label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <label class="radio-inline col-xs-3">
+                        <input type="radio" ng-model="viewModelOaportal.purchaseOperation" value="1">
+                        <span>战采新签</span>
+                    </label>
+                    <!--<label class="radio-inline col-xs-3">
+                        <input type="radio" ng-model="viewModelOaportal.purchaseOperation" value="2">
+                        <span>战采续签</span>
+                    </label>-->
+                    <!--<label class="radio-inline col-xs-3">
+                        <input type="radio" ng-model="viewModelOaportal.purchaseOperation" value="3">
+                        <span>战采变更</span>
+                    </label>-->
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <div ng-show="viewModelOaportal.purchaseOperation == 1">
+                <div class="col-xs-12  form-group">
+                    <label class="col-xs-3 control-label text-right" title="采购方式">采购方式<span style="color:red;">*</span></label>
+                    <div class="col-xs-9 form-group baseifo-input">
+                        <select ng-model="viewModelOaportal.purchasePattern" ng-options="p.code as p.value for p in viewModelOaportal.purchasePatterns" class="meeting" ng-selected="p.code==viewModel.purchasePattern">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12  form-group">
+                <label class="col-xs-3 control-label text-right" title="业务类型">业务类型<span style="color:red;">*</span></label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <span class="text-center">工程采购类</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="text-center" style="margin-top:50px;">
+            <button class="btn btn-primary" style="padding-left:20px;padding-right:20px;margin-right:50px;" ng-click="submitOaportal()">确&nbsp;定</button>
+            <button class="btn btn-default" style="padding-left:20px;padding-right:20px;" ng-click="cancel()">取&nbsp;消</button>
+        </div>
+    </div>
+</div>

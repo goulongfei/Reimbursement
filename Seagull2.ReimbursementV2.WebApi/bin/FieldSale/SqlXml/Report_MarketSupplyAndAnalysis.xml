@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <Sql id="Report">
+    Begin
+    declare @StageAreaCode nvarchar(36)
+    set @StageAreaCode ={0};
+    ---先查询楼栋产品信息
+    select distinct spiv.PropertyTypeName,spiv.[SaleBuildingName] as [BuildingName],spiv.[StyleName],spiv.[BuildingCode],spiv.[StyleCode],
+    spiv.PropertyTypeCode
+    from [Sale].[SaleProductInfoView] as spiv
+    where spiv.[StageAreaCode]=@StageAreaCode
+
+    select spiv.ProductCode,spiv.[BuildingCode],spiv.[StyleCode],isnull(pa.AreaValue,0) as AreaValue  into #product
+    from [Sale].[SaleProductInfoView] as spiv
+    left outer join [ProDefine].[ProductArea] as pa on pa.ProductCode=spiv.ProductCode and pa.[key]='1' and pa.[VersionEndTime] is null
+    where spiv.[StageAreaCode]=@StageAreaCode
+
+    --
+    --认购套、面积
+    select spiv.[BuildingCode],spiv.[StyleCode],count(*) as SubscribeHouseCounts,sum(spiv.AreaValue) as SubscribeHouseCapacity
+    from #product as spiv
+    inner join sale.SaleProduct as sp on sp.Code=spiv.ProductCode and sp.SaleProductStatusCode='3'
+    group by spiv.[BuildingCode],spiv.[StyleCode]
+
+    --认筹面积套数
+    SELECT spiv.[BuildingCode],spiv.[StyleCode],count(*) as IdentificationChipsbeHouseCounts,sum(spiv.AreaValue) as IdentificationChipsHouseCapacity
+    FROM sale.SalePledgedChips_SaleProduct as spcsp
+    inner join sale.SalePledgedChips as spc ON spcsp.SalePledgedChipsCode=spc.Code
+    inner join #product as spiv ON spcsp.SaleProductCode=spiv.ProductCode
+    group by spiv.[BuildingCode],spiv.[StyleCode]
+
+    -----推盘套、面积
+    select  spiv.[BuildingCode],spiv.[StyleCode],count(*) as PlannedHouseCounts,sum(spiv.AreaValue) as PlannedHouseCapacity
+    from [Sale].[SaleRelease] as sr
+    inner join [Sale].[Release_SalesProduct] as rsp on rsp.[SaleReleaseCode]=sr.Code
+    inner join #product as spiv on spiv.ProductCode=rsp.SaleProductCode
+    group by  spiv.[BuildingCode],spiv.[StyleCode]
+
+    --取证套、面积
+    select  spiv.[BuildingCode],spiv.[StyleCode],count(*) as StockHouseCounts,sum(spiv.AreaValue) as StockHouseCapacity
+    from [Sale].[PredictSaleLicense] as psl
+    inner join [Sale].[PredictSaleLicense_Building] as pslb on pslb.[PredictSaleLicenseCode]=psl.Code and psl.ValidStatus=1
+    inner join #product as spiv on spiv.[BuildingCode]=pslb.[BuildingCode]
+    group by  spiv.[BuildingCode],spiv.[StyleCode]
+
+
+    drop table #product
+
+
+    end
+
+
+  </Sql>
+</Root>

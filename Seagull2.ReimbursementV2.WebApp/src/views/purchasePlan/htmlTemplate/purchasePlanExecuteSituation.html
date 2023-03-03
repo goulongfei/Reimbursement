@@ -1,0 +1,127 @@
+﻿<h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购执行情况</h4>
+<div class="form-inline">
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <div class="col-xs-12" style="text-align:center;font-weight:bolder;margin-bottom:15px">项目采购进度</div>
+        <div class="col-xs-12" ellipse-echart opt="projectPurchaseScheduleOpt" data="viewModel.projectPurchaseScheduleList"></div>
+        <div class="col-xs-11" style="margin:auto">
+            <br />
+            <table class="table table-bordered table-condensed" style="font-size:12px;table-layout:fixed;">
+                <thead>
+                    <tr>
+                        <th style="width:20px;"></th>
+                        <th style="font-weight:400;text-align:center;width:45px">类型</th>
+                        <th style="font-weight:400;width:30px;text-align: center;">数量</th>
+                        <th style="font-weight:400;width:50px;text-align: center;">金额(万元)</th>
+                        <th style="font-weight:400;width:45px;text-align: center;">金额占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.projectPurchaseScheduleList[0].colorCode}"></div></td>
+                        <td style="text-align:center;">未发起</td>
+                        <td style="text-align:right;">{{viewModel.projectPurchaseScheduleList[0].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.projectPurchaseScheduleList[0].value/10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.projectPurchaseScheduleList[0].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.projectPurchaseScheduleList[1].colorCode}"></div></td>
+                        <td style="text-align:center;">流转中</td>
+                        <td style="text-align:right;">{{viewModel.projectPurchaseScheduleList[1].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.projectPurchaseScheduleList[1].value/10000 |number:2 }}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.projectPurchaseScheduleList[1].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.projectPurchaseScheduleList[2].colorCode}"></div></td>
+                        <td style="text-align:center;">已完成 </td>
+                        <td style="text-align:right;">{{viewModel.projectPurchaseScheduleList[2].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.projectPurchaseScheduleList[2].value /10000 |number:2 }}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.projectPurchaseScheduleList[2].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <div class="col-xs-12" style="text-align:center;font-weight:bolder;margin-bottom:15px">计划完成时间</div>
+        <div class="col-xs-12" ellipse-echart opt="planCompleteTimeOpt" data="viewModel.planCompleteTimeList"></div>
+        <div class="col-xs-11" style="margin:auto">
+            <br />
+            <table class="table table-bordered table-condensed" style="font-size:12px;table-layout:fixed;">
+                <thead>
+                    <tr>
+                        <th style="width:20px;"></th>
+                        <th style="font-weight:400;text-align:center;width:50px">类型</th>
+                        <th style="font-weight:400;width:40px;text-align: center;">数量</th>
+                        <th style="font-weight:400;width:50px;text-align: center;">金额(万元)</th>
+                        <th style="font-weight:400;width:40px;text-align: center;">金额占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.planCompleteTimeList[0].colorCode}"></div></td>
+                        <td style="text-align:center;"> 按时完成</td>
+                        <td style="text-align:right;">{{viewModel.planCompleteTimeList[0].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.planCompleteTimeList[0].value/10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.planCompleteTimeList[0].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.planCompleteTimeList[1].colorCode}"></div></td>
+                        <td style="text-align:center;">超时完成</td>
+                        <td style="text-align:right;">{{viewModel.planCompleteTimeList[1].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.planCompleteTimeList[1].value /10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.planCompleteTimeList[1].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.planCompleteTimeList[2].colorCode}"></div></td>
+                        <td style="text-align:center;"> 超时未完成</td>
+                        <td style="text-align:right;">{{viewModel.planCompleteTimeList[2].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.planCompleteTimeList[2].value /10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.planCompleteTimeList[2].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <div class="col-xs-12" style="text-align:center;font-weight:bolder;margin-bottom:15px">采购方式分布</div>
+        <div class="col-xs-12" ellipse-echart opt="purchaseWaySortingOpt" data="viewModel.purchaseWaySortingList"></div>
+        <div class="col-xs-15" style="margin:auto">
+            <span style="cursor:pointer;color:blue;float:right;" ng-click="purchaseWaySortingDetailShow()">查看更多</span>
+            <table class="table table-bordered table-condensed" style="font-size:12px;table-layout:fixed;">
+                <thead>
+                    <tr>
+                        <th style="width:20px;"></th>
+                        <th style="font-weight:400;text-align:center;width:70px">类型</th>
+                        <th style="font-weight:400;width:30px;text-align: center;">数量</th>
+                        <th style="font-weight:400;width:40px;text-align: center;">金额(万元)</th>
+                        <th style="font-weight:400;width:40px;text-align: center;">金额占比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.purchaseWaySortingList[0].colorCode}"></div></td>
+                        <td style="text-align:center;">{{viewModel.purchaseWaySortingList[0].name}}</td>
+                        <td style="text-align:right;">{{viewModel.purchaseWaySortingList[0].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.purchaseWaySortingList[0].value/10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.purchaseWaySortingList[0].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.purchaseWaySortingList[1].colorCode}"></div></td>
+                        <td style="text-align:center;">{{viewModel.purchaseWaySortingList[1].name}}</td>
+                        <td style="text-align:right;">{{viewModel.purchaseWaySortingList[1].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.purchaseWaySortingList[1].value/10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.purchaseWaySortingList[1].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0;text-align:center;vertical-align:middle;"><div style="display:inline-block;width:8px;height:8px" ng-style="{'background-color':viewModel.purchaseWaySortingList[2].colorCode}"></div></td>
+                        <td style="text-align:center;">{{viewModel.purchaseWaySortingList[2].name}}</td>
+                        <td style="text-align:right;">{{viewModel.purchaseWaySortingList[2].quantity}}</td>
+                        <td style="text-align:right;">{{viewModel.purchaseWaySortingList[2].value/10000 |number:2}}</td>
+                        <td style="text-align:right;" class="text-right">{{viewModel.purchaseWaySortingList[2].amountRate * 100 |number:2}}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="clearfix "></div>
+</div>

@@ -1,0 +1,267 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingNotProjectEvaluateTenderGatherWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3 " left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/bidding/notProject/htmlTemplate/biddingNotProjectBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 投标文件</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">商务标</th>
+                        <th style="text-align:center;" class="table-thead">技术标</th>
+                        <th style="text-align:center;" class="table-thead">其他附件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.supplierScopeList|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).businessFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).technologyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).otherFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 让利询价文件</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">历史让利询价文件</th>
+                        <th style="text-align:center;" class="table-thead">历史让利答复文件</th>
+                        <th style="text-align:center;" class="table-thead">本次让利询价文件</th>
+                        <th style="text-align:center;" class="table-thead">本次让利询价答复文件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.supplierScopeList|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="supplier.historyGrantDiscountEnquiryFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="supplier.historyGrantDiscountEnquiryReplyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getGrantDiscountEnquiry(supplier.supplierCode).businessGrantDiscountEnquiryFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getGrantDiscountEnquiry(supplier.supplierCode).businessGrantDiscountEnquiryReplyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 商务评标信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">首轮回标金额(元)</th>
+                        <th style="text-align:center;" class="table-thead">单价（元）</th>
+                        <th style="text-align:center;" class="table-thead">让利金额(元)</th>
+                        <th style="text-align:center;" class="table-thead">最终报价（元）</th>
+                        <th style="text-align:center;" class="table-thead">排名</th>
+                        <th style="text-align:center;" class="table-thead">备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.businessEvaluateBiddingInfoPEMus">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;">
+                            <span ng-show="supplier.totalAmountWithTax>0">
+                                {{supplier.totalAmountWithTax|number:2}}
+                            </span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span ng-show="supplier.unitPrice>0">
+                                {{supplier.unitPrice|number:2}}
+                            </span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span ng-show="viewModel.purchaseOfNotProjectPEMu.evaluateBiddingTimes!=1 && supplier.afterDiscountAmount>0">
+                                {{supplier.afterDiscountAmount|number:2}}
+                            </span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span ng-show="supplier.finalQuoteAmountWithTax>0">
+                                {{supplier.finalQuoteAmountWithTax|number:2}}
+                            </span>
+                        </td>
+                        <td style="text-align:center;">
+                            {{supplier.ranking}}
+                        </td>
+                        <td style="text-align:center;">
+                            {{supplier.remark}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 技术文件及评价信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">技术标</th>
+                        <th style="text-align:center;" class="table-thead">是否合格</th>
+                        <th style="text-align:center;" class="table-thead">备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in viewModel.technologyEvaluateBiddingInfoPEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{item.supplierName}}</td>
+                        <td>
+                            <div wf-uploader files="baseInfo.getSupplierReplyBiddingInfo(item.supplierCode).technologyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <span ng-show="item.isQualified===true||item.isQualified==='true'">合格</span>
+                            <span ng-show="item.isQualified===false||item.isQualified==='false'">不合格</span>
+                        </td>
+                        <td style="text-align:center;">
+                            {{item.remark}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评标小组报告</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">评标人</th>
+                        <th style="text-align:center;" class="table-thead">评标类型</th>
+                        <th style="text-align:center;" class="table-thead">历史评标文件</th>
+                        <th style="text-align:center;" class="table-thead">评标文件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td style="text-align:center;">{{viewModel.purchaseOfNotProjectPEMu.businessMainUserName}} </td>
+                        <td style="text-align:center;">商务标</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="viewModel.historyBusinessEvaluateTenderFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                            <p ng-repeat="evaluteHistoryFile in viewModel.historyBusinessEvaluateTenderFileList">
+                                <span ng-repeat="file in evaluteHistoryFile.clientFileInformationList">
+                                    <span wf-uploader files="[file]" opts="baseInfo.fileopts" ready="baseInfo.fileReady" read-only="true"></span>
+                                </span>
+                                <br />
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+                            <p ng-repeat="file in viewModel.businessEvaluateTenderFile.clientFileInformationList">
+                                <span wf-uploader files="[file]" opts="baseInfo.fileopts" ready="baseInfo.fileReady" read-only="true"></span>
+                                <br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td style="text-align:center;">{{viewModel.purchaseOfNotProjectPEMu.technologyMainUserName}} </td>
+                        <td style="text-align:center;">技术标</td>
+                        <td style="text-align:center;">--</td>
+                        <td style="text-align:center;">
+                            <p ng-repeat="file in viewModel.technologyEvaluateTenderFile.clientFileInformationList">
+                                <span wf-uploader files="[file]" opts="baseInfo.fileopts" ready="baseInfo.fileReady" read-only="true"></span>
+                                <br />
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 发放让利询价</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                <label class="col-xs-6 control-label" title="是否发放让利询价" style="text-align:right;">是否发放让利询价<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span class="btn checkbox-label-not" ng-class="{'checkbox-label-this':viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry==null?false:viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry}" ng-click="viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry=viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry==null?true:!viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry;chargeGrant()">发放让利询价</span>
+                    <span class="btn checkbox-label-not" ng-class="{'checkbox-label-this':viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry==null?false:!viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry}" ng-click="viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry=viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry==null?false:!viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry;chargeGrant()">不发放让利询价</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" ng-show="viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry==true||viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry=='true'">
+                <label class="col-xs-6 control-label" title="回复截止时间" style="text-align:right;">回复截止时间<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div date-time-picker date-time="viewModel.purchaseOfNotProjectPEMu.discountDeadline"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="table-responsive" ng-show="viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry==true||viewModel.purchaseOfNotProjectPEMu.isGrantDiscountEnquiry=='true'">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">验证码</th>
+                        <th style="text-align:center;" class="table-thead">联系人邮箱</th>
+                        <th style="text-align:center;" class="table-thead">历史让利询价文件</th>
+                        <th style="text-align:center;" class="table-thead">让利询价文件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.supplierScopeList|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{supplier.supplierName}}</td>
+                        <td class="text-center">{{supplier.verificationCode}}</td>
+                        <td class="text-center">{{supplier.linkEmail}}</td>
+                        <td class="text-center">
+                            <div wf-uploader files="supplier.historyGrantDiscountEnquiryFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td class="text-center">
+                            <div ng-if="supplier.isQualified" wf-uploader files="baseInfo.getGrantDiscountEnquiry(supplier.supplierCode).businessGrantDiscountEnquiryFileList" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

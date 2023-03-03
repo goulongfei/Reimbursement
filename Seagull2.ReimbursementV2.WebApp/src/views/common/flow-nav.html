@@ -1,0 +1,19 @@
+<div class="wf-nav hidden-print process-nav ng-isolate-scope wf-nav hidden-print process-nav ng-scope">
+    <div class="container containerll">
+        <div class="containerll-img">
+            <img src="https://cdn.sinoocean-test.com/libs/seagull2-workflow-responsive/1.0.3/images/nav-picture-01.jpg" alt="">
+            <span class="module-title">{{mainTitle}}</span>
+            <img src="https://cdn.sinoocean-test.com/libs/seagull2-workflow-responsive/1.0.3/images/nav-picture-02.jpg" class="nav-picture-right">
+        </div>
+        <!--流程导航开始，不打印-->
+        <div class="clearfix wf-nav-responsive">
+            <div class="flow-picture-img"><span>流程导航</span></div>
+            <div wf-process-navigator wf-content="processNavigator"></div>
+        </div>
+        <p style="margin:10px 0 10px 0; padding:10px; box-shadow: 2px 2px 10px; " class="bg-info" ng-if="processNavigator.currentActivityBusinessType===4">
+            您对审批事项负有审核、监督职责，负责提出专业意见，为最终审批人提供建议（包括但不限于否决建议）。如果在最终审批人审定前您未主动成功发送本待办，则视为您对审批事项无异议（同意审批事项）。
+        </p>
+        <div sog-abort-opinion opinions="opinions" class="ng-isolate-scope"></div>
+    </div>
+
+</div>

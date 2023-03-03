@@ -1,0 +1,59 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/DirectCommissionedImplementSignatureWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div ng-include="'views/directCommissioned/implement/htmlTemplate/directCommissionedImplementBaseInfo.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--确认收到复审资料标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 确认收到复审资料</h4>
+            <!--确认收到复审资料-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="收到复审资料" style="text-align:right">收到复审资料</label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <input type="checkbox" ng-model="viewModel.purchaseOfImplement.isConfirmReceipt" />确认已收到四方盖章的复审报告与审定预结算书。
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="备注" style="text-align:right">备注</label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <textarea style="width: 100%" class="textarea" ng-model="viewModel.purchaseOfImplement.signatureRemark"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>  

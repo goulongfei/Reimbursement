@@ -1,0 +1,50 @@
+﻿<div class="table-responsive">
+    <table class="table table-striped table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th class="table-thead text-center" rowspan="2">序号</th>
+                <th class="table-thead text-center">标段</th>
+                <th class="table-thead text-center" colspan="{{item.supplierScopeList.length}}" ng-repeat="item in data.biddingSectionInfoList|orderBy : 'sortNo' : false">{{item.biddingSectionName}}</th>
+            </tr>
+            <tr>
+                <th class="table-thead text-center">信息项</th>
+                <th class="table-thead text-center" ng-repeat="scope in data.offerSupplierInfoList|orderBy:'sortNo':false">{{scope.supplierName}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-left">1</td>
+                <td class="text-left" style="display:table-cell; vertical-align:middle;">首次回标价</td>
+                <td class="text-right" ng-repeat="info in data.replyList|orderBy : 'sortNo' : false">
+                    <span ng-style="{color:info.isLowerPrices?'#F00':'#000'}">
+                        {{ info.totalAmountWithTaxDisplay| number:2}}
+                    </span>
+                </td>
+            </tr>
+            <tr ng-repeat="clarify in data.clarifyList|orderBy:'round':false">
+                <td class="text-left">{{$index+2}}</td>
+                <td class="text-left" style="display:table-cell; vertical-align:middle;">第{{numberToChinese(clarify.round)}}轮澄清</td>
+                <td class="text-right" ng-repeat="info in clarify.supplierReplyBiddingInfoList|orderBy : 'sortNo' : false">
+                    <span ng-style="{color:info.isLowerPrices?'#F00':'#000'}">
+                        {{ info.totalAmountWithTaxDisplay| number:2}}
+                    </span>
+                </td>
+            </tr>
+            <tr ng-repeat="evaluate in data.evaluateList|orderBy:'round':false">
+                <td class="text-left">{{$index+2+data.clarifyList.length}}</td>
+                <td class="text-left" style="display:table-cell; vertical-align:middle;">
+                    <span ng-show="$index===0 && data.evaluateList.length>1">首轮让利</span>
+                    <span ng-show="$index!==0 && $index!==data.evaluateList.length-1">
+                        第{{numberToChinese(evaluate.round)}}轮让利
+                    </span>
+                    <span ng-show="$index === data.evaluateList.length-1">最终让利</span>
+                </td>
+                <td class="text-right" ng-repeat="info in evaluate.supplierReplyBiddingInfoList|orderBy : 'sortNo' : false">
+                    <span ng-style="{color:info.isLowerPrices?'#F00':'#000'}">
+                        {{ info.totalAmountWithTaxDisplay| number:2}}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

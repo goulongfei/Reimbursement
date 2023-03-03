@@ -1,0 +1,75 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingNotProjectEvaluateTenderWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3 " left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/bidding/notProject/htmlTemplate/biddingNotProjectBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <!--技术标-->
+        <div>
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 技术文件及评价信息</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                            <th style="text-align:center;" class="table-thead">供应商名称</th>
+                            <th style="text-align:center;" class="table-thead">技术标</th>
+                            <th style="text-align:center;" class="table-thead">是否合格</th>
+                            <th style="text-align:center;" class="table-thead">备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in viewModel.technologyEvaluateBiddingInfoPEMus|orderBy : 'sortNo' : false">
+                            <td class="text-center">{{$index+1}}</td>
+                            <td style="text-align:center;">{{item.supplierName}}</td>
+                            <td>
+                                <div wf-uploader files="baseInfo.getSupplierReplyBiddingInfo(item.supplierCode).technologyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                            </td>
+                            <td style="text-align:center;">
+                                <span class="btn checkbox-label-not" ng-class="{'checkbox-label-this':item.isQualified==null?false:item.isQualified}" ng-click="item.isQualified=item.isQualified==null?true:!item.isQualified;">合格</span>
+                                <span class="btn checkbox-label-not" ng-class="{'checkbox-label-this':item.isQualified==null?false:!item.isQualified}" ng-click="item.isQualified=item.isQualified==null?false:!item.isQualified;">不合格</span>
+                            </td>
+                            <td style="text-align:center;">
+                                <input type="text" class="meeting" ng-model="item.remark">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="技术标评标报告" style="text-align:right;">技术标评标报告<span style="color:red;">*</span></label>
+                    <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                        <div wf-uploader files="viewModel.technologyEvaluateTenderFile.clientFileInformationList" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                    </div>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

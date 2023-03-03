@@ -1,0 +1,203 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingNotProjectScalingWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航栏-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3 " left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/bidding/notProject/htmlTemplate/biddingNotProjectBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购时间安排</h4>
+        <div purchase-datearrange-info data="viewModel.purchaseDateArrangeInfoPEMus" opts="baseInfo.purchaseDateArrangeOpts" readonly="true"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+
+        <!--使用成本中心-->
+        <div select-usecostcenter data="viewModel.useCostCenterInfoList" readonly="true" ng-show="viewModel.isUseCostCenter"></div>
+
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            <span>供应商投标信息</span>
+            <span style="color:blue;font-size:12px;padding-left:10px;cursor:pointer;" ng-click="lookInfo('biddingNotProjectEvaluateTenderGather')">查看评标信息</span>
+        </h4>
+        <button class="btn btn-primary" ng-click="addWinningBidSupplier()" style="cursor:pointer">+添加到中标</button>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">
+                            <input type="checkbox" ng-checked="baseInfo.select_all" ng-model="baseInfo.select_all" ng-change="selectAll(baseInfo.select_all)" />
+                        </th>
+                        <th style="text-align:center;width:5%;" class="col-xs-2 col-sm-2 col-md-2">序号</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">供应商名称</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">最终回标价(元)</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">排名</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">是否合格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.supplierScopeList">
+                        <td style="text-align:center;vertical-align:middle;">
+                            <input type="checkbox" ng-disabled="!supplier.isQualified" ng-model="supplier.checked" ng-change="selectOne(item.checked)" />
+                        </td>
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">{{supplier.finalQuoteAmount|number:2}}</td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">{{supplier.ranking}}</td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">
+                            <span ng-show="supplier.isQualified">合格</span>
+                            <span ng-show="!supplier.isQualified">不合格</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>
+            <span>中标情况</span>
+            <span style="color:red;font-size:12px;padding-left:10px;">提示：每行对应一个合同，若签订多个合同，请选择多行</span>
+        </h4>
+        <button class="btn btn-primary" ng-click="deleteWinningBidSupplier()" style="cursor:pointer">-删除</button>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">
+                            <input type="checkbox" ng-checked="baseInfo.winningBid_all" ng-model="baseInfo.winningBid_all" ng-change="winningBidSelectAll(baseInfo.winningBid_all)" />
+                        </th>
+                        <th style="text-align:center;width:5%;" class="col-xs-2 col-sm-2 col-md-2">序号</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">供应商名称</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">法人主体</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">拟签订合同金额（元）</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">是否首轮最低价中标</th>
+                        <th style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.perSignContractInfoPEMus|orderBy : 'sortNo' : false">
+                        <td style="text-align:center;vertical-align:middle;">
+                            <input type="checkbox" ng-model="supplier.checked" ng-change="winningBidSelectOne(item.checked)" />
+                        </td>
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">
+                            <select class="meeting" ng-model="supplier.corporationCode" ng-change="baseInfo.selectCorporation(supplier)" ng-options="p.corporationCode as p.corporationName for p in viewModel.corporationScopes" ng-selected="p.corporationCode == supplier.corporationCode">
+                                <option value="">请选择</option>
+                            </select>
+                        </td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">
+                            <div wf-money opts="baseInfo.moneyOpts" class="meeting" ng-change="baseInfo.changeSignContractAmount()" ng-model="supplier.perSignContractAmount"></div>
+                        </td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">
+                            <span ng-show="supplier.isFirstRoundBottomPrice">是</span>
+                            <span ng-show="!supplier.isFirstRoundBottomPrice">否</span>
+                        </td>
+                        <td style="text-align:center;" class="col-xs-2 col-sm-2 col-md-2">
+                            <input type="text" class="meeting" ng-model="supplier.explain">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="商务评标报告" style="text-align:right;">商务评标报告</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-repeat="item in viewModel.scalingBusinessFile">
+                        <span wf-uploader files="[item]" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></span><br />
+                    </p>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="技术标评标报告" style="text-align:right;">技术标评标报告</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <p ng-repeat="item in viewModel.scalingTechnologyFile">
+                        <span wf-uploader files="[item]" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></span><br />
+                    </p>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="定标报告" style="text-align:right;">定标报告<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <div wf-uploader files="viewModel.scalingFile" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="其他附件" style="text-align:right;">其他附件</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <div wf-uploader files="viewModel.scalingOtherFile" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>传阅</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:right" title="传阅人">传阅人</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span sog-ogu-input="viewModel.scalingCircularizePersons" opts="baseInfo.selectCheckBoxPeople"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!-- 评论列表-->
+        <h4 class="control-heading bg-info" ng-show="isOpinionsShow"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+        <div class="form-inline" ng-show="isOpinionsShow">
+            <div class="form-inline">
+                <span sog-comment="opinions"></span>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!-- 入围审批意见列表-->
+        <div application-opinion data="viewModel.applicationApprovalOpinion" read-only="true" opinion-opts="opinionOpts"></div>
+        <!--定标其他审批流-->
+        <div ng-show="viewModel.isUseCostCenter">
+            <h4 class="control-heading bg-info">
+                <i class="glyphicon glyphicon-list-alt"></i> 定标其他审批流
+                <input type="button" style="margin-left:82%;font-weight:900;background-color:#d9edf7;" name="name" value="{{settings.spreadButtonName}}" class="btn" ng-click="settings.spreadInfoFn()" />
+            </h4>
+            <div class="form-inline" ng-show="settings.isSpreadInfo">
+                <span sog-simple-opinions="viewModel.otherOpinions"></span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- 定标审批意见列表-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 定标审批</h4>
+        <div class="form-inline">
+            <span sog-simple-opinions="viewModel.awardApprovalOpinion"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

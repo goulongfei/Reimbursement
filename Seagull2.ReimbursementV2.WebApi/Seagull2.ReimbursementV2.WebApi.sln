@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seagull2.ReimbursementV2.WebApi", "Seagull2.ReimbursementV2.WebApi.csproj", "{38B05F76-1E01-4517-9E5F-351C537D75D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seagull2.ReimbursementV2.WebApp", "..\Seagull2.ReimbursementV2.WebApp\Seagull2.ReimbursementV2.WebApp.csproj", "{EE205156-57A1-4441-A478-CA6C513562CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seagull2.ReimbursementV2.TransactionData", "..\Seagull2.ReimbursementV2.TransactionData\Seagull2.ReimbursementV2.TransactionData.csproj", "{DDD4C9EC-42D9-4263-BB22-3ADFFAA337C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{38B05F76-1E01-4517-9E5F-351C537D75D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38B05F76-1E01-4517-9E5F-351C537D75D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38B05F76-1E01-4517-9E5F-351C537D75D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38B05F76-1E01-4517-9E5F-351C537D75D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE205156-57A1-4441-A478-CA6C513562CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE205156-57A1-4441-A478-CA6C513562CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE205156-57A1-4441-A478-CA6C513562CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE205156-57A1-4441-A478-CA6C513562CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDD4C9EC-42D9-4263-BB22-3ADFFAA337C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDD4C9EC-42D9-4263-BB22-3ADFFAA337C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDD4C9EC-42D9-4263-BB22-3ADFFAA337C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDD4C9EC-42D9-4263-BB22-3ADFFAA337C8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62F4C014-0897-49CC-80F7-1D56038FF6A9}
+	EndGlobalSection
+EndGlobal

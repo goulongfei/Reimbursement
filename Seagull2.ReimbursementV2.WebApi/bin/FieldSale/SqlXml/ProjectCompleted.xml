@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <Sql id="CostFeeProjectSql">
+    SELECT sum(Cost) from (
+    SELECT
+    CCM.Amount*0.0001 as Cost
+    FROM [Contract].[Contract] CC
+    INNER JOIN Contract.Contract_MarketingCost CCM ON CCM.ContractCode = CC.Code
+    and CC.ProjectCode ={0}
+    AND CC.ContractTypeCode = '5' AND CC.VersionEndTime IS NULL AND CC.ValidStatus = 1
+    AND CCM.VersionEndTime IS NULL AND CCM.ValidStatus = 1
+    union
+    SELECT
+    ,ac.[Cost]
+    FROM [Sale].[ActualMarketingCosts] as ac
+    inner join Sale.PromotionType pt on pt.Code =ac.[PromoteTypeCode]
+    where ac.[ProjectCode]={0} and ltrim(isnull(ac.ContractCode,''))='') as T
+
+  </Sql>
+  <Sql id="ChanelCostFeeProjectSql">
+
+    SELECT pt.CnName+'-'+cost.OriginaName as Promote,
+    chanel.Code as ChanelCode,chanel.CnName as ChanelName,chanel.StartDate,
+    (case isnull(cc.code,'') when '' then chanel.FeeBudget else CCM.Amount end) as Cost
+    FROM [Sale].[MonthPromotePlan] as chanel
+    inner join Sale.PromotionType pt on pt.Code =chanel.[PromoteTypeCode]
+    inner join Finance.CostCategory cost  on cost.OriginalCode =chanel.CostTypeCode
+    left outer join [Contract].[Contract] CC on CC.Code =chanel.ContractCode and CC.ProjectCode =chanel.[ProjectCode]
+    AND CC.ContractTypeCode = '5' AND CC.VersionEndTime IS NULL AND CC.ValidStatus = 1
+    left outer join  [Contract].Contract_MarketingCost CCM ON CCM.ContractCode = CC.Code
+    AND CCM.VersionEndTime IS NULL AND CCM.ValidStatus = 1
+    where {0} =chanel.[ProjectCode] and chanel.VersionEndTime is null and chanel.ValidStatus=1
+    and pt.Code in ('1','2','10','6')
+    order by pt.code,cost.OriginaName
+  </Sql>
+
+  <Sql id="GetAdvertisMediaForProjecCode">
+
+    SELECT pt.CnName+'-'+cost.OriginaName as Promote,
+    chanel.Code ,chanel.CnName ,chanel.StartDate,chanel.EndDate
+
+    FROM [Sale].[MonthPromotePlan] as chanel
+    inner join Sale.PromotionType pt on pt.Code =chanel.[PromoteTypeCode]
+    inner join Finance.CostCategory cost  on cost.OriginalCode =chanel.CostTypeCode
+
+    where chanel.VersionEndTime is null and chanel.ValidStatus=1
+    and chanel.[PromoteTypeCode] in ('1','2','10','6') and {0} =chanel.[ProjectCode]
+    order by chanel.[PromoteTypeCode],chanel.StartDate,cost.OriginaName
+  </Sql>
+  
+  <Sql id="GetChanelSaleAmountByProjecCode">
+
+    declare @projectCode nvarchar(36)
+    set @projectCode={0};
+    
+    WITH Product AS (
+    SELECT v.ProductCode,
+    v.StageAreaCode,
+    v.ProjectCode
+    FROM [Sale].[SaleProductInfoView] v
+    WHERE v.ProjectCode = @projectCode
+    ),
+    Stages as (
+    SELECT distinct
+    v.StageAreaCode
+    FROM Product v
+    ),
+    Chanel as (
+    SELECT
+    chanel.Code
+    FROM [Sale].[MonthPromotePlan] as chanel
+    where @projectCode=chanel.[ProjectCode] and chanel.VersionEndTime is null and chanel.ValidStatus=1
+    and chanel.[PromoteTypeCode] in ('1','2','10','6')
+
+    ),
+    Costorms as (
+    select  pc.Code from
+    [Sale].[SaleProjectCustomer] pc
+    inner join Sale.SaleStageGroup sgg on sgg.GroupID =pc.[SaleStageAreaGroupID]
+    where exists(
+    select 1 from Stages v where v.StageAreaCode=sgg.StageAreaCode
+    )
+    ),
+    BuyersRecords as(
+    select distinct SaleRecordCode,AdvertisMediaCode from
+    [Sale].[SaleHouseBuyer_Customer] bc inner join [Sale].[SaleHouseBuyer] b on bc.[SaleHouseBuyerCode] =b.Code
+    inner join Costorms c on c.Code =bc.[SaleProjectCustomerCode]
+    inner join [Sale].[Customer_AdvertisMedia] ca on  ca.CustomerCode=c.Code
+    inner join Chanel as chanel on chanel.Code =ca.AdvertisMediaCode
+    )
+    SELECT  sum(pc.DealPrice) as FeeBudget,srp.AdvertisMediaCode as Code FROM product v
+    INNER JOIN Sale.SaleRecord_SaleProduct ssp ON ssp.SaleProductCode = v.ProductCode
+    INNER JOIN Sale.SaleRecord sr ON ssp.SaleRecordCode = sr.Code AND sr.ValidStatus=1
+    inner join BuyersRecords srp on srp.SaleRecordCode=sr.Code
+    INNER JOIN Signs.PurchaseContract pc ON pc.SaleRecordCode =sr.Code and pc.VersionEndTime is null
+    LEFT OUTER JOIN Sale.BreakPurchaseContract bpc ON bpc.SaleRecordCode = pc.SaleRecordCode
+    where bpc.Code is null
+    group by srp.AdvertisMediaCode
+
+  </Sql>
+</Root>

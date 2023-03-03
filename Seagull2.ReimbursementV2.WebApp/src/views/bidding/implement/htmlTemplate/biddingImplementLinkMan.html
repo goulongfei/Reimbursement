@@ -1,0 +1,56 @@
+﻿<div class="form-inline">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="领取招标文件时间">领取招标文件时间</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input ">
+            {{viewModel.purchaseOfImplement.getBiddingFileStartDate|date:'yyyy-MM-dd'}}
+            至
+            {{viewModel.purchaseOfImplement.getBiddingFileEndDate|date:'yyyy-MM-dd'}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="clearfix visible-xs-block visible-sm-block"></div>
+<div class="clearfix"></div>
+
+<!--招标人联系方式标题-->
+<h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 招标人联系方式</h4>
+<!--招标人联系方式内容-->
+<div class="form-inline">
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="联系人">联系人</label>
+        <div class="col-xs-6 form-group baseifo-input" sog-valide-status="联系人">
+            {{viewModel.purchaseOfImplement.linkManUserName}}
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="联系电话">联系电话</label>
+        <div class="col-xs-6 form-group baseifo-input" sog-valide-status="联系电话">
+            {{viewModel.purchaseOfImplement.linkManPhone}}
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="邮箱">邮箱</label>
+        <div class="col-xs-6 form-group baseifo-input" sog-valide-status="邮箱">
+            {{viewModel.purchaseOfImplement.linkManEmail}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="开户银行">开户银行</label>
+        <div class="col-xs-6 form-group baseifo-input" sog-valide-status="开户银行">
+            {{viewModel.purchaseOfImplement.linkManBankName}}
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-8 form-group">
+        <label class="text-right col-xs-6 col-sm-6 col-md-3 control-label" title="银行账号">银行账号</label>
+        <div class="col-xs-6 col-sm-6 col-md-9 form-group baseifo-input" sog-valide-status="银行账号">
+            {{viewModel.purchaseOfImplement.linkManBankAccount}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

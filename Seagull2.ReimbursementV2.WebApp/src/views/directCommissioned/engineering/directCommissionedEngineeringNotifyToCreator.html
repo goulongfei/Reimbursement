@@ -1,0 +1,44 @@
+﻿<html lang="zh-CN" class="ng-app">
+<head>
+    <style type="text/css">
+        @charset "UTF-8";
+
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+            display: none !important;
+        }
+
+        ng\:form {
+            display: block;
+        }
+
+        .ng-animate-block-transitions {
+            transition: 0s all !important;
+            -webkit-transition: 0s all !important;
+        }
+
+        .ng-hide-add-active, .ng-hide-remove {
+            display: block !important;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <title>复审结果反馈通知</title>
+</head>
+<body>
+    <div data-ui-view="" class="ng-scope">
+        <div class="container ng-scope">
+            <div ng-hide="loading" class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">复审结果反馈通知</h3></div>
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <p class="ng-binding">供应商"{{notifyModel.outReTrialUnitName}}"对采购"{{notifyModel.purchaseName}}"的复审结果已反馈，点此查看</p>
+                        <p class="ng-binding"><a ng-click="openUrl()" style="color:blue">{{linkUrl}}</a></p>
+                    </div>
+                </div>
+                <div class="panel-footer text-center"><button ng-click="deleteTask()" type="button" class="btn btn-info">删除</button></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

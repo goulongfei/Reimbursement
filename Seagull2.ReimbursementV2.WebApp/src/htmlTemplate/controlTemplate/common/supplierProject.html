@@ -1,0 +1,42 @@
+﻿<div class="modal hidden-print show staff-service">
+    <div class="modal-backdrop hidden-print"></div>
+    <div class="modal-dialog" style="width:65%" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="glyphicon glyphicon-info-sign text-info"></i>选择所属项目</h4>
+            </div>
+            <div class="modal-body" style="padding-bottom:0px;">
+                <div class="form-inline clearfix">
+                    <div class="col-xs-12 form-group" style="margin-bottom: 5px;">
+                        <label class="col-xs-6 col-sm-3 control-label text-right" title="项目名称">项目名称</label>
+                        <div class="col-xs-6   col-sm-7 form-group baseifo-input">
+                            <input type="text" class="meeting" ng-model="queryCondition.projectCnName">
+                        </div>
+                        <div class="col-xs-12 col-sm-2">
+                            <button class="btn btn-primary" style="padding: 0 15px;" ng-click="query()">搜 索</button>
+                        </div>
+                    </div>
+                </div>
+                <hr style="border-color: #eee;" />
+                <div>
+                    <div style="text-align:left" ng-show="isShowTree">
+                        <span wf-tree tree-opts="selectProjectOpts" class="tree"></span>
+                    </div>
+                    <div ng-show="!isShowTree">
+                        <ul ng-show="queryResult.length>0">
+                            <li ng-repeat="item in queryResult"><input type="checkbox" ng-model="item.isChecked"> {{item.businessModelName}}-{{item.cnName}}</li>
+                        </ul>
+                        <div ng-show="queryResult.length===0" style="padding:20px 0;text-align:center;font-size: 12px;">暂无数据</div>
+                    </div>
+                </div>
+                <div tm-pagination="paginationConf" style="float:right"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="confirmHandler() ">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="closeThisDialog(this)">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

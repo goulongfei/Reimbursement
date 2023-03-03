@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+
+  <Sql  id="SaleAgentUserQueryAdapter_GetProDefineProjectInfos">
+    SELECT DISTINCT sgg.GroupID AS Code,c.CnName+'-'+sgg.GroupName AS CnName,sa.Code as SaleAgentCode,sa.CnName as SaleAgentName,p.Code as ProjectCode FROM
+    [Sale].[SaleAgentView] sa
+    INNER JOIN Sale.SaleStageGroup sgg ON sgg.GroupID =sa.StageGroupCode
+    INNER JOIN ProDefine.StageArea saa ON saa.Code =sgg.StageAreaCode AND saa.VersionEndTime IS NULL
+    INNER JOIN ProDefine.ProjectInfo p ON p.code =saa.ProjectInfoCode AND p.VersionEndTime IS NULL
+    INNER JOIN LandObtained.ProjectCity c ON c.Code =p.ProjectCityCode AND c.VersionEndTime IS NULL  AND sa.Phone={0}
+  </Sql>
+</Root>

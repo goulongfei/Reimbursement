@@ -1,0 +1,101 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/InquiryPriceMarketingEvaluateGrantWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <!--信息项组标题-->
+        <!--采购信息标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购信息</h4>
+        <!--采购信息内容-->
+        <div ng-include="'views/inquiryPriceMarketing/htmlTemplate/inquiryPriceMarketingBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <!--回标情况标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 回标情况<span style="color:red;">*</span></h4>
+        <!--回标情况内容-->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="table-thead text-center" style="width:5%;">序号</th>
+                        <th class="table-thead text-center">供应商名称</th>
+                        <th class="table-thead text-center">回标总价(元)</th>
+                        <th class="table-thead text-center">询价回复文件</th>
+                        <th class="table-thead text-center">第二轮报价</th>
+                        <th class="table-thead text-center">第三轮报价</th>
+                        <th class="table-thead text-center">发放让利</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in viewModel.grantDiscountEnquiryInfoList|orderBy : 'supplierName' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">
+                            <span open-supplier-info supplier="item"></span>
+                        </td>
+                        <td class="text-center">
+                            {{item.totalAmountWithTax| number:2}}
+                        </td>
+                        <td class="text-center">
+                            <p ng-repeat="file in item.inquiryPriceReplyFileList">
+                                <span wf-uploader files="[file]" opts="fileOpts" ready="fileReady" read-only="true"></span>
+                                <br />
+                            </p>
+                        </td>
+                        <td class="text-center">
+                            <span ng-if="item.secondRoundQuotation>0">{{item.secondRoundQuotation| number:2}}</span>
+                            <span ng-if="item.secondRoundQuotation===0">--</span>
+                        </td>
+                        <td class="text-center">
+                            <span ng-if="item.thirdRoundQuotation>0">{{item.thirdRoundQuotation| number:2}}</span>
+                            <span ng-if="item.thirdRoundQuotation===0">--</span>
+                        </td>
+                        <td class="text-center">
+                            <div ng-if="item.isNeedBidProfitSharingReply===true">
+                                <select class="meeting" ng-model="item.isSendDiscount"
+                                        ng-options="p.value as p.key for p in baseInfo.sendDiscountTypeList"
+                                        ng-selected="p.value == item.isSendDiscount"
+                                        ng-change="baseInfo.changeSendDiscountType()">
+                                    <option value="" ng-selected="item.isSendDiscount===null">请选择</option>
+                                </select>
+                            </div>
+                            <span ng-if="item.isNeedBidProfitSharingReply===false">--</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <!--让利回复截止时间标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 让利回复截止时间&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-size: 14px;">根据管理要求，两次让利结束后直接到达定标环节，请谨慎操作</span></h4>
+        <!--让利回复截止时间内容-->
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="回复截止时间" style="text-align:right">回复截止时间</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <div style="float:left" date-time-picker date-time="viewModel.purchaseOfMarketing.discountDeadline"></div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>

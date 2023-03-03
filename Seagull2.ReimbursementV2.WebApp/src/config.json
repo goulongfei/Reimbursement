@@ -1,0 +1,48 @@
+{
+  "seagull2Url": {
+    "platformUrlBase": "/THRWebApi/ReimbursementV2"
+  },
+  "oAuth": {
+    "client_id": "PurchasingMgt"
+  },
+  "uploader": {
+    "serviceBaseUrl": "/THRWebApi/ReimbursementV2/PurchaseFile",
+    "swfUrl": "https://cdn.sinoocean-test.com/libs/webuploader/0.1.8/dist/Uploader.swf"
+  },
+  "wfToolbar": {
+    "closeMode": "notice",
+    "closeMode_options": "notice/dialog",
+    "autoCloseTime": 0,
+    "autoClosePageLink": "https://workflow-dev.sinoocean-test.com/THRWebApp/oaportal/",
+    "oaCommonPagesBaseUrl": "https://workflow-dev.sinoocean-test.com/THRWebApp/OACommonPages/default.htm#"
+  },
+  "ogu": {
+    "selectorUrl": "/THRWebApi/ReimbursementV2/Organization/LoadChildren",
+    "searchUrl": "/THRWebApi/ReimbursementV2/organization/search",
+    "sipUrl": "/THRWebApi/ReimbursementV2/organization/loadUsersSip",
+    "userInfoUrl": "/THRWebApi/ReimbursementV2/organization/loadUsersContactInfo",
+    "currentUserInfoUrl": "/THRWebApi/ReimbursementV2/organization/GetUserInfo",
+    "userPhotoUrl": "/THRWebApi/ReimbursementV2/organization/GetUserPhoto"
+  },
+  "customerConfig": {
+    "customerUrl": "https://workflow.sinoocean-test.com/THRWebApi/Platform/Assistant/LoadAssistants",
+    "customerInfo": [
+      {
+        "applicationName": "采购管理"
+      }
+    ]
+  },
+  "errorPageCustomer": {
+    "subject": "客服主题",
+    "customerMail": "liumh@seagull2.cn",
+    "customerPhone": "13323"
+  },
+  "pageCommonConfig": {
+    "isValidMoveTo": false,
+    "dateTimePickerStep": 1
+  },
+  "urlCommonConfig": {
+    "urlBase": "https://workflow.sinoocean-test.com"
+  }
+
+}

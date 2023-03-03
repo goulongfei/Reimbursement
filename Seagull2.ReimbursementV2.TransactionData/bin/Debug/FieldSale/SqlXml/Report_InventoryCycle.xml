@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+
+  <Sql id="InventoryCycled">
+      <!--create proc USP_InventoryCycle
+      @StageAreaCode nvarchar(36)
+      as
+      select h.Code AS ProductCode,
+      h.CnName AS SaleProductName,
+      psl.IssueDate AS IssueDate,
+      lb.Code AS BuildingCode,
+      lb.ActualName AS BuildingName,
+      lb.CnName AS SaleBuildingName,
+      sa.Code AS StageAreaCode,
+      sa.CnName AS StageAreaName,
+      [pi].Code AS ProjectCode,
+      [pi].CnName AS ProjectName,
+      lb.PropertyTypeCode,
+      pt.CnName AS PropertyTypeName,
+
+      hs.CnName as HouseStyleName,
+      pa.AreaValue as AreaValue,
+      p.PriceValue as PriceValue
+      into #TempQuery1 from(
+      LandObtained.ProjectInfo as [pi]
+      inner join LandObtained.StageArea as sa on [pi].VersionEndTime is NULL and sa.VersionEndTime is NULL and sa.ValidStatus = 1  and [pi].ValidStatus = 1 and sa.ProjectInfoCode = [pi].Code
+      inner join LandObtained.LogicBuilding as lb on lb.VersionEndTime is NULL and sa.ValidStatus = 1 and lb.StageAreaCode = sa.Code
+      inner join LandObtained.PropertyType as pt on pt.ValidStatus = 1 and pt.Code = lb.PropertyTypeCode
+      inner join Sale.PredictSaleLicense_Building as pslb on pslb.BuildingCode = lb.Code
+      inner join Sale.PredictSaleLicense as psl on psl.Code = pslb.PredictSaleLicenseCode
+      inner join ProDefine.BuildingUnit as bu on bu.VersionEndTime is NULL and bu.ValidStatus = 1 and bu.BuildingCode = lb.Code
+      inner join ProDefine.BuildingUnitFloor as buf on buf.ValidStatus = 1 and buf.BuildingUnitCode = bu.Code
+      inner join ProDefine.House_BuildingUnitFloor as hbuf on hbuf.BuildingUnitFloorCode = buf.Code
+      inner join ProDefine.House as h on h.VersionEndTime is NULL and h.ValidStatus = 1 and h.Code = hbuf.HouseCode
+      inner join ProDefine.ProductInfoExtend as pie on pie.Code = h.Code
+      inner join ProDefine.HouseStyle as hs on hs.ValidStatus=1 AND hs.VersionEndTime is NULL and hs.Code = pie.HouseStyle
+
+      inner join ProDefine.ProductArea as pa on pa.ProductCode = h.Code
+      inner join ProDefine.Price as p on p.ProductCode = h.Code
+      )
+      where StageAreaCode= @StageAreaCode
+
+
+      select psl.IssueDate AS IssueDate,
+      p.PriceValue as PriceValue,
+      p.[Key] as [Key]
+      into #TempQuery2 from(
+      LandObtained.StageArea as sa
+      inner join LandObtained.LogicBuilding as lb on lb.VersionEndTime is NULL and sa.ValidStatus = 1 and sa.VersionEndTime is NULL and lb.StageAreaCode = sa.Code
+      inner join Sale.PredictSaleLicense_Building as pslb on pslb.BuildingCode = lb.Code
+      inner join Sale.PredictSaleLicense as psl on psl.Code = pslb.PredictSaleLicenseCode
+      inner join ProDefine.BuildingUnit as bu on bu.VersionEndTime is NULL and bu.ValidStatus = 1 and bu.BuildingCode = lb.Code
+      inner join ProDefine.BuildingUnitFloor as buf on buf.ValidStatus = 1 and buf.BuildingUnitCode = bu.Code
+      inner join ProDefine.House_BuildingUnitFloor as hbuf on hbuf.BuildingUnitFloorCode = buf.Code
+      inner join ProDefine.House as h on h.VersionEndTime is NULL and h.ValidStatus = 1 and h.Code = hbuf.HouseCode
+      inner join ProDefine.Price as p on p.ProductCode = h.Code
+      )
+      where StageAreaCode= @StageAreaCode
+
+      select SubQuery1.IssueDate, SubQuery1.PropertyTypeName, SubQuery1.SaleBuildingName, SubQuery1.HouseStyleName
+      ,SubQuery1.HouseCount
+      ,SubQuery1.AreaCount
+      ,SubQuery1.PriceCount
+
+      ,SubQuery2.HouseCount as SaleHouseCount
+      ,SubQuery2.HouseCount/convert(decimal(18,4),SubQuery1.HouseCount) as HouseSellingRate
+      ,SubQuery2.AreaCount as SaleAreaCount
+      ,SubQuery2.AreaCount/convert(decimal(18,4),SubQuery1.AreaCount) as AreaSellingRate
+      ,SubQuery2.PriceCount as SalePriceCount
+      ,SubQuery2.PriceCount/convert(decimal(18,4),SubQuery1.PriceCount) as PriceSellingRate
+
+      ,SubQuery1.HouseCount-SubQuery2.HouseCount as StockHouseCount
+      ,SubQuery1.AreaCount-SubQuery2.AreaCount as StockAreaCount
+      ,SubQuery1.PriceCount-SubQuery2.PriceCount as StockPriceCount
+      ,SubQuery3.StockPlanAveragePrice
+      ,SubQuery3.StockPublicAveragePrice
+      ,datediff(day,SubQuery1.IssueDate, getdate()) as StockDays
+      from (
+      select #TempQuery1.IssueDate,#TempQuery1.PropertyTypeName, #TempQuery1.SaleBuildingName, #TempQuery1.HouseStyleName as HouseStyleName
+      ,count(*) as HouseCount
+      ,sum(#TempQuery1.AreaValue) as AreaCount
+      ,sum(#TempQuery1.PriceValue*#TempQuery1.AreaValue) as PriceCount
+      from #TempQuery1
+      group by #TempQuery1.IssueDate,#TempQuery1.PropertyTypeName,#TempQuery1.SaleBuildingName,#TempQuery1.HouseStyleName
+      ) as SubQuery1,
+      (
+      select #TempQuery1.IssueDate,#TempQuery1.PropertyTypeName,#TempQuery1.SaleBuildingName, #TempQuery1.HouseStyleName as HouseStyleName
+      ,count(#TempQuery1.ProductCode) as HouseCount
+      ,sum(#TempQuery1.AreaValue) as AreaCount
+      ,sum(pc.DealPrice) as PriceCount
+      from #TempQuery1
+      left join [Signs].[PurchaseContract_SaleProduct] as pcsp on pcsp.SaleProductCode=#TempQuery1.ProductCode
+      left join [Signs].[PurchaseContract] as pc on pc.Code= pcsp.PurchaseContractCode and pc.VersionEndTime is null and pc.ValidStatus=1 and pc.VersionStartTime &lt; GETDATE()
+      group by #TempQuery1.IssueDate,#TempQuery1.PropertyTypeName,#TempQuery1.SaleBuildingName, #TempQuery1.HouseStyleName
+      ) as SubQuery2,
+      (
+      select SubQuery3_1.IssueDate as  IssueDate3_1,
+      SubQuery3_2.IssueDate as IssueDate3_2,
+      StockPlanAveragePrice,
+      StockPublicAveragePrice
+      from
+      (
+      select  #TempQuery2.IssueDate, #TempQuery2.PriceValue as StockPlanAveragePrice
+      from  #TempQuery2
+      where [Key]='25'
+      ) as SubQuery3_1,
+      (select  #TempQuery2.IssueDate, #TempQuery2.PriceValue as StockPublicAveragePrice
+      from #TempQuery2
+      where [Key]='26'
+      ) as SubQuery3_2
+      ) as SubQuery3
+      where SubQuery1.IssueDate=SubQuery2.IssueDate
+      and SubQuery1.PropertyTypeName=SubQuery2.PropertyTypeName
+      and SubQuery1.SaleBuildingName=SubQuery2.SaleBuildingName
+      and SubQuery1.HouseStyleName=SubQuery2.HouseStyleName
+      and SubQuery1.IssueDate=SubQuery3.IssueDate3_1
+      and SubQuery1.IssueDate=SubQuery3.IssueDate3_2
+
+      go-->
+      exec USP_InventoryCycle '9899B27F-68AE-48A9-A338-D41227D491CC'
+  </Sql>
+</Root>
+
+
+

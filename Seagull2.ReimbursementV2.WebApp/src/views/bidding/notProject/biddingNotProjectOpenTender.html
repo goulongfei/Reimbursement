@@ -1,0 +1,100 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingNotProjectOpenTenderWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3 " left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>{{title}}</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/bidding/notProject/htmlTemplate/biddingNotProjectBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购时间安排<span style="color:red;">*</span></h4>
+        <div purchase-datearrange-info data="viewModel.purchaseDateArrangeInfo" opts="baseInfo.purchaseDateArrangeOpts" readonly="true"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 供应商回标<span style="color:red;">*</span></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">验证码</th>
+                        <th style="text-align:center;" class="table-thead">回标状态</th>
+                        <th style="text-align:center;" class="table-thead">回标时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.supplierScopeList">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{supplier.supplierName}}</td>
+                        <td class="text-center"> {{supplier.verificationCode}}</td>
+                        <td style="text-align:center;" ng-show="supplier.isReplyBidding">已回标</td>
+                        <td style="text-align:center;" ng-show="!supplier.isReplyBidding">未回标</td>
+                        <td style="text-align:center;">
+                            {{(supplier.replyBiddingDate|date:'yyyy-MM-dd HH:mm')=="0001-01-01 00:00"?"":supplier.replyBiddingDate|date:'yyyy-MM-dd HH:mm'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 延长回标截止时间</h4>
+        <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+            <label class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:right" title="最新回标截止时间">最新回标截止时间</label>
+            <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                <div ng-if="firstDate>=nowDate" date-time-picker date-time="viewModel.purchaseOfNotProjectPEMu.lastReplyDeadline" style="float:left;"></div>
+                <div ng-if="firstDate<nowDate" style="float:left">
+                    {{(viewModel.purchaseOfNotProjectPEMu.lastReplyDeadline|date:'yyyy-MM-dd HH:mm')=="0001-01-01 00:00"?"":viewModel.purchaseOfNotProjectPEMu.lastReplyDeadline|date:'yyyy-MM-dd HH:mm'}}
+                </div>
+                <button ng-if="firstDate>=nowDate" ng-click="updateReplyDeadline()" class="btn btn-primary" style="cursor:pointer; margin-left:50px">确定</button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-12 col-md-12 form-group" ng-if="firstDate<nowDate">
+            <label ng-show="firstDate<nowDate" class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:right" title="最新采购时间安排">最新采购时间安排</label>
+            <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input" ng-show="firstDate<nowDate">
+                <button class="btn btn-primary" style="cursor:pointer;float:left;width:50px;" ng-click="editpurchaseDatearrange()">修改</button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 废标</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                <input type="checkbox" ng-model="viewModel.purchaseOfNotProjectPEMu.isAbandonBidding" ng-change="cancelTender()" />废标
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group" ng-show="viewModel.purchaseOfNotProjectPEMu.isAbandonBidding">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" style="text-align:right;line-height:50px;" title="废标原因">废标原因<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <textarea style="width:100%;height:50px;" class="meeting" ng-model="viewModel.purchaseOfNotProjectPEMu.abandonBiddingReason"></textarea>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <div style="color:red; font-size:12px">
+            <span>提示：</span><br>
+            <span>1、请通知投标单位于”回标截止时间“前在网上上传电子版标书</span><br>
+            <span>2、回标截止时间到，页面左上方会出现发送按钮，您可以发送至评标环节</span><br>
+            <span>3、评标环节，商务负责人与技术负责人分别收到待办</span><br>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

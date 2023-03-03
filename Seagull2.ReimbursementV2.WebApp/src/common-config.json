@@ -1,0 +1,30 @@
+{
+  "common": {
+    "apiUrlBase": "http://localhost:10086",
+    "webUrlBase": "http://localhost:9555",
+    "glodonBase": "http://10.23.74.160"
+  },
+  "exception": {
+    "mode": "notice",
+    "mode_options": "ignore/page/dialog/notice"
+  },
+  "errorPageCustomer": {
+    "subject": "系统问题反馈",
+    "customerMail": "zhangqf@sinooceanland.cn"
+  },
+  "oAuth": {
+    "oAuthUrl": "https://workflow-dev.sinoocean-test.com/THRWebApp/passport.htm#/oauth-authorize",
+    "logoutUrl": "https://workflow-dev.sinoocean-test.com/THRWebApp/passport.htm#/logout"
+  },
+  "infrastUriHelper": {
+    "regionSelectorUrl": "https://workflow.sinoocean-test.com/THRWebApi/CommonDb/Region/LoadChildren",
+    "regionSearchUrl": "https://workflow.sinoocean-test.com/THRWebApi/CommonDb/Region/Search",
+    "industrySelectorUrl": "https://workflow.sinoocean-test.com/THRWebApi/CommonDb/Industry/LoadChildren",
+    "industrySearchUrl": "https://workflow.sinoocean-test.com/THRWebApi/CommonDb/Industry/Search"
+  },
+  "customerConfig": {
+    "customerUrl": "https://workflow.sinoocean-test.com/THRWebApi/Platform/Assistant/LoadAssistants",
+    "qiyukfAutoInitDelay": 3000,
+    "selfApiTimeOut": 6000
+  }
+}

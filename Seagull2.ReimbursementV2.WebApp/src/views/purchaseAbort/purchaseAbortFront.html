@@ -1,0 +1,116 @@
+﻿<div class="staff-service">
+    <div class="container appil-container">
+        <div class="page-header clearfix">
+            <span>采购作废</span>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>搜索条件</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label" title="采购形式" style="text-align:right">采购形式<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select ng-model="viewModel.purchaseWayCode" ng-options="p.code as p.value for p in viewModel.purchaseWays" class="meeting" ng-selected="p.code==viewModel.purchaseWayCode">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-3 control-label text-right" title="采购名称" style="text-align:right">采购名称</label>
+                <div class="col-xs-6 col-sm-6 col-md-9 form-group baseifo-input">
+                    <input sog-valide-status="采购名称" type="text" class="meeting" ng-model="viewModel.purchaseName" maxlength="250">
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="项目名称" style="text-align:right">项目名称</label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <div rc-select-project opts="baseInfo.projectOpts"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8 form-group sog-xs-style-sign">
+                <label class="col-xs-6 col-sm-6 col-md-3 control-label" title="期区/地块" style="text-align:right">期区/地块</label>
+                <div class="col-xs-6 col-sm-6 col-md-3 form-group baseifo-input ">
+                    <select sog-valide-status="期区/地块" class="meeting" ng-model="viewModel.stageAreaCode"
+                            ng-options="p.code as p.name for p in baseInfo.stageArea"
+                            ng-change="baseInfo.stageAreaChange()">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label" title="法人公司" style="text-align:right">法人公司</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div select-corporation opts="baseInfo.corporationOpts" data="viewModel.corporationScope"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label" title="记账公司" style="text-align:right">记账公司</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div select-chargecompany opts="baseInfo.chargeCompanyOpts" data="viewModel.corporationScope"></div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+                <label class="col-xs-6 control-label" title="成本中心" style="text-align:right">成本中心</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <select sog-valide-status="成本中心" class="meeting" ng-model="viewModel.costCenterCode"
+                            ng-options="p.code as p.name for p in baseInfo.costCenter"
+                            ng-selected="p.code == viewModel.costCenterCode"
+                            ng-change="baseInfo.costCenterChange()">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign text-center">
+                <button ng-click="baseInfo.queryData()" class="glyphicon btn in-crease">搜索</button>
+                <button ng-click="baseInfo.renewQuery()" class="glyphicon btn" style="margin-left:40px;">重置</button>
+            </div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购列表</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 form-group sog-xs-style-sign">
+                <div class="table-responsive flow-table-box">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="table-thead text-center">序号</th>
+                                <th class="table-thead text-center">采购名称</th>
+                                <th class="table-thead text-center">项目名称</th>
+                                <th class="table-thead text-center">期区</th>
+                                <th class="table-thead text-center">记账公司</th>
+                                <th class="table-thead text-center">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in baseInfo.purchaseList">
+                                <td class="text-center">{{$index+1}}</td>
+                                <td class="text-left">{{item.purchaseName}}</td>
+                                <td class="text-center">{{item.projectName}}</td>
+                                <td class="text-center">{{item.stageAreaName}}</td>
+                                <td class="text-center">{{item.chargeCompanyName}}</td>
+                                <td class="text-center">
+                                    <button ng-click="baseInfo.startPurchaseAbort(item)" class="glyphicon btn in-crease">选择</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div ng-if="pagination.totalItems == 0" class="text-center">暂无数据</div>
+                <div style="float:right;" class="clearfix tab-content-pagination">
+                    <div ng-if="pagination.itemsPerPage < pagination.totalItems" tm-pagination="pagination" class="fc-pagination pull-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    @media (max-width: 767px) {
+        .form-group label {
+            text-align: left !important;
+        }
+    }
+</style>

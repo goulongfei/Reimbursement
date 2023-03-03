@@ -1,0 +1,47 @@
+﻿<div class="modal-body staff-service" ng-init="init()" ng-style="containerBodyStyle">
+    <div class="form-inline">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i><span class="Row-11">设置搜索条件</span></h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="关键字" style="text-align:right;">关键字</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <input type="text" class="meeting" placeholder="关键字" ng-model="viewModel.keyWords" />
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="col-xs-12 col-sm-4 col-md-4 form-group">
+                <div class="col-xs-12 form-group baseifo-input">
+                    <button class="btn btn-primary" ng-click="corporationSearch()">搜索</button>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i><span class="Row-11">公司列表</span></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;"></th>
+                        <th style="text-align:center;">公司名称</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in corporationList.slice((viewModel.corporationConf.currentPage-1)*viewModel.corporationConf.itemsPerPage,(viewModel.corporationConf.currentPage)*viewModel.corporationConf.itemsPerPage)">
+                        <td style="text-align:center;">
+                            <input type="checkbox" name="corporation" ng-model="item.checked" />
+                        </td>
+                        <td style="text-align:left;">
+                            <span>{{item.cnName}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div tm-pagination="viewModel.corporationConf"></div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="selectOk()">确定</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="corporationSelectOk()">取消</button>
+</div>

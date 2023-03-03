@@ -1,0 +1,39 @@
+﻿<!--查看操作IP-->
+    <div class="form-inline" style="margin:10px;">
+        <h5 class="control-heading">
+            采购名称 ：{{model.purchaseName}}
+        </h5>
+        <div class="form-inline clearfix">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="fc-th-name text-center">序号</th>
+                        <th class="fc-th-name text-center">操作环节</th>
+                        <th class="fc-th-title text-center">供应商名称</th>
+                        <th class="fc-th-start text-center">操作IP地址</th>
+                        <th class="fc-th-org text-center">操作时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in model.ipDataList">
+                        <td class="text-center">{{(model.paginationConf.currentPage -1 )* model.paginationConf.itemsPerPage + $index + 1}}</td>
+                        <td class="text-center">{{item.linkName}}</td>
+                        <td class="text-center">{{item.supplierName}}</td>
+                        <td class="text-center">{{item.ipAddress}}</td>
+                        <td class="text-center">{{item.handlingTime|date:'yyyy-MM-dd  HH:mm'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix"></div>
+        <div class="modal-footer">
+            <div class="form-inline clearfix">
+                <div ng-if="model.paginationConf.itemsPerPage < model.paginationConf.totalItems" tm-pagination="model.paginationConf" class="fc-pagination pull-center"></div>
+                <div ng-if="model.paginationConf.totalItems == 0" class="text-center">暂无数据</div>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="margin:0;" ng-click="closeThisDialog;">确定</button>
+            <button type="button" class="btn btn-default" ng-click="closeThisDialog();">取消</button>
+        </div>
+    </div>
+

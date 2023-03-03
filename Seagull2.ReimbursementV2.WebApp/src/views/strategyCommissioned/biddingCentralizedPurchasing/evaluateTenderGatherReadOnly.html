@@ -1,0 +1,343 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/EvaluateTenderGatherWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航栏-->
+        <div ng-show="viewModel.formAction.actionStateCode==2" left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>招投标（集中采购）</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/strategyCommissioned/biddingCentralizedPurchasing/htmlTemplate/biddingCentralizedPurchasingBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评标信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">首轮回标总价</th>
+                        <th style="text-align:center;" class="table-thead">名次</th>
+                        <th style="text-align:center;" class="table-thead">最终报价</th>
+                        <th style="text-align:center;" class="table-thead">名次</th>
+                        <th style="text-align:center;" class="table-thead">是否合格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;">{{baseInfo.getBusinessEvaluateBiddingInfo(supplier.supplierCode).totalAmountWithTax| number:2}}</td>
+                        <td style="text-align:center;">{{baseInfo.getBusinessEvaluateBiddingInfo(supplier.supplierCode).firstTurnRanking}}</td>
+                        <td style="text-align:center;">{{baseInfo.getBusinessEvaluateBiddingInfo(supplier.supplierCode).finalQuoteAmountNotTax| number:2}}</td>
+                        <td style="text-align:center;">{{baseInfo.getBusinessEvaluateBiddingInfo(supplier.supplierCode).ranking}}</td>
+                        <td style="text-align:center;" ng-show="baseInfo.getTechnologyEvaluateBiddingInfo(supplier.supplierCode).isQualified">合格</td>
+                        <td style="text-align:center;" ng-show="!baseInfo.getTechnologyEvaluateBiddingInfo(supplier.supplierCode).isQualified">不合格</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 开标信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">回标总价</th>
+                        <th style="text-align:center;" class="table-thead">除税回标总价</th>
+                        <th style="text-align:center;" class="table-thead">税率</th>
+                        <th style="text-align:center;" class="table-thead">税款</th>
+                        <th style="text-align:center;" class="table-thead">商务标</th>
+                        <th style="text-align:center;" class="table-thead">技术标</th>
+                        <th style="text-align:center;" class="table-thead">投标书承诺函及资质证明文件</th>
+                        <th style="text-align:center;" class="table-thead">其他附件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;">{{supplier.supplierName}}</td>
+                        <td style="text-align:center;">{{baseInfo.getReplyBidding(supplier.supplierCode).totalAmountWithTax| number:2}}</td>
+                        <td style="text-align:center;">{{baseInfo.getReplyBidding(supplier.supplierCode).totalAmountNotTax| number:2}}</td>
+                        <td style="text-align:center;">{{baseInfo.getReplyBidding(supplier.supplierCode).taxRate| number:0}}%</td>
+                        <td style="text-align:center;">{{(baseInfo.getReplyBidding(supplier.supplierCode).totalAmountWithTax-baseInfo.getReplyBidding(supplier.supplierCode).totalAmountNotTax)| number:2}}</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).businessFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).technologyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).qualificationFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).otherFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 商务澄清回复信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">澄清环节</th>
+                        <th style="text-align:center;" class="table-thead">信息项</th>
+                        <th style="text-align:center;font-weight:normal;color:blue;" class="table-thead" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">{{supplier.supplierName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="clearBiddingClarify in baseInfo.clearBiddingClarifyRunds">
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="6">{{$index+1}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="6">{{clearBiddingClarify.name}}</td>
+                        <td class="text-center">除税清标总价</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax>0">
+                                {{baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax| number:2}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">清标总价</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax>0">
+                                {{baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax| number:2}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">税率</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).taxRate>0">
+                                {{baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).taxRate| number:0}}%
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">税款</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="(baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax-baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax)>0">
+                                {{(baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax-baseInfo.getClearBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax)| number:2}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">商务澄清问卷</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <div wf-uploader files="baseInfo.getClearBiddingClarifyInfo(supplier.supplierCode,clearBiddingClarify.code).businessClarifyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end>
+                        <td class="text-center">商务澄清答复文件</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <div wf-uploader files="baseInfo.getClearBiddingClarifyInfo(supplier.supplierCode,clearBiddingClarify.code).businessReplyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 技术澄清回复信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">澄清环节</th>
+                        <th style="text-align:center;" class="table-thead">信息项</th>
+                        <th style="text-align:center;font-weight:normal;color:blue;" class="table-thead" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">{{supplier.supplierName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="clearBiddingClarify in baseInfo.clearBiddingClarifyRunds">
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="2">{{$index+1}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="2">{{clearBiddingClarify.name}}</td>
+                        <td class="text-center">技术澄清问卷</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <div wf-uploader files="baseInfo.getClearBiddingClarifyInfo(supplier.supplierCode,clearBiddingClarify.code).technologyClarifyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end>
+                        <td class="text-center">技术澄清答复文件</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <div wf-uploader files="baseInfo.getClearBiddingClarifyInfo(supplier.supplierCode,clearBiddingClarify.code).technologyReplyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 让利询价答复信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">让利环节</th>
+                        <th style="text-align:center;" class="table-thead">信息项</th>
+                        <th style="text-align:center;font-weight:normal;color:blue;" class="table-thead" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">{{supplier.supplierName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="clearBiddingClarify in baseInfo.grantDiscountEnquiryRounds">
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="6">{{$index+1}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="6">{{clearBiddingClarify.name}}</td>
+                        <td class="text-center">除税让利总价</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax>0">
+                                {{baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax| number:2}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">让利总价</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax>0">
+                                {{baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax| number:2}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">税率</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).taxRate>0">
+                                {{baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).taxRate| number:0}}%
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">税款</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <span ng-show="(baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax-baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax)>0">
+                                {{(baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountWithTax-baseInfo.getEvaluateBiddingReplyBidding(supplier.supplierCode,clearBiddingClarify.code).totalAmountNotTax)| number:2}}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">让利询价文件</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <div wf-uploader files="baseInfo.getGrantDiscountEnquiryInfo(supplier.supplierCode,clearBiddingClarify.code).businessGrantDiscountEnquiryFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end>
+                        <td class="text-center">让利询价答复文件</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <div wf-uploader files="baseInfo.getGrantDiscountEnquiryInfo(supplier.supplierCode,clearBiddingClarify.code).businessGrantDiscountEnquiryReplyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评标报告</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">评标人</th>
+                        <th style="text-align:center;" class="table-thead">评标类型</th>
+                        <th style="text-align:center;" class="table-thead">历史评标文件</th>
+                        <th style="text-align:center;" class="table-thead">评标文件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td style="text-align:center;">{{viewModel.p_StrategyPurchasePlanCase.businessMainUserName}} </td>
+                        <td style="text-align:center;">商务标</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="viewModel.historyBusinessEvaluateTenderFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="viewModel.businessEvaluateTenderFileList[0].clientFileInformationList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td style="text-align:center;">{{viewModel.p_StrategyPurchasePlanCase.technologyMainUserName}} </td>
+                        <td style="text-align:center;">技术标</td>
+                        <td style="text-align:center;">--</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="viewModel.technologyEvaluateTenderFileList[0].clientFileInformationList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 发放让利询价或面谈通知</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                <label class="col-xs-6 control-label" title="是否发放让利询价" style="text-align:right;">是否发放让利询价<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span ng-show="viewModel.p_StrategyPurchasePlanCase.isGrantDiscountEnquiry">发放让利询价</span>
+                    <span ng-show="!viewModel.p_StrategyPurchasePlanCase.isGrantDiscountEnquiry">不放让利询价</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" ng-show="viewModel.p_StrategyPurchasePlanCase.isGrantDiscountEnquiry==true||viewModel.p_StrategyPurchasePlanCase.isGrantDiscountEnquiry=='true'">
+                <label class="col-xs-6 control-label" title="回复截止时间" style="text-align:right;">回复截止时间<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">{{viewModel.p_StrategyPurchasePlanCase.discountDeadline|date:'yyyy-MM-dd HH:mm'}}</div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="table-responsive" ng-show="viewModel.p_StrategyPurchasePlanCase.isGrantDiscountEnquiry==true||viewModel.p_StrategyPurchasePlanCase.isGrantDiscountEnquiry=='true'">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">验证码</th>
+                        <th style="text-align:center;" class="table-thead">联系人邮箱</th>
+                        <th style="text-align:center;" class="table-thead">历史让利询价文件</th>
+                        <th style="text-align:center;" class="table-thead">让利询价文件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center">{{supplier.supplierName}}</td>
+                        <td class="text-center">{{supplier.verificationCode}}</td>
+                        <td class="text-center">{{supplier.linkEmail}}</td>
+                        <td class="text-center">
+                            <div wf-uploader files="supplier.historyGrantDiscountEnquiryFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td class="text-center">
+                            <div wf-uploader files="baseInfo.getGrantDiscountEnquiryInfo(supplier.supplierCode,viewModel.p_StrategyPurchasePlanCase.evaluateBiddingTimes).businessGrantDiscountEnquiryFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

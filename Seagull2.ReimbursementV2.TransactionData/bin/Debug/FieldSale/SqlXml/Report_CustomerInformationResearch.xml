@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+
+  <Sql id="HouseholdArea">
+    select a.ProvinceName as Name, count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc
+    on sr.Code=spc.SaleRecordCode
+    and sr.ValidStatus=1
+    and spc.ValidStatus=1
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp
+    on spcsp.SalePledgedChipsCode=spc.Code
+    inner join [dbo].[SaleProductView] as spv
+    on spv.ProductCode=spcsp.SaleProductCode
+    inner join [Sale].[SaleRecord_Person] as srp
+    on srp.SaleRecordCode = sr.Code
+    and srp.VersionEndTime is NULL
+    inner join Common.Address as a
+    on a.FlagCode = srp.PersonCode
+    and a.ValidStatus=1
+    where spv.StageAreaCode ={0}
+    and a.AddressCategoryCode=1
+    group by a.ProvinceName
+  </Sql>
+  <Sql id="FromArea">
+
+    select cpbi.HouseholdIncomeCode as Name,Count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc
+    on sr.Code=spc.SaleRecordCode
+    and sr.ValidStatus=1
+    and spc.ValidStatus=1
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp
+    on spcsp.SalePledgedChipsCode=spc.Code
+    inner join [dbo].[SaleProductView] as spv
+    on spv.ProductCode=spcsp.SaleProductCode
+    inner join [Sale].[SaleRecord_Person] as srp
+    on srp.SaleRecordCode = sr.Code
+    and srp.VersionEndTime is NULL
+    inner join [Relationship].[CustomerPersonalBasicInfo] as cpbi
+    on cpbi.Code= srp.PersonCode
+    and cpbi.ValidStatus=1
+    and cpbi.VersionEndTime is NULL
+    inner join [Common].[HouseholdIncome] as chi
+    on chi.Code=cpbi.HouseholdIncomeCode
+    and chi.ValidStatus=1
+    where spv.StageAreaCode ={0}
+    group by cpbi.HouseholdIncomeCode
+
+  </Sql>
+  <Sql id="FamilySalary">
+
+    select chi.CnName as Name,Count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc 
+    on sr.Code=spc.SaleRecordCode 
+    and sr.ValidStatus=1 
+    and spc.ValidStatus=1 
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp 
+    on spcsp.SalePledgedChipsCode=spc.Code 
+    inner join [dbo].[SaleProductView] as spv 
+    on spv.ProductCode=spcsp.SaleProductCode 
+    inner join [Sale].[SaleRecord_Person] as srp 
+    on srp.SaleRecordCode = sr.Code 
+    and srp.VersionEndTime is NULL 
+    inner join [Relationship].[CustomerPersonalBasicInfo] as cpbi 
+    on cpbi.Code= srp.PersonCode 
+    and cpbi.ValidStatus=1 
+    and cpbi.VersionEndTime is NULL
+    inner join [Common].[HouseholdIncome] as chi 
+    on chi.Code=cpbi.HouseholdIncomeCode 
+    and chi.ValidStatus=1
+    where spv.StageAreaCode ={0}
+    group by chi.CnName
+  </Sql>
+  <Sql id="Job">
+
+    select oi.CnName as Name,Count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc on sr.Code=spc.SaleRecordCode and sr.ValidStatus=1 and spc.ValidStatus=1
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp on spcsp.SalePledgedChipsCode=spc.Code
+    inner join [dbo].[SaleProductView] as spv on spv.ProductCode=spcsp.SaleProductCode
+    inner join [Sale].[SaleRecord_Person] as srp on srp.SaleRecordCode = sr.Code and srp.VersionEndTime is NULL
+    inner join [Relationship].[CustomerPersonalBasicInfo] as cpbi on cpbi.Code= srp.PersonCode and cpbi.ValidStatus=1 and cpbi.VersionEndTime is NULL
+    inner join [Common].[OrganizationInstitutionsType] as oi on oi.Code=cpbi.OrganizationInstitutionsTypeCode and oi.ValidStatus=1
+    where spv.StageAreaCode ={0}
+    group by oi.CnName
+
+  </Sql>
+
+  <Sql id="FamilyLifeCycle">
+
+    select fs.CnName as Name,Count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc on sr.Code=spc.SaleRecordCode and sr.ValidStatus=1 and spc.ValidStatus=1 
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp on spcsp.SalePledgedChipsCode=spc.Code 
+    inner join [dbo].[SaleProductView] as spv on spv.ProductCode=spcsp.SaleProductCode
+    inner join [Sale].[SaleRecord_Person] as srp on srp.SaleRecordCode = sr.Code and srp.VersionEndTime is NULL 
+    inner join [Relationship].[CustomerPersonalBasicInfo] as cpbi on cpbi.Code= srp.PersonCode and cpbi.ValidStatus=1 and cpbi.VersionEndTime is NULL
+    inner join [Common].[FamilyStructure] as fs on fs.Code=cpbi.FamilyStructureCode
+    where spv.StageAreaCode ={0}
+    group by fs.CnName
+  </Sql>
+
+
+  <Sql id="PaymentType">
+
+    select spw.CnName as Name,Count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc on sr.Code=spc.SaleRecordCode and sr.ValidStatus=1 and spc.ValidStatus=1 
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp on spcsp.SalePledgedChipsCode=spc.Code 
+    inner join [dbo].[SaleProductView] as spv on spv.ProductCode=spcsp.SaleProductCode
+    inner join [Sale].[SalePayWay] as spw on spw.Code=spc.SalePayWayCode and spw.ValidStatus=1
+    where spv.StageAreaCode ={0}
+    group by spw.CnName
+  </Sql>
+
+  <Sql id="IntentionHouseType">
+    select hs.CnName as Name,count(*) as Value
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc on sr.Code=spc.SaleRecordCode and sr.ValidStatus=1 and spc.ValidStatus=1
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp on spc.Code=spcsp.SalePledgedChipsCode
+    inner join [dbo].[SaleProductView] as spv on spv.ProductCode=spcsp.SaleProductCode
+    inner join [Sale].[SaleProduct] as sp on sp.Code=spcsp.SaleProductCode and sp.ValidStatus=1
+    inner join [ProDefine].[ProductInfoExtend] as pie on pie.Code=sp.Code
+    inner join [ProDefine].[HouseStructure] as hs on hs.Code=pie.HouseStructure and hs.ValidStatus=1
+  where spv.StageAreaCode ={0}
+    group by hs.CnName
+
+  </Sql>
+  <Sql id="IntentionPrice">
+    WITH TempQuery as
+    (
+    select sr.Code
+    ,(spc.[IntentionMinPrice]+ spc.[IntentionMaxPrice])/2 as IntentionPrice
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc on sr.Code=spc.SaleRecordCode and spc.ValidStatus=1 and sr.ValidStatus=1
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp on spcsp.SalePledgedChipsCode=spc.Code
+    inner join [dbo].[SaleProductView] as spv on spv.ProductCode=spcsp.SaleProductCode
+    where spv.StageAreaCode ={0}
+    )
+    select '小于3千' as Name, count(*) as Value from TempQuery where IntentionPrice/10000&lt;=0.3 union
+    select  '3千~5千',count(*) from TempQuery where IntentionPrice/10000&gt;0.3 and IntentionPrice/10000&lt;=0.5 union
+    select '5千~8千',count(*) from TempQuery where IntentionPrice/10000&gt;0.5 and IntentionPrice/10000&lt;=0.8 union
+    select '8千~1万',count(*) from TempQuery where IntentionPrice/10000&gt;0.8 and IntentionPrice/10000&lt;=1 union
+    select '1万~2万',count(*) from TempQuery where IntentionPrice/10000&gt;1 and IntentionPrice/10000&lt;=2 union
+    select '2万~3万',count(*) from TempQuery where IntentionPrice/10000&gt;2 and IntentionPrice/10000&lt;=3 union
+    select '3万~4万',count(*) from TempQuery where IntentionPrice/10000&gt;3 and IntentionPrice/10000&lt;=4 union
+    select '4万~5万',count(*) from TempQuery where IntentionPrice/10000&gt;4 and IntentionPrice/10000&lt;=5 union
+    select '5万~6万',count(*) from TempQuery where IntentionPrice/10000&gt;5 and IntentionPrice/10000&lt;=6 union
+    select '6万~8万',count(*) from TempQuery where IntentionPrice/10000&gt;6 and IntentionPrice/10000&lt;=8 union
+    select '8万~10万',count(*) from TempQuery where IntentionPrice/10000&gt;8 and IntentionPrice/10000&lt;=10 union
+    select '大于10万',count(*) from TempQuery where IntentionPrice/10000&gt;10
+
+
+  </Sql>
+  <Sql id="IntentionAmount">
+    WITH TempQuery as
+    (
+    select sr.Code
+    ,(spc.[IntentionMinAmount]+spc.[IntentionMaxAmount])/2 as IntentionAmount
+    from [Sale].[SaleRecord] as sr
+    inner join [Sale].[SalePledgedChips] as spc on sr.Code=spc.SaleRecordCode and spc.ValidStatus=1 and sr.ValidStatus=1
+    inner join [Sale].[SalePledgedChips_SaleProduct] as spcsp on spcsp.SalePledgedChipsCode=spc.Code
+    inner join [dbo].[SaleProductView] as spv on spv.ProductCode=spcsp.SaleProductCode
+    where spv.StageAreaCode ={0}
+    )
+    select  '50万以下' as Name, count(*) as Value from TempQuery where IntentionAmount/10000&lt;=50 union
+    select '50万~100万',count(*) from TempQuery where IntentionAmount/10000&gt;50 and IntentionAmount/10000&lt;=100 union
+    select '100万~200万',count(*) from TempQuery where IntentionAmount/10000&gt;100 and IntentionAmount/10000&lt;=200 union
+    select '200万~500万',count(*) from TempQuery where IntentionAmount/10000&gt;200 and IntentionAmount/10000&lt;=500 union
+    select '500万~1000万',count(*) from TempQuery where IntentionAmount/10000&gt;500 and IntentionAmount/10000&lt;=1000 union
+    select '大于1000万',count(*) from TempQuery where IntentionAmount/10000&gt;1000
+
+
+  </Sql>
+</Root>

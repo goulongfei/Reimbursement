@@ -1,0 +1,135 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingStrategyGroupTendersIssuedWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航栏-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3" left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>招投标（集团战采）</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/strategyCommissioned/biddingStrategyGroup/htmlTemplate/biddingStrategyGroupBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购时间安排<span style="color:red;">*</span></h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="table-thead" style="text-align:center;">环节名称</th>
+                        <th class="table-thead" style="text-align:center;">供应商回复截止时间</th>
+                        <th class="table-thead" style="text-align:center;">供应商提问截止时间</th>
+                        <th class="table-thead" style="text-align:center;">回标截止时间</th>
+                        <th class="table-thead" style="text-align:center;">清标时间</th>
+                        <th class="table-thead" style="text-align:center;">评标时间</th>
+                        <th class="table-thead" style="text-align:center;">定标时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in baseInfo.purchaseDateArrangeInfoPEMus()">
+                        <th class="table-thead" style="text-align:center;">采购时间安排</th>
+                        <td ng-if="!readonly" style="padding-left:0px!important;padding-right:0px!important;">
+                            {{item.inviteReplyDeadline | date:'yyyy-MM-dd HH:mm'}}
+                        </td>
+                        <td ng-if="!readonly" style="padding-left:0px!important;padding-right:0px!important;">
+                            <div date-time-picker date-time="item.questionDeadline" sog-valide-status="供应商提问截止时间"></div>
+                        </td>
+                        <td ng-if="!readonly" style="padding-left:0px!important;padding-right:0px!important;">
+                            <div date-time-picker date-time="item.replyDeadline" sog-valide-status="回标截止时间"></div>
+                        </td>
+                        <td ng-if="!readonly" style="padding-left:0px!important;padding-right:0px!important;">
+                            <input type="text" pick-a-date="item.clearBinddingDeadline" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }"
+                                   class="form-control-text iecssl" sog-valide-status="清标时间" />
+                        </td>
+                        <td ng-if="!readonly" style="padding-left:0px!important;padding-right:0px!important;">
+                            <input type="text" pick-a-date="item.evaluateBiddingDeadline" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }"
+                                   class="form-control-text iecssl" sog-valide-status="评标时间" />
+                        </td>
+                        <td ng-if="!readonly" style="padding-left:0px!important;padding-right:0px!important;">
+                            <input type="text" pick-a-date="item.decideBiddingDeadline" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }"
+                                   class="form-control-text iecssl" sog-valide-status="定标时间" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 招标主责人<span style="color:red;">*</span></h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" style="text-align:right" title="招标主责人">招标主责人<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <span sog-ogu-input="viewModel.linkManUser" opts="baseInfo.selectRadioPeople"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" style="text-align:right" title="联系方式">联系方式<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <input type="text" class="meeting" ng-model="viewModel.p_StrategyPurchasePlanCase.linkManPhone">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 col-sm-6 col-md-6 control-label" style="text-align:right" title="E-mail">E-mail<span style="color:red;">*</span></label>
+                <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+                    <input type="text" class="meeting" ng-model="viewModel.p_StrategyPurchasePlanCase.linkManEmail">
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 入围供应商<span style="color:red;">*</span></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">行业领域</th>
+                        <th style="text-align:center;" class="table-thead">行业领域等级</th>
+                        <th style="text-align:center;" class="table-thead">验证码</th>
+                        <th style="text-align:center;" class="table-thead">回复情况</th>
+                        <th style="text-align:center;" class="table-thead">回复时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td class="text-center"><div open-supplier-info supplier="item"></div></td>
+                        <td class="text-center">{{item.industryDomainName}}</td>
+                        <td class="text-center">{{item.industryDomainLevelName}}</td>
+                        <td class="text-center">{{item.verificationCode}}</td>
+                        <td class="text-center">
+                            {{item.bidInviteReplyStateName}}
+                        </td>
+                        <td class="text-center">
+                            {{item.bidInviteReplyDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block visible-sm-block"></div>
+        <div class="clearfix"></div>
+        <!-- 审批意见列表-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>审批意见列表</h4>
+        <div class="form-inline">
+            <span sog-simple-opinions="opinions"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

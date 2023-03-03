@@ -1,0 +1,56 @@
+﻿<!--折叠起来后显示的竖条-->
+<div class="sidebar-open cc-wrapper" ng-click="toggleSidebar()" ng-if="sideSetting.sidebarShow">
+    <div class="sidebar-open-text">
+      <em class="iconfont">&#xe62c;</em>
+      我<br>的<br>采<br>购<br>清<br>单
+      <span class="iconfont">&#xe792;</span>    
+  </div>
+    <div class="sidebar-open-count">({{paginationUnstart.totalItems}})</div>
+</div>
+<div ng-if="!sideSetting.sidebarShow" height="100%;">
+    <div class="sidebar-title clearfix" ng-click="toggleSidebar()" style="cursor:pointer;">
+        <div class="text-center pdl-top-bar" style="color:#ffffff"><span class="text-center">我的采购清单</span></div>
+    </div>
+    <div class="sidebar-content pdl-content">
+        <div class="sidebar-notice">
+            <div class="sidebar-notice">
+                <div class="input-group sidebar-search">
+                    <span class="glyphicon glyphicon-search"></span>
+                    <input type="text" class="form-control" style="vertical-align: middle;" placeholder="请输入关键字" ng-model="queryKeyWord">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" ng-click="mainPage.queryByPurchaseName()">搜 索</button>
+                    </span>
+                </div>
+            </div>
+            <div class="sidebar-tabs clearfix">
+                <div class="row fc-tabs">
+                    <ul class="nav nav-pdl-tabs" ng-click="showCurrentTab($event)">
+                        <li class="active nav-pdl-left">
+                            <a name="tab_unStart" ng-click="refresh('to-unstart')"
+                               data-toggle="tab">本季待发起<span ng-if="taskCount.unStratTaskNum > 0">({{taskCount.unStratTaskNum}})</span></a>
+                        </li>
+                        <li class="nav-pdl-center">
+                            <a name="tab_processing" ng-click="refresh('to-running')"
+                               data-toggle="tab">采购进行中<span ng-if="taskCount.runningTaskNum > 0">({{taskCount.runningTaskNum}})</span></a>
+                        </li>
+                        <li class="nav-pdl-right">
+                            <a name="tab_finished" ng-click="refresh('to-finished')"
+                               data-toggle="tab">本年已办结<span ng-if="taskCount.completedTaskNum > 0">({{taskCount.completedTaskNum}})</span></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content fc-tab-content" ng-switch="currentShowTabName">
+                        <div id="tab_unStart" class="tab-pane fade in active" ng-switch-when="tab_unStart">
+                            <div pd-task-unstart></div>
+                        </div>
+                        <div id="tab_processing" class="tab-pane fade in active" ng-switch-when="tab_processing">
+                            <div pd-task-processing></div>
+                        </div>
+                        <div id="tab_finished" class="tab-pane fade in active" ng-switch-when="tab_finished">
+                            <div pd-task-finished></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

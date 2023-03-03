@@ -1,0 +1,205 @@
+﻿<div class="staff-service">
+    <div class="container appil-container">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>拼接Url验证Get请求</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-10 col-md-10 form-group" style="margin-top:2px;">
+                <label class="col-xs-2 control-label">get请求地址</label>
+                <div class="col-xs-10 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.getUrl" placeholder="/ReturnTenderColludingAlert/MessageEmailRecordInfoShow?flowNumber=20191012000007">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 form-group" style="margin-top:2px;">
+                <div class="col-xs-12 form-group baseifo-input text-left">
+                    <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="anyGetApiUrl()">验证查询</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-inline clearfix">
+            <pre>{{viewModel.recordGetDataList | json}}</pre>
+        </div>
+
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>拼接Url验证Post请求&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:9px;">post请求参数的参考内容：{"projectCityCode":"110000","projectCnName":"天","pageSize":6,"pageIndex":1}</span></h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label">post请求地址</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.postUrl" placeholder="/ProjectInfo/QueryProjectInfomation">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-7 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label">post请求参数</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.postUrlData">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-1 form-group" style="margin-top:2px;">
+                <div class="col-xs-12 form-group baseifo-input text-left">
+                    <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="anyPostApiUrl()">验证查询</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-inline clearfix">
+            <pre>{{viewModel.recordPostDataList | json}}</pre>
+        </div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>根据流程ID修改流程参数</h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-sm-10 col-md-10 form-group" style="margin-top:2px;">
+                <label class="col-xs-2 control-label">ResourceID</label>
+                <div class="col-xs-10 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.resourceID">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 form-group" style="margin-top:2px;">
+                <div class="col-xs-12 form-group baseifo-input text-left">
+                    <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="getParametersByResourceID()">确定</button>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-10 col-md-10 form-group" style="margin-top:2px;">
+                <label class="col-xs-2 control-label">ProcessID</label>
+                <div class="col-xs-10 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.processID">
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 form-group" style="margin-top:2px;">
+                <div class="col-xs-12 form-group baseifo-input text-left">
+                    <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="getParametersByProcessID()">确定</button>
+                </div>
+            </div>
+        </div>
+        <!--<div class="form-inline clearfix" ng-hide="hideParams">
+        <span>当前流程状态：{{data.status}}</span><br />
+        <a href='ModalDialog/EditResourceParam.aspx?ResourceID=" + pro.ID + "&type=resource&add=ture' style='color:blue;' target='_blank'>新增流程参数</a>
+        <table class="table table-bordered table-striped" ng-hide="data.applicationRumtimeParametersList.length==0">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>流程参数</th>
+                    <th>流程值</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in data.applicationRumtimeParametersList">
+                    <td style="width:10%">{{$index+1}}</td>
+                    <td style="width:10%">{{item.parameterName}}</td>
+                    <td style="width:40%">
+                        {{item.parameterValue}}
+                        <span wf-user-presence="item.parameterValue"></span>
+                    </td>
+                    <td style="width:40%">
+                        <a class="blue-link" target="_blank" href='ModalDialog/EditResourceParam.aspx?ResourceID=" + pro.ID + "&param=" + item.ToString() + "&type=resource'>修改</a>
+                        <a class="blue-link" target="_blank" href='ModalDialog/EditResourceParam.aspx?ResourceID=" + pro.ID + "&param=" + item.ToString() + "&type=resource&del=true'>删除</a>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <span ng-hide="data.applicationRumtimeParametersList.length>0">没有流程参数。</span>
+    </div>-->
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>日志查询----日期
+            <input class="meeting" ng-model="selectModel.logTime" placeholder="20190925" style="width:150px;border-color:red">
+            <button type="button" class="btn btn-primary" ng-click="showLog();">查询程序日志</button>
+            <small style="margin-left:300px;">如果要查询不在日期文件内:allNotInFile</small>
+        </h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 form-group">
+                查询服务器IP：<span style="color:red">{{selectModel.logServerIp}}</span>
+                <table ng-hide="hideFiles" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>名称</th>
+                            <th>创建时间</th>
+                            <th>大小</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in files">
+                            <td>{{$index+1}}</td>
+                            <td>
+                                <a ng-if="selectModel.logTime == 'allNotInFile'" class="blue-link" target="_blank" href="/THRWebApi/ReimbursementV2/Log/{{item.fileName}}"> {{item.fileName}} </a>
+                                <a ng-if="selectModel.logTime != 'allNotInFile'" class="blue-link" target="_blank" href="/THRWebApi/ReimbursementV2/Log/{{selectModel.logTime}}/{{item.fileName}}"> {{item.fileName}} </a>
+                            </td>
+                            <td>{{item.createTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td>{{item.fileLength}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>直接委托更换供应商
+            <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="UpdateSupplier()">执行处理</button>
+        </h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">Code</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.code">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">SupplierCode</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.supplierCode">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">SupplierName</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.supplierName">
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>询价营销类（发起合同订立，无法结束代办）
+            <button class="btn btn-primary btn-sm" style="padding-left:20px;padding-right:20px;" ng-click="closeInquiryPriceMarketingStartupContract()">执行处理</button>
+        </h4>
+        <div class="form-inline clearfix">
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">ResourceID</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.inquiryResourceID">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">ContractCode</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.contractCode">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">ContractResourceCode</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.contractResourceCode">
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">ContractProcessCode</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.contractProcessCode">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">ContractActivityId</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.contractActivityId">
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4 form-group" style="margin-top:2px;">
+                <label class="col-xs-4 control-label">PurchaseprocessId</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input class="meeting" ng-model="viewModel.purchaseprocessId">
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

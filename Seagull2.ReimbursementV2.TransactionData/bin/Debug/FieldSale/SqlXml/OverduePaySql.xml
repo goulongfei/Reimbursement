@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+
+  <Sql  id="GetOverduePay">
+    WITH    Signs
+    AS ( SELECT   SaleRecordCode ,
+    SalePayWayCode
+    FROM     signs.PurchaseContract
+    WHERE    VersionEndTIme IS NULL
+    AND ValidStatus = 1
+    ),
+    Pro
+    AS ( SELECT   ProductCode
+    FROM     Sale.SaleProductView
+    )
+    SELECT  ProductCode,t1.SaleRecordCode INTO #SaleRecordCodeNew
+    FROM    Pro
+    JOIN (
+    SELECT  SaleProductCode,SaleRecordCode
+    FROM    Sale.SaleRecord_SaleProduct
+    WHERE   SaleRecordCode IN (
+    SELECT  Code
+    FROM    Sale.SaleRecord r
+    WHERE   EXISTS ( SELECT 1
+    FROM   Charge.AccountsReceivable ar
+    JOIN Charge.PaymentChargeRecordItem ri ON ri.AccountsReceivableCode = ar.Code
+    WHERE  ar.BusinessNumber = r.ChargeCode
+    AND (ar.CostCategoryCode = 'F9506CDE-E862-44D7-AF19-8F1D9C487FDA'
+    OR ar.CostCategoryCode = '33753834-4781-4231-9E84-A909150B19F9'
+    OR ar.CostCategoryCode = 'AD5D1537-774A-4898-A9F0-31E29B5EFB00')
+    AND ri.CreateTime &lt; N'{1}' AND ri.CreateTime >= N'{0}')
+                            AND NOT EXISTS (
+							SELECT 1
+                                     FROM   Charge.AccountsReceivable ar
+                                            JOIN Charge.PaymentChargeRecordItem ri ON ri.AccountsReceivableCode = ar.Code
+                                     WHERE  ar.BusinessNumber = r.ChargeCode
+                                            AND (ar.CostCategoryCode = '33753834-4781-4231-9E84-A909150B19F9'
+											 OR ar.CostCategoryCode = 'AD5D1537-774A-4898-A9F0-31E29B5EFB00')
+                                            AND ri.CreateTime &lt; N'{0}' 
+							)
+                            AND r.ChargeCode IN  ( SELECT ar.BusinessNumber
+                                     FROM   Charge.AccountsReceivable ar
+                                            
+                                     WHERE  ar.BusinessNumber = r.ChargeCode AND ValidStatus='1'
+                                            AND 
+											(ar.CostCategoryCode = 'F9506CDE-E862-44D7-AF19-8F1D9C487FDA' 
+											
+											) )
+                            AND Code IN ( SELECT    SaleRecordCode
+                                          FROM      Signs
+                                          WHERE     SalePayWayCode = '1' )
+                             ) 
+	) AS t1 ON Pro.ProductCode=t1.SaleProductCode
+   
+    UNION
+    SELECT  ProductCode,t2.SaleRecordCode
+    FROM    Pro
+	JOIN (
+	SELECT  SaleProductCode,SaleRecordCode
+            FROM    Sale.SaleRecord_SaleProduct
+            WHERE   SaleRecordCode IN (
+                    SELECT  Code
+                    FROM    Sale.SaleRecord r
+                    WHERE   EXISTS ( SELECT 1
+                                     FROM   Charge.AccountsReceivable ar
+                                            JOIN Charge.PaymentChargeRecordItem ri ON ri.AccountsReceivableCode = ar.Code
+                                     WHERE  ar.BusinessNumber = r.ChargeCode
+                                            AND (ar.CostCategoryCode = '33753834-4781-4231-9E84-A909150B19F9'
+                                            or ar.CostCategoryCode ='AD5D1537-774A-4898-A9F0-31E29B5EFB00')
+                                            AND ri.CreateTime &lt; N'{1}' AND ri.CreateTime >= N'{0}')
+                            AND  NOT  EXISTS
+							(
+                            SELECT 1
+                            FROM    Charge.AccountsReceivable ar
+                                    JOIN Charge.PaymentChargeRecordItem ri ON ri.AccountsReceivableCode = ar.Code
+                            WHERE   ar.BusinessNumber = r.ChargeCode
+                                    AND (ar.CostCategoryCode = '33753834-4781-4231-9E84-A909150B19F9'
+                                            or ar.CostCategoryCode ='AD5D1537-774A-4898-A9F0-31E29B5EFB00') 
+									AND ri.CreateTime &lt; N'{0}' 
+									
+							)
+                            AND r.ChargeCode IN  ( SELECT ar.BusinessNumber
+                                     FROM   Charge.AccountsReceivable ar
+                                            
+                                     WHERE  ar.BusinessNumber = r.ChargeCode AND ValidStatus='1'
+                                            AND 
+											(ar.CostCategoryCode = '33753834-4781-4231-9E84-A909150B19F9' 
+											
+											) )
+                            AND Code IN ( SELECT    SaleRecordCode
+                                          FROM      Signs
+                                          WHERE     SalePayWayCode = '2' )
+                            )
+	) AS t2 ON Pro.ProductCode=t2.SaleProductCode
+   
+    UNION
+    SELECT  ProductCode,t3.SaleRecordCode
+    FROM    Pro
+	JOIN (
+	SELECT  SaleProductCode,SaleRecordCode
+            FROM    Sale.SaleRecord_SaleProduct
+            WHERE   SaleRecordCode IN (
+                    SELECT  Code
+                    FROM    Sale.SaleRecord r
+                    WHERE   EXISTS ( SELECT 1
+                                     FROM   Charge.AccountsReceivable ar
+                                            JOIN Charge.PaymentChargeRecordItem ri ON ri.AccountsReceivableCode = ar.Code
+                                     WHERE  ar.BusinessNumber = r.ChargeCode
+                                            AND (ar.CostCategoryCode = 'AD5D1537-774A-4898-A9F0-31E29B5EFB00' 
+                                                or ar.CostCategoryCode ='33753834-4781-4231-9E84-A909150B19F9')
+                                            AND ri.CreateTime &lt; N'{1}' AND ri.CreateTime >= N'{0}')
+                            AND  NOT  EXISTS
+							(
+                            SELECT 1
+                            FROM    Charge.AccountsReceivable ar
+                                    JOIN Charge.PaymentChargeRecordItem ri ON ri.AccountsReceivableCode = ar.Code
+                            WHERE   ar.BusinessNumber = r.ChargeCode
+                                    AND (ar.CostCategoryCode = 'AD5D1537-774A-4898-A9F0-31E29B5EFB00' 
+                                                or ar.CostCategoryCode ='33753834-4781-4231-9E84-A909150B19F9') 
+									AND ri.CreateTime &lt; N'{0}' 
+									
+							)
+                            AND Code IN (
+                            SELECT  SaleRecordCode
+                            FROM    Signs
+                            WHERE   SalePayWayCode IN ( '3', '4', '5' ) )
+                             )
+	) AS t3 ON pro.ProductCode=t3.SaleProductCode
+
+SELECT DISTINCT
+        cc.OriginaName AS CostTypeName ,
+        ar.Code AS AccountsReceivableCode ,
+        record.ChargeCode ,
+        sg.GroupID ,
+        ss.SaleRecordCode ,
+        pc.SalePayWayCode ,
+        pv.ProjectCode ,
+        pv.ProjectName ,
+        pv.StageareaCode ,
+        pv.BuildingCode ,
+        pv.SaleBuildingName ,
+        pv.SaleUnitName ,
+        pv.SaleProductName ,
+        pv.ProductCode ,
+        pc.ContractAwardDate AS SignDate ,
+        pv.StageAreaName ,
+        ar.Deadline ,
+        pv.[ProjectCityName] ,
+        c.CnName AS CorporationName ,
+        cp.CorporationCode
+FROM    Sale.SaleRecord_SaleProduct ss
+        INNER JOIN sale.SaleRecord record ON ss.SaleRecordCode = record.Code
+                                       AND record.ValidStatus = 1
+        INNER JOIN #SaleRecordCodeNew AS recordNew ON record.Code=recordNew.SaleRecordCode
+        INNER JOIN Charge.AccountsReceivable ar ON record.ChargeCode = ar.BusinessNumber
+                                                   AND ar.ValidStatus = 1
+                                                   AND NOT EXISTS( SELECT
+                                                              1
+                                                              FROM
+                                                              Charge.PaymentChargeRecordItem pr
+                                                              WHERE
+                                                              pr.AccountsReceivableCode = ar.Code
+                                                              AND pr.ValidStatus = 1
+                                                              )
+        INNER JOIN Signs.PurchaseContract pc ON pc.SaleRecordCode = ss.SaleRecordCode
+                                                AND pc.VersionEndTime IS NULL
+        INNER  JOIN [Sale].[SaleProductView] pv ON ss.SaleProductCode = pv.ProductCode
+        INNER JOIN Sale.SaleStageGroup sg ON sg.StageAreaCode = pv.StageAreaCode
+        inner join [Finance].[CostCategory] cc on cc.Code =ar.CostCategoryCode 
+    AND cc.Code IN (
+                                                 'AD5D1537-774A-4898-A9F0-31E29B5EFB00',
+                                                 '33753834-4781-4231-9E84-A909150B19F9',
+                                                 '86D4D4B6-9D7F-44EE-8A72-ABC05E020FE3',
+                                                 'F9506CDE-E862-44D7-AF19-8F1D9C487FDA',
+                                                 'E67D8498-C6BE-448E-9A50-131A11162DF1',
+                                                 '364D6791-4260-4320-967E-848412D43402' )
+        LEFT OUTER JOIN [LandObtained].Corporation_ProjectInfo cp ON pv.ProjectCode = cp.ProjectInfoCode
+        LEFT OUTER JOIN [Common].Corporation c ON c.Code = cp.CorporationCode
+WHERE   1 = 1
+        AND {2}
+        
+DROP TABLE #SaleRecordCodeNew 
+  </Sql>
+</Root>

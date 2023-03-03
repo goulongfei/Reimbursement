@@ -1,0 +1,6 @@
+﻿<div>
+    <input style="width:60%;" type="text" readonly="readonly" class="meeting" title="{{data.supplierName}}" ng-model="data.supplierName" ng-readonly="true">
+    <span style="cursor: pointer;" ng-click="SelectSupplier()"><i class="glyphicon glyphicon-folder-open"></i></span>
+    <span style="cursor: pointer;" ng-click="RemoveSupplier()"><i class="glyphicon glyphicon-remove"></i></span>
+    <button ng-if="opts.actionTypeCode===5 || pts.actionTypeCode===6" class="btn btn-primary" style="cursor:pointer" ng-click="addSupplierByLabel()">按标签筛选</button>
+</div>

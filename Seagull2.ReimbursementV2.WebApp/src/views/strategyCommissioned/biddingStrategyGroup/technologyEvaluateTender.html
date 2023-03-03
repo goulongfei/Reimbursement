@@ -1,0 +1,108 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingStrategyGroupEvaluateTenderWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航栏-->
+        <div ng-show="viewModel.formAction.actionStateCode==2" left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>招投标（集团战采）</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/strategyCommissioned/biddingStrategyGroup/htmlTemplate/biddingStrategyGroupBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 开标情况</h4>
+        <!--技术标-->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">供应商名称</th>
+                        <th style="text-align:center;" class="table-thead">技术标</th>
+                        <th style="text-align:center;" class="table-thead">是否合格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.p_TechnologyEvaluateBiddingInfoPEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;"><div open-supplier-info supplier="supplier"></div></td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="baseInfo.getReplyBidding(supplier.supplierCode).technologyFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;">
+                            <select class="meeting" ng-model="supplier.isQualified">
+                                <option value="" ng-selected="supplier.isQualified===null">请选择</option>
+                                <option value="true" ng-selected="supplier.isQualified == true">合格</option>
+                                <option value="false" ng-selected="supplier.isQualified == false">不合格</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 技术澄清回复信息</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">澄清环节</th>
+                        <th style="text-align:center;" class="table-thead">信息项</th>
+                        <th style="text-align:center;font-weight:normal;color:blue;" class="table-thead" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">{{supplier.supplierName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="clearBiddingClarify in baseInfo.clearBiddingClarifyRunds">
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="2">{{$index+1}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle;" rowspan="2">{{clearBiddingClarify.name}}</td>
+                        <td class="text-center">技术澄清问卷</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <p ng-repeat="item in baseInfo.getClearBiddingClarifyInfo(supplier.supplierCode,clearBiddingClarify.code).technologyClarifyFileList">
+                                <span wf-uploader files="[item]" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></span><br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end>
+                        <td class="text-center">技术澄清答复文件</td>
+                        <td class="text-center" ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                            <p ng-repeat="item in baseInfo.getClearBiddingClarifyInfo(supplier.supplierCode,clearBiddingClarify.code).technologyReplyFileList">
+                                <span wf-uploader files="[item]" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></span><br />
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 附件</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                <label class="col-xs-6 control-label" title="技术评标文件" style="text-align:right;">技术评标文件<span style="color:red;">*</span></label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <div wf-uploader files="viewModel.technologyEvaluateTenderFileList[0].clientFileInformationList" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

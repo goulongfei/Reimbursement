@@ -1,0 +1,72 @@
+﻿<div class="form-inline">
+    <div class="col-xs-12 col-sm-12- col-md-12 form-group sog-xs-style-sign">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label text-right" title="采购名称" style="text-align:right">报销人</label>
+        <div class="col-xs-6 col-sm-7 col-md-10 form-group baseifo-input">
+            {{viewModel.purchaseBase.purchaseName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="col-xs-12 col-md-4 col-sm-6 form-group sog-xs-style-sign">
+        <label class="col-xs-6 col-md-6 col-sm-6 control-label" title="法人公司" style="text-align:right">法人公司</label>
+        <div class="col-xs-6 col-md-6 col-sm-6 form-group baseifo-input">
+            {{viewModel.corporationName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+        <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="记账公司" style="text-align:right">记账公司</label>
+        <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+            {{viewModel.purchaseOfComparePrice.chargeCompanyName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group sog-xs-style-sign">
+        <label class="col-xs-6 col-sm-6 col-md-6 control-label" title="成本中心" style="text-align:right">成本中心</label>
+        <div class="col-xs-6 col-sm-6 col-md-6 form-group baseifo-input">
+            {{viewModel.purchaseOfComparePrice.costCenterName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="是否涉及项目" style="text-align:right">是否涉及项目<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-if="viewModel.purchaseOfComparePrice.isInvolveProject">涉及</span>
+            <span ng-if="!viewModel.purchaseOfComparePrice.isInvolveProject">不涉及</span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.purchaseOfComparePrice.isInvolveProject">
+        <label class="col-xs-6 control-label" title="项目名称" style="text-align:right">项目名称<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseOfComparePrice.projectName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="业务类别" style="text-align:right">业务类别<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseOfComparePrice.comparePriceBusinessTypeName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="是否签订合同" style="text-align:right">是否签订合同<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-if="!viewModel.purchaseOfComparePrice.isSignContract">不签订合同</span>
+            <span ng-if="viewModel.purchaseOfComparePrice.isSignContract">签订合同</span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="col-xs-6 control-label" title="拟采购总金额" style="text-align:right">拟采购总金额<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span>{{viewModel.purchaseBase.purchaseAmount | number:2}}</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="本次采购范围和内容" style="text-align:right">本次采购范围和内容<span style="color:red;">*</span></label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-bind-html="viewModel.purchaseOfComparePrice.purchaseContent | htmlContent"></p>
+        </div>
+    </div>
+</div>

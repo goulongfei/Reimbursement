@@ -1,0 +1,261 @@
+﻿<div class="staff-service">
+
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/StrategyCentralizedCommissionedWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>直接委托(集中采购)</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <!--信息项组标题-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>基本信息</h4>
+        <!--基本信息-->
+        <div class="form-inline">
+            <!--基本信息-->
+            <div class="col-xs-12 col-sm-6 col-md-8 form-group">
+                <label class="col-xs-6 col-md-3 control-label" style="text-align:right" title="采购名称">
+                    <span style="color:red;">*</span>采购名称
+                </label>
+                <div class="col-xs-6 col-md-9 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.purchasePlanName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="采购主责人" style="text-align:right">采购主责人</label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span ng-if="viewModel.purchaseMainUser.id" wf-user-presence="viewModel.purchaseMainUser" opts="baseInfo.selectRadioPeople"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="招标人" style="text-align:right">
+                    <span style="color:red;">*</span> 招标人
+                </label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.bidderName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="供应商类别" style="text-align:right">
+                    <span style="color:red;">*</span> 供应商类别
+                </label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span ng-init="baseInfo.supplierTypeInit()">{{viewModel.industryDomainName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="合约分类" style="text-align:right">
+                    <span style="color:red;">*</span> 合约分类
+                </label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.contractAgreementTypeName }}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                <label class="col-xs-6 control-label" title="招采组织" style="text-align:right">
+                    <span style="color:red;">*</span> 招采组织
+                </label>
+                <div class="col-xs-6 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.constructCenterName}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 col-sm-6 col-md-8 form-group">
+                <label class="col-xs-6 col-md-3 control-label" title="招采组织集采负责人" style="text-align:right">
+                    <span style="color:red;">*</span> 招采组织集采负责人
+                </label>
+                <div class="col-xs-6 col-md-9 form-group baseifo-input">
+                    <span ng-if="viewModel.constructCenterMainUser.id" wf-user-presence="viewModel.constructCenterMainUser" opts="baseInfo.selectRadioPeople"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="采购小组成员" style="text-align:right">
+                    <span style="color:red;">*</span> 采购小组成员
+                </label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span ng-repeat="user in viewModel.strategyPurchasePlanPersonList" wf-user-presence="user"> </span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="工期/供货期" style="text-align:right">
+                    工期/供货期
+                </label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.timeLimitDescribe}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="本次采购范围和内容" style="text-align:right">
+                    <span style="color:red;">*</span>
+                    本次采购范围和内容
+                </label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.purchaseContentDescribe}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+
+            <div class="col-xs-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="付款方式描述" style="text-align:right">
+                    <span style="color:red;">*</span>
+                    付款方式描述
+                </label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span>{{viewModel.p_StrategyPurchasePlanCase.payWayDescribe}}</span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+            <div class="col-xs-12 form-group">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label" title="相关附件" style="text-align:right">
+                    相关附件
+                </label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <span wf-uploader files="viewModel.reportFile.clientFileInformationList" opts="baseInfo.fileopts" ready="fileReady" read-only="true"></span>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+            <!--协议信息*-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>协议信息 <span style="color:red">*</span></h4>
+            <div class="table-responsive col-xs-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr style="text-align:center;">
+                            <th class="table-thead" style="text-align:center;">序号</th>
+                            <th class="table-thead" style="text-align:center;">供应商名称<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">行业领域<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">协议名称<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">框架协议附件<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">协议份数<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">报价清单<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">指导手册<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">协议开始时间<span style="color:red;">*</span></th>
+                            <th class="table-thead" style="text-align:center;">协议结束时间<span style="color:red;">*</span></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="item in viewModel.p_StrategyPurchaseAgreementInfos">
+                            <td style="text-align:center;">
+                                {{$index+1}}
+                            </td>
+                            <td style="text-align:center;">
+                                <a style="color:blue;" ng-click="checkSupplierDetails(item.supplierCode);" class="ng-binding">{{item.supplierName}}</a>
+                            </td>
+
+                            <td style="text-align:center;">
+                                {{item.industryDomainName}}
+                            </td>
+
+                            <td style="text-align:center;">
+                                <span>{{item.agreementName}}</span>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <div style="width:80px;">
+                                    <span wf-uploader files="item.agreementFile" opts="baseInfo.fileopts " ready="fileReady
+                                " read-only="true"></span>
+                                </div>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <div>
+                                    <span>{{item.agreementCopies}}</span>
+                                </div>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <div style="width:80px;">
+                                    <span wf-uploader files="item.quoteDetailedFile" opts="baseInfo.fileopts" ready="fileReady
+                                " read-only="true"></span>
+                                </div>
+                            </td>
+
+                            <td style="text-align:center;">
+                                <div style="width:80px;">
+                                    <span wf-uploader files="item.strategyDirectFile" opts="baseInfo.fileopts" ready="fileReady
+                                " read-only="true"></span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span>{{item.startDate | date:'yyyy-MM-dd'}}</span>
+                            </td>
+
+                            <td>
+                                <span>{{item.endDate | date:'yyyy-MM-dd'}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+
+            <!--传阅-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>传阅</h4>
+            <div class="col-xs-12">
+                <label class="col-xs-6 col-sm-3 col-md-2 control-label " title="传阅人 ">传阅人</label>
+                <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+                    <div class="list-group-item-text ">
+                        <span ng-repeat="user in viewModel.circularizePersons" wf-user-presence="user"> </span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <!--审批, 修改url-base-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批</h4>
+        <div class="form-inline">
+            <input wf-opinions opinions-opts="opinionOpts" opinions="opinions" predefined-opinions="predefinedOpinions" user-predefined-opinions="userPredefinedOpinions"
+                   current-opinion="currentOpinion" url-base="/StrategyCentralizedCommissionedWf" />
+            <div class="clearfix"></div>
+        </div>
+        <!-- 审批意见列表, 与意见控件二选一 -->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+        <div class="form-inline">
+            <div class="form-inline">
+                <span sog-comment="opinions"></span>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <h4 ng-if="opinions.length!=0" class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>审批意见列表</h4>
+        <div ng-if="opinions.length!=0" class="form-inline">
+            <span sog-simple-opinions="opinions"></span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

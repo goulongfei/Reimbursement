@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <Sql id="CostFeeSql">
+    declare @projectCode nvarchar(36) ,@start datetime,@end datetime
+    set @projectCode={0}
+    set @start={1};
+    set @end={2};
+
+    SELECT
+    (select top 1 pti.PromotionTypeCode
+    from  Sale.PromotionTypeItem pti where  pti.Code=cost.OriginalCode
+
+    ) as PromoteTypeCode
+    ,
+    cost.OriginalCode as [CostTypeCode],CCM.Amount as Cost,CC.EffectiveDate as CreateTime
+    FROM [Contract].[Contract] CC
+    INNER JOIN Contract.Contract_MarketingCost CCM ON CCM.ContractCode = CC.Code
+    and CC.ProjectCode =@projectCode AND CC.EffectiveDate >= @start AND CC.EffectiveDate &lt; @end
+    AND CC.ContractTypeCode = '5' AND CC.VersionEndTime IS NULL AND CC.ValidStatus = 1 AND CCM.VersionEndTime IS NULL AND CCM.ValidStatus = 1
+    inner join Finance.CostCategory cost  on cost.Code =CCM.MarketingCostCode
+    union
+    SELECT ac.[PromoteTypeCode]
+    ,ac.[CostTypeCode]
+    ,ac.[Cost]
+    ,convert(datetime, convert(char(4),ac.[CostYear])+'-'+convert(char(2),ac.[CostMonth])+'-1') as CreateTime
+    FROM [Sale].[ActualMarketingCosts] as ac
+    inner join Sale.PromotionType pt on pt.Code =ac.[PromoteTypeCode]
+    where ac.[ProjectCode]=@projectCode and ltrim(isnull(ac.ContractCode,''))=''
+    and convert(datetime, convert(char(4),ac.[CostYear])+'-'+convert(char(2),ac.[CostMonth])+'-1')>=@start
+    and convert(datetime, convert(char(4),ac.[CostYear])+'-'+convert(char(2),ac.[CostMonth])+'-1')&lt;@end
+
+  </Sql>
+  <Sql id="PushAddResou">
+
+    SELECT p.StageAreaName,p.SaleReleaName,p.StageAreaCode,p.SaleReleaCode,p.SaleScopeCode,SUM(p.HouseCount) AS HouseNumer,SUM(p.AddCount) AS AddNumer FROM (
+    SELECT
+    [SA].CnName AS StageAreaName,sr.CnName AS SaleReleaName,SA.Code AS StageAreaCode,sr.Code as SaleReleaCode,sr.SaleScopeCode,rs.ScopeType,COUNT(*) AS HouseCount,0 AS AddCount
+    FROM   [ProDefine].[StageArea] [SA]
+    INNER JOIN Sale.SaleRelease sr ON SA.Code = sr.StageAreaCode
+    INNER JOIN sale.Release_SalesProduct rs ON rs.SaleReleaseCode = sr.Code
+    WHERE   [SA].[VersionEndTime] IS NULL
+    AND     [SA].[ValidStatus] = 1
+    AND     sr.ValidStatus = 1
+    AND     [SA].[ProjectInfoCode] = {0}
+    GROUP BY [SA].CnName,sr.CnName,SA.Code,sr.Code,sr.SaleScopeCode,rs.ScopeType HAVING rs.ScopeType = 1
+    UNION
+    SELECT
+    [SA].CnName AS StageAreaName,sr.CnName AS SaleReleaName,SA.Code AS StageAreaCode,sr.Code as SaleReleaCode,sr.SaleScopeCode,rs.ScopeType,0 ,COUNT(*)
+    FROM   [ProDefine].[StageArea] [SA]
+    INNER JOIN Sale.SaleRelease sr ON SA.Code = sr.StageAreaCode
+    INNER JOIN sale.Release_SalesProduct rs ON rs.SaleReleaseCode = sr.Code
+    WHERE   [SA].[VersionEndTime] IS NULL
+    AND     [SA].[ValidStatus] = 1
+    AND     sr.ValidStatus = 1
+    AND     [SA].[ProjectInfoCode] ={0}
+    GROUP BY [SA].CnName,sr.CnName,SA.Code,sr.Code,sr.SaleScopeCode,rs.ScopeType HAVING rs.ScopeType = 2 ) AS p
+    GROUP BY p.StageAreaName,p.SaleReleaName,p.StageAreaCode,p.SaleReleaCode,p.SaleScopeCode
+
+  </Sql>
+
+  <Sql id="MarketFeeUsedInQByProjectYearFeeType">
+
+
+    SELECT  T.Q,SUM(T.Used) AS Used FROM (
+    SELECT a.Quarter AS Q,SUM(a.Cost) AS Used
+    FROM [Sale].[ActualMarketingCosts] AS a
+    INNER JOIN Sale.PromotionType pt ON pt.Code=a.PromoteTypeCode
+    INNER JOIN Sale.PromotionTypeItem pti ON pti.PromotionTypeCode =pt.Code AND pti.Code=a.CostTypeCode
+    WHERE a.ValidStatus =1
+    AND ( not Exists(SELECT 1 FROM  Sale.MonthShareContractCost AS m WHERE (m.MonthCode = a.Code)))
+    AND a.CostYear = {0}  AND a.Cost >0  AND a.ProjectCode={1} AND a.PromoteTypeCode={2} AND a.CostTypeCode={3}
+    GROUP BY a.Quarter
+    UNION
+    SELECT b.Quarter AS Q,SUM(b.Cost) AS Used
+    FROM
+    sale.MonthShareContractCost AS b  INNER JOIN
+    [Sale].[ActualMarketingCosts] AS a  ON b.MonthCode = a.Code
+    INNER JOIN Sale.PromotionType pt ON pt.Code=a.PromoteTypeCode
+    INNER JOIN Sale.PromotionTypeItem pti ON pti.PromotionTypeCode =pt.Code AND pti.Code=a.CostTypeCode
+    WHERE a.ValidStatus =1  AND b.CostYear = {0}  AND b.Cost >0  AND a.ProjectCode={1} AND a.PromoteTypeCode={2} AND a.CostTypeCode={3}
+    GROUP BY b.Quarter
+    ) AS T GROUP BY T.Q
+
+
+  </Sql>
+  <Sql id="MarketFeeUsedInQByProjectYearFee">
+
+
+    SELECT T.Quarter, T.PromoteTypeCode,T.CostTypeCode,SUM(T.Used) AS Used FROM (
+    SELECT a.Quarter, a.PromoteTypeCode,a.CostTypeCode,SUM(a.Cost) AS Used
+    FROM [Sale].[ActualMarketingCosts] AS a
+    INNER JOIN Sale.PromotionType pt ON pt.Code=a.PromoteTypeCode
+    INNER JOIN Sale.PromotionTypeItem pti ON pti.PromotionTypeCode =pt.Code AND pti.Code=a.CostTypeCode
+    WHERE a.ValidStatus =1 AND a.Cost >0 and a.CostTypeCode not in ('2.1.7.4.1')
+    AND ( not Exists(SELECT 1 FROM  Sale.MonthShareContractCost AS m WHERE (m.MonthCode = a.Code )))
+    AND a.CostYear = {0}   AND a.ProjectCode={1}
+    GROUP BY  a.Quarter, a.PromoteTypeCode,a.CostTypeCode
+    UNION
+    SELECT b.Quarter,a.PromoteTypeCode,a.CostTypeCode,SUM(b.Cost) AS Used
+    FROM
+    sale.MonthShareContractCost AS b  INNER JOIN
+    [Sale].[ActualMarketingCosts] AS a  ON b.MonthCode = a.Code
+    INNER JOIN Sale.PromotionType pt ON pt.Code=a.PromoteTypeCode
+    INNER JOIN Sale.PromotionTypeItem pti ON pti.PromotionTypeCode =pt.Code AND pti.Code=a.CostTypeCode
+    WHERE a.ValidStatus =1  AND b.Cost >0
+    AND a.CostYear = {0}   AND a.ProjectCode={1}
+    and a.CostTypeCode not in ('2.1.7.4.1')
+    GROUP BY b.Quarter, a.PromoteTypeCode,a.CostTypeCode
+    ) AS T GROUP BY T.PromoteTypeCode,T.CostTypeCode,T.Quarter
+  </Sql>
+
+  <Sql id="MarketFeeUsedInQByProjectYearFeeContract">
+    SELECT  m.Code ,
+    m.CnName ,
+    m.StartDate ,
+    m.EndDate ,
+    m.ManagerCode ,
+    a.PromoteTypeCode ,
+    a.CostTypeCode ,
+    a.ContractCode ,
+    ms.Cost AS FeeBudget ,
+    ms.CostMonth AS PlanMonth ,
+    m.CallCount ,
+    m.VisitCount ,
+    m.VisitToDealCount ,
+    ms.Code AS SupplierCode,
+    ms.CostYear AS PlanYear
+    FROM    Sale.MonthPromotePlan m
+    INNER JOIN Sale.ActualMarketingCosts a ON a.Code = m.Code
+    INNER JOIN Sale.MonthShareContractCost ms ON ms.MonthCode = m.Code
+    WHERE   m.VersionEndTime IS NULL
+    AND a.ContractCode = {0}
+    AND a.ProjectCode ={1}
+    AND a.PromoteTypeCode ={2}
+    AND a.CostTypeCode ={3}
+    AND ms.CostYear = {4}
+
+  </Sql>
+
+
+  <Sql id="FeeUsedByProjectYear">
+    SELECT  T.Quarter ,
+    SUM(T.Used) AS Used
+    FROM    ( SELECT    a.Quarter ,
+    SUM(a.Cost) AS Used
+    FROM      [Sale].[ActualMarketingCosts] AS a
+    WHERE     a.ValidStatus = 1
+    AND a.Cost > 0
+    AND ( NOT EXISTS ( SELECT   1
+    FROM     Sale.MonthShareContractCost AS m
+    WHERE    ( m.MonthCode = a.Code ) )
+    )
+    AND a.CostYear = {0}
+    AND a.ProjectCode = {1}
+    GROUP BY  a.Quarter
+    UNION
+    SELECT    b.Quarter ,
+    SUM(b.Cost) AS Used
+    FROM      sale.MonthShareContractCost AS b
+    INNER JOIN [Sale].[ActualMarketingCosts] AS a ON b.MonthCode = a.Code
+    WHERE     a.ValidStatus = 1
+    AND b.Cost > 0
+    AND a.CostYear = {0}
+    AND a.ProjectCode = {1}
+    GROUP BY  b.Quarter
+    ) AS T
+    GROUP BY
+    T.Quarter
+  </Sql>
+</Root>

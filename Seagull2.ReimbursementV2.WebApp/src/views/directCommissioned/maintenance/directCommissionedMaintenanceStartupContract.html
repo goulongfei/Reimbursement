@@ -1,0 +1,95 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/DirectCommissionedMaintenanceStartupContractWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div ng-include="'views/directCommissioned/maintenance/htmlTemplate/directCommissionedMaintenanceBaseInfo.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--委托信息标题-->
+            <h4 class="control-heading bg-info">
+                <i class="glyphicon glyphicon-list-alt"></i> 委托信息
+                <small><span style="color:red;">&nbsp;&nbsp;提示：下表每行对应一个合同，如需签订多个合同，请添加多行。</span></small>
+            </h4>
+            <!--委托信息内容-->
+            <div purchase-delegation-info data="viewModel.purchaseDelegationInfoList" readonly="true" opts="settings.delegationOpts"></div>
+
+
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--其他附件标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 其他附件</h4>
+            <!--其他附件内容-->
+            <div ng-include="'views/directCommissioned/maintenance/htmlTemplate/directCommissionedMaintenanceOtherInfo.html'"></div>
+
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--传阅标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 传阅</h4>
+            <!--传阅内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="col-xs-6 col-sm-6 col-md-2 control-label text-right" title="传阅人">传阅人</label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        <span ng-repeat="item in viewModel.circularizePersons">
+                            <span wf-user-presence="item"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 审批意见列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批</h4>
+            <div class="form-inline">
+                <span sog-simple-opinions="opinions"></span>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 其他审批意见-->
+            <h4 class="control-heading bg-info" ng-if="viewModel.isUseCostCenter"><i class="glyphicon glyphicon-list-alt"></i>其他审批意见</h4>
+            <div class="form-inline" ng-if="viewModel.isUseCostCenter">
+                <span sog-simple-opinions="viewModel.otherOpinions"></span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>  

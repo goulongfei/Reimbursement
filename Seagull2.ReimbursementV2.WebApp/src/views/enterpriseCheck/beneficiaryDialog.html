@@ -1,0 +1,72 @@
+﻿<style>
+    tr>td{
+        text-align:center
+    }
+    .beinvested{
+       height:8px;
+       margin-bottom:-1px;
+       display:inline-block;
+       width:84px;
+       background:url('img/line_arrow@2x.png') no-repeat right bottom;
+       background-size:75px 8px;
+       font-size:12px;
+       color:#128bed;
+       text-align:center;
+       margin-right:6px;
+       position:relative;
+   }
+    .right-line{
+       height:8px;
+       margin-bottom:-1px;
+       display:inline-block;
+       width:84px;
+       background:url('img/line_arrow@2x_left.png') no-repeat right bottom;
+       background-size:75px 8px;
+       font-size:12px;
+       color:#128bed;
+       text-align:center;
+       margin-right:6px;
+       position:relative;
+   }
+   .text{
+       position:absolute;
+       text-align:center;
+       display:inline-block;
+       left:0;
+       top:-13px;
+       width:100%;
+   }
+</style>
+<div class="staff-service">
+    <div class="modal-body">
+        <div class="form-inline">
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 受益人信息</h4>
+            <div class="form-inline table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>序号</td>
+                            <td>名称</td>
+                            <td>持股比例</td>
+                            <td>持股方式</td>
+                            <td>占比</td>
+                            <td>层级关系</td>
+                        </tr>
+                    </thead>
+                    <tbody id="talbe-list">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- modal footer -->
+    <div class="modal-footer" style="text-align:center">
+       
+        <button type="button" class="btn btn-default" style="font-size:13px;padding:6px 12px" ng-click="closeThisDialog();">关&nbsp;闭</button>
+    </div>
+</div>
+

@@ -1,0 +1,317 @@
+﻿<!--重要信息-->
+<div class="form-inline" ng-show="viewModel.isEmphasis!==false">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="采购名称">采购名称</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            {{viewModel.purchaseBase.purchaseName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="法人公司">招标人</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.corporationScopeList">{{item.corporationName}}  <br /></span>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="供应商类别">供应商类别</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.industryDomainScope"> {{item.industryDomainName}} <br /></span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="采购类别">采购类别</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.purchaseCategoryName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="是否示范区采购">是否示范区采购</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            <span ng-show="viewModel.purchaseOfEngineering.isExampleArea===true">是</span>
+            <span ng-show="viewModel.purchaseOfEngineering.isExampleArea!==true">否</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="isShowTenderFile">
+        <label class="text-right col-xs-6 control-label" title="使用招标清单">招标清单</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            <span ng-show="viewModel.purchaseBase.isUsedTenderFile===true">使用</span>
+            <span ng-show="viewModel.purchaseBase.isUsedTenderFile!==true">不使用</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="定标专项单方">定标专项单方</label>
+        <div class="col-xs-6 form-group baseifo-input text-right ">
+            {{viewModel.purchaseOfEngineering.calibrationSpecialPrice|number:2}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-show="viewModel.isNeedAgreement===false || viewModel.isAdmin===true">
+        <label class="text-right col-xs-6 control-label" title="本次采购成本目标">本次采购成本目标</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.purchaseCostTargetAmount|number:2}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="建筑面积">建筑面积</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.buildingArea|number:2}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="建设单方成本目标">建设单方成本目标</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.buildingCostTargetPerArea|number:2}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="合约分类">合约分类</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseOfEngineering.contractAgreementTypeName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="合同价格形式">合同价格形式</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.contractPriceTypeName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 form-group">
+        <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="本次招标范围和内容 ">
+            本次招标范围和内容
+            <br />
+        </label>
+        <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+            <p ng-bind-html="viewModel.purchaseOfEngineering.purchaseContent | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 form-group">
+        <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="付款方式描述">付款方式描述</label>
+        <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+            <p ng-bind-html="viewModel.purchaseOfEngineering.paymentWayDescribe | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!--详细信息-->
+<div class="form-inline" ng-show="viewModel.isEmphasis===false">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="采购名称">采购名称</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            {{viewModel.purchaseBase.purchaseName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="isApproval && viewModel.isShowExpenditureType">
+        <label class="col-xs-6 control-label text-right" title="支出类型">支出类型</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.expenditureTypeName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseProject && isApproval && viewModel.isShowExpenditureType">
+        <label class="col-xs-6 control-label text-right" title="使用项目">使用项目</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.useProjectName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseProject && isApproval && viewModel.isShowExpenditureType">
+        <label class="col-xs-6 control-label text-right" title="使用期区">使用期区</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.useStageAreaName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseCostCenter && isApproval && viewModel.isShowExpenditureType">
+        <label class="col-xs-6 control-label text-right" title="使用记账公司">使用记账公司</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.useChargeCompanyName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="viewModel.isUseCostCenter && isApproval && viewModel.isShowExpenditureType">
+        <label class="col-xs-6 control-label text-right" title="使用成本中心">使用成本中心</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseBase.useCostCenterName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label ng-if="!viewModel.isUseProject" class="text-right col-xs-6 control-label" title="项目名称">项目名称</label>
+        <label ng-if="viewModel.isUseProject" class="text-right col-xs-6 control-label" title="合约的列支项目">项目名称</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.projectScopeList">{{item.projectName}} <br /></span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-8 form-group">
+        <label ng-if="!viewModel.isUseProject" class="text-right col-xs-6 col-sm-6 col-md-3 control-label" title="期区">期区</label>
+        <label ng-if="viewModel.isUseProject" class="text-right col-xs-6 col-sm-6 col-md-3 control-label" title="合约的列支期区">期区</label>
+        <div class="col-xs-6 col-sm-6 col-md-9 form-group baseifo-input ">
+            <span ng-repeat="item in viewModel.stageAreaScopeList">{{item.projectName}}-{{item.stageAreaName}} <br /></span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="法人公司">招标人</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.corporationScopeList">{{item.corporationName}} <br /></span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label ng-if="!viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="记账公司">记账公司<span style="color:red;">*</span></label>
+        <label ng-if="viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="合同的列支记账公司">记账公司<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.chargeCompanyName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label ng-if="!viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="成本中心">成本中心<span style="color:red;">*</span></label>
+        <label ng-if="viewModel.isUseCostCenter" class="col-xs-6 control-label text-right" title="合同的列支成本中心">成本中心<span style="color:red;">*</span></label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.costCenterName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="供应商类别">供应商类别</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            <span ng-repeat="item in viewModel.industryDomainScope">{{item.industryDomainName}} <br /></span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="采购类别">采购类别</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.purchaseCategoryName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="定标专项单方">定标专项单方</label>
+        <div class="col-xs-6 form-group baseifo-input text-right ">
+            {{viewModel.purchaseOfEngineering.calibrationSpecialPrice|number:2}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-if="isShowTenderFile">
+        <label class="text-right col-xs-6 control-label" title="使用招标清单">招标清单</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            <span ng-show="viewModel.purchaseBase.isUsedTenderFile===true">使用</span>
+            <span ng-show="viewModel.purchaseBase.isUsedTenderFile!==true">不使用</span>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 form-group">
+        <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="建设地点">建设地点</label>
+        <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+            {{viewModel.purchaseOfEngineering.cityInput.fullPathNameReadOnly}}
+            &nbsp;
+            {{viewModel.purchaseOfEngineering.buildDetailAddress}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-show="viewModel.isNeedAgreement===false || viewModel.isAdmin===true">
+        <label class="text-right col-xs-6 control-label" title="本次采购成本目标">本次采购成本目标</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.purchaseCostTargetAmount|number:2}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="是否示范区采购">是否需要缴纳保证金</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            <span ng-show="viewModel.purchaseOfEngineering.isNeedPaymentDeposit===true">是</span>
+            <span ng-show="viewModel.purchaseOfEngineering.isNeedPaymentDeposit!==true">否</span>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group" ng-show="viewModel.purchaseOfEngineering.isNeedPaymentDeposit===true">
+        <label class="text-right col-xs-6 control-label" title="各供应商应缴纳保证金金额">各供应商应缴纳保证金金额</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.needPaymentDepositAmount|number:2}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="合约分类">合约分类</label>
+        <div class="col-xs-6 form-group baseifo-input">
+            {{viewModel.purchaseOfEngineering.contractAgreementTypeName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="合同价格形式">合同价格形式</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.contractPriceTypeName}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="计价方式">计价方式</label>
+        <div class="col-xs-6 form-group baseifo-input ">
+            {{viewModel.purchaseOfEngineering.valuationWayName}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="建筑面积">建筑面积</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.buildingArea|number:2}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="单价（元）">单价（元）</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.price|number:2}}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="建设单方成本目标">建设单方成本目标</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.purchaseOfEngineering.buildingCostTargetPerArea|number:2}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="本次招标范围和内容 ">
+            本次招标范围和内容
+            <br />
+        </label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-bind-html="viewModel.purchaseOfEngineering.purchaseContent | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="付款方式描述">付款方式描述</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <p ng-bind-html="viewModel.purchaseOfEngineering.paymentWayDescribe | htmlContent"></p>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-4 form-group">
+        <label class="text-right col-xs-6 control-label" title="中标总金额">中标总金额</label>
+        <div class="col-xs-6 form-group baseifo-input text-right">
+            {{viewModel.totalBiddingTotalPrice|number:2}}
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

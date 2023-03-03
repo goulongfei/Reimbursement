@@ -1,0 +1,119 @@
+﻿<div class="modal hidden-print show staff-service">
+    <div class="modal-backdrop hidden-print">
+    </div>
+    <div class="modal-dialog" style="width: 70%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="glyphicon glyphicon-info-sign text-info"></i>供应商查询 
+                    <button type="button" class="close" ng-click="closeThisDialog()"><span>×</span></button>
+                </h4>
+            </div>
+            <div class="appil-container">
+                <div class="form-inline clearfix">
+                    <div class="col-xs-12">
+                        <!--供应商领域-->
+                        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                            <label class="col-xs-6 control-label" title="供应商类别" >供应商类别</label>
+                            <div class="col-xs-4 form-group baseifo-input">
+                                <span supplier-category data="$parent.tradeCatagory" single="false" ng-show="!$parent.tradeCatagoryReadOnly"></span>
+                                <span ng-show="$parent.tradeCatagoryReadOnly">{{$parent.tradeCatagoryName}}</span>
+                            </div>
+                        </div>
+                        <!--行业领域-->
+                        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                            <label class="col-xs-6 control-label" title="供应商名称" >供应商名称</label>
+                            <div class="col-xs-6 form-group baseifo-input">
+                                <input type="text" class="meeting" ng-model="$parent.supplierName" placeholder="供应商名称">
+                            </div>
+                        </div>
+                        <!--供应商等级-->
+                        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                            <label class="col-xs-6 form-group control-label" title="供应商等级">供应商等级</label>
+                            <div class="col-xs-6 form-group baseifo-input">
+                                <select style="width:100%" ng-model="$parent.supplierLevel" placeholder="供应商等级" ng-change="" class="meeting">
+                                    <option ng-repeat="item in supplierLevelList" value="{{item.code}}" ng-selected="item.code==myOrganization.managementUnitCode" title="{{item.cnName}}">{{item.cnName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--是否垄断-->
+                        <div class="col-xs-12 col-sm-6 col-md-4 form-group">
+                            <label class="col-xs-6 control-label" title="是否垄断">是否垄断</label>
+                            <div class="col-xs-6 form-group baseifo-input" ng-if="$parent.isMonopoly">
+                                <input type="radio" disabled name="IsMonopoly" ng-value="true" ng-model="$parent.isMonopoly"><span>是</span>
+                                <input type="radio" disabled name="IsMonopoly" ng-value="false" ng-model="$parent.isMonopoly"><span>否</span>
+                            </div>
+                            <div class="col-xs-6 form-group baseifo-input" ng-if="!$parent.isMonopoly">
+                                <input type="radio"  name="IsMonopoly" ng-value="true" ng-model="$parent.isMonopoly"><span>是</span>
+                                <input type="radio"  name="IsMonopoly" ng-value="false" ng-model="$parent.isMonopoly"><span>否</span>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-md-8 form-group" style="text-align:center">
+                            <button class="btn in-crease" style="margin-right:5%;" ng-click="Add(this.selectnum);closeThisDialog()">确定添加</button>
+                            <button class="btn in-crease" style="margin-right:5%;" ng-click="Search(1)">查询</button>
+                            <button class="btn in-crease" ng-click="ResetSearchConditions()">条件重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>供应商列表</h4>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center"></th>
+                                <th style="text-align:center">供应商名称</th>
+                                <th style="text-align:center">供应商类别</th>
+                                <th style="text-align:center">行业领域</th>
+                                <th style="text-align:center">总部地址</th>
+                                <th style="text-align:center">供应商级别</th>
+                                <th style="text-align:center">供应商考察</th>
+                                <th style="text-align:center">合作次数</th>
+                                <th style="text-align:center">入库时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in querySupplierList.data">
+                                <td style="text-align:left">
+                                    <input type="radio" name="checksupplier" value="{{$index}}" ng-model="$parent.selectnum" />
+                                </td>
+                                <td style="text-align:left">
+                                    <span><a style="color:blue;" ng-click="checkSupplierDetails(detail.code);">{{detail.supplierName}}</a></span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span>{{detail.supplierCatagory}}</span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span>{{detail.tradeArea}}</span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span>{{detail.mainAdress}}</span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span>{{detail.tradeAreaLevelName}}</span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span><a style="color:blue;" ng-click="findInspectionConclusion(detail.code);">查看</a></span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span>{{detail.cooperationTimes}}</span>
+                                </td>
+                                <td style="text-align:left">
+                                    <span>{{detail.createTime | date:'yyyy-MM-dd'}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <div class="col-xs-12 form-group">
+                    <div class="foot-page" tm-pagination="selectCommodityPaging" style="float:right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

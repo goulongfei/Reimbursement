@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <Sql id="SaleModelPermormance">
+    select sa.Code, sa.CompanyCode as CompanyCode ,sa.VersionStartTime as VersionStartTime ,sa.VersionEndTime as  VersionEndTime  from
+    [Sale].[SaleStageGroup] as ssg
+    inner join [Sale].[SaleTeam] as st  on ssg.GroupID=st.StageAreaGroupID    
+    and st.ValidStatus=1 and ssg.StageAreaCode={0}
+
+    inner join [Sale].[SaleTeam_SaleAgent] as stsa on st.Code =stsa.SaleTeamCode   
+    and st.ValidStatus=1 and stsa.ValidStatus=1
+
+    inner join Sale.SaleAgent as sa  on  stsa.SaleAgentCode =sa.Code 
+
+
+    select CompanyCode,ContractDate ,sum(DealPrice) as TotalPrice,sum(AreaValue) as TotalArea
+    from
+    (
+    SELECT sa.CompanyCode as CompanyCode
+    ,pc.ContractAwardDate as ContractDate
+    ,pc.DealPrice
+    ,pa.AreaValue
+    FROM  [Sale].[SaleStageGroup] as ssg
+    inner join [Sale].[SaleTeam] as st  on ssg.GroupID=st.StageAreaGroupID
+    and st.ValidStatus=1 and ssg.StageAreaCode={1}
+
+    inner join [Sale].[SaleTeam_SaleAgent] as stsa on st.Code =stsa.SaleTeamCode
+    and st.ValidStatus=1 and stsa.ValidStatus=1
+
+    inner join Sale.SaleAgent as sa  on  stsa.SaleAgentCode =sa.Code
+    and sa.ValidStatus=1 and stsa.ValidStatus=1 and sa.CompanyCode={2}
+
+    inner join [Sale].[SaleRecord_SaleAgent] as srsa on srsa.SaleAgentCode=sa.Code
+    and sa.ValidStatus=1
+
+    inner join [Sale].[SaleRecord] sr on sr.Code=srsa.SaleRecordCode
+    and sr.ValidStatus=1  and stsa.ValidStatus=1
+
+
+    inner join [Signs].[PurchaseContract] as pc on srsa.SaleRecordCode=pc.SaleRecordCode
+    and stsa.ValidStatus=1 and pc.ValidStatus=1
+
+    inner join [Sale].[SaleRecord_SaleProduct] as pcsp on pcsp.SaleRecordCode=pc.SaleRecordCode
+    and pc.ValidStatus=1
+
+    inner join [Sale].[SaleProductInfoView] as spiv on spiv.ProductCode=pcsp.SaleProductCode
+
+    inner join  ProDefine.ProductArea AS pa ON pa.ProductCode = spiv.ProductCode
+
+    )as a
+    group by CompanyCode,ContractDate
+    order by CompanyCode
+
+  </Sql>
+</Root>

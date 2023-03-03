@@ -1,0 +1,114 @@
+﻿<style>
+    .table_container{
+        width:25%;
+        float:left;
+        margin-right:10px;
+        display:inline-block;
+        background:#F8F8F8;
+    }
+    .table_container>div{
+        height:92px;
+        padding-left:30px;
+        padding-top:20px;
+    }
+    .table_container h2{
+        font-size:30px;
+        font-weight:bold;
+        color:#128BED;
+        margin-top:0px
+    }
+    body{
+ background:#DCE1E8;
+    }
+    table tbody tr td{
+        text-align:center
+    }
+</style>
+<div class="staff-service" style="background:#DCE1E8">
+    <div class="container appil-container" style="background:#fff;padding:15px;">
+        <div class="form-inline">
+            <p style="padding:15px 15px 15px 0px;font-size:13px;border-bottom:1px solid #F6F6F6"><span class="title">监控变更统计</span></p>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-inline">
+            <a class="table_container" ng-click="showDetail()">
+                <div>
+                    <div>工商信息</div>
+                    <h2>0</h2>
+                </div>   
+            </a>
+            <a class="table_container">
+                <div>
+                    <div>司法诉讼</div>
+                    <h2>14</h2>
+                </div>
+            </a>
+            <a class="table_container">
+                <div>
+                    <div>经营风险</div>
+                    <h2>0</h2>
+                </div>
+            </a>
+            <div class="clearfix"></div>
+        </div> 
+        <div class="form-inline">
+            <p style="padding:15px 15px 15px 0px;font-size:13px;border-bottom:1px solid #F6F6F6">
+                <span class="title">
+                    监控动态趋势 - 风险类型
+                </span>
+            </p>
+            <div class="clearfix"></div>
+        </div>
+        <div id="main" style="height:400px;width: 100%">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="container appil-container" style="margin-top:10px;background:#fff;padding:15px;" >
+
+        <div class="form-inline">
+            <p style="padding:15px 15px 15px 0px;font-size:13px;border-bottom:1px solid #F6F6F6">
+                <span class="title">
+                    监控动态趋势 - 风险级别
+                </span>
+            </p>
+            <div class="clearfix"></div>
+        </div>
+        <div id="risk" style="height:400px;width: 100%">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="container appil-container" style="margin-top:10px;background:#fff;padding:15px;" >
+
+        <div class="form-inline">
+            <p style="padding:15px 15px 15px 0px;font-size:13px;border-bottom:1px solid #F6F6F6">
+                <span class="title">
+                    监控动态分布图
+                </span>
+            </p>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-inline">
+            <table style="width:100%">
+                <tbody>
+                    <tr>
+                        <td width="50%">
+                            <div style="height:400px;position:relative;padding:15px;" id="dynamic"></div>
+                        </td>
+                        <td width="50%">
+                            <div style="height:400px;position:relative;padding:15px" id="enterprise"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>监控动态</td>
+                        <td>监控企业</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+

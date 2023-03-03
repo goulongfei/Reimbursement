@@ -1,0 +1,103 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/DirectCommissionedImplementAuditApplicationWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--重要信息开关-->
+            <div is-emphasis data="viewModel.isEmphasis"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <h4 class="control-heading bg-info">
+                <i class="glyphicon glyphicon-list-alt"></i> 采购基本信息
+                <input type="button" style="margin-left:82%;font-weight:900;background-color:#d9edf7;" name="name" value="{{settings.spreadButtonName}}" class="btn" ng-click="baseInfo.spreadInfoFn()" />
+            </h4>
+            <!--采购基本信息内容-->
+            <div ng-if="settings.isSpreadInfo == true">
+                <div ng-if="viewModel.isEmphasis === true" ng-include="'views/directCommissioned/implement/htmlTemplate/directCommissionedImplementImportantBaseInfo.html'"></div>
+                <div ng-if="viewModel.isEmphasis === false" ng-include="'views/directCommissioned/implement/htmlTemplate/directCommissionedImplementBaseInfo.html'"></div>
+            </div>
+            <div ng-if="settings.isSpreadInfo == false">
+                <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-2 control-label" title="采购名称">采购名称</label>
+                    <div class="col-xs-6 col-sm-6 col-md-10 form-group baseifo-input">
+                        {{viewModel.purchaseBase.purchaseName}}
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--委托信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 委托信息</h4>
+            <!--委托信息内容-->
+            <div purchase-delegation-info data="viewModel.purchaseDelegationInfoList" opts="settings.delegationOpts" readonly="true"
+                 price-file="viewModel.pirceFile"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--预算审核信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 预算审核信息</h4>
+            <!--预算审核信息内容-->
+            <div ng-if="viewModel.isEmphasis === true" ng-include="'views/directCommissioned/implement/htmlTemplate/directCommissionedImplementInitialAuditChart.html'"></div>
+            <div ng-if="viewModel.isEmphasis === false" ng-include="'views/directCommissioned/implement/htmlTemplate/directCommissionedImplementInitialAudit.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--预算资料清单标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 预算资料</h4>
+            <!--预算资料内容-->
+            <div ng-include="'views/directCommissioned/implement/htmlTemplate/directCommossionedImplementMaterialMediumFile.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--其他附件标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 其他附件</h4>
+            <!--其他附件内容-->
+            <div ng-include="'views/directCommissioned/implement/htmlTemplate/directCommissionedImplementOtherInfo.html'"></div>
+
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 审批意见列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批</h4>
+            <div class="form-inline">
+                <span sog-simple-opinions="opinions"></span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>  

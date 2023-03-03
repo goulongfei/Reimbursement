@@ -1,0 +1,62 @@
+﻿<div wf-title="选择采购计划编制对象"></div>
+<div class="staff-service">
+    <!--页面标题开始-->
+    <div class="page-header col-xs-12 clearfix" style="text-align:center;">
+        <span>选择采购计划编制对象</span>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+</div>
+<div class="centerArea" style="margin: 0px auto;width: 50%;">
+    <div class="staff-service">
+        <div class="col-xs-12">
+            <!--信息项组标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt">请选择编制采购计划的期区\地块</i></h4>
+
+            <!--信息项组内容-->
+            <div class="col-xs-12  form-group">
+                <label class="col-xs-3 control-label text-right" title="城市">城市<span style="color:red;">*</span></label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <select ng-model="viewModel.selectCity.code" ng-options="p.code as p.name for p in viewModel.citys" class="meeting" ng-selected="p.code==viewModel.selectCity.code" ng-change="baseInfo.selectCity()">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="col-xs-12  form-group">
+                <label class="col-xs-3 control-label text-right" title="项目">项目<span style="color:red;">*</span></label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <select ng-model="viewModel.selectProject.code" ng-options="p.code as p.name for p in viewModel.projects" class="meeting" ng-selected="p.code==viewModel.selectProject.code" ng-change="baseInfo.selectProject()">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="col-xs-12  form-group">
+                <label class="col-xs-3 control-label text-right" title="期区">期区<span style="color:red;">*</span></label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <select ng-model="viewModel.selectStageArea.code" ng-options="p.code as p.name for p in viewModel.stageAreas" class="meeting" ng-selected="p.code==viewModel.selectStageArea.code" ng-change="baseInfo.selectStageArea()">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="col-xs-12  form-group">
+                <div class="col-xs-6 text-center">
+                    <button type="button" ng-click="submit()" class="in-crease">确定</button>
+                </div>
+                <div class="col-xs-6 text-center ">
+                    <button type="button" ng-click="cancel()" class="in-crease">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="staff-service">
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+    <div class="bs-docs-footer hidden-print">
+        <div class="container appil-container">
+        </div>
+    </div>
+</div>

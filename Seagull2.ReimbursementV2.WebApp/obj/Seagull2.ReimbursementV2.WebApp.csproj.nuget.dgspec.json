@@ -1,0 +1,94 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\EWork\\ReimbursementV2\\Seagull2.ReimbursementV2.WebApp\\Seagull2.ReimbursementV2.WebApp.csproj": {}
+  },
+  "projects": {
+    "E:\\EWork\\ReimbursementV2\\Seagull2.ReimbursementV2.WebApp\\Seagull2.ReimbursementV2.WebApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\EWork\\ReimbursementV2\\Seagull2.ReimbursementV2.WebApp\\Seagull2.ReimbursementV2.WebApp.csproj",
+        "projectName": "Seagull2.PurchaseV2.WebApp",
+        "projectPath": "E:\\EWork\\ReimbursementV2\\Seagull2.ReimbursementV2.WebApp\\Seagull2.ReimbursementV2.WebApp.csproj",
+        "packagesPath": "C:\\Users\\goulongfei\\.nuget\\packages\\",
+        "outputPath": "E:\\EWork\\ReimbursementV2\\Seagull2.ReimbursementV2.WebApp\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\goulongfei\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "http://nuget-source.sinooceangroup.com/nuget/seagull2nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net462": {
+          "dependencies": {
+            "MCS.Library": {
+              "target": "Package",
+              "version": "[2.6.1, )"
+            },
+            "MCS.Library.Data": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "MCS.Library.OGUPermission": {
+              "target": "Package",
+              "version": "[2.1.2, )"
+            },
+            "MCS.Library.SOA.Web.WebControls": {
+              "target": "Package",
+              "version": "[1.7.2, )"
+            },
+            "MCS.Web.Library": {
+              "target": "Package",
+              "version": "[1.2.1, )"
+            },
+            "MCS.Web.MVC.Library": {
+              "target": "Package",
+              "version": "[1.0.0.103, )"
+            },
+            "Mcs.Web.Mvc": {
+              "target": "Package",
+              "version": "[5.8.0, )"
+            },
+            "SinoOcean.Seagull2.TransactionData.Evaluation": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "SinoOcean.Seagull2.TransactionData.Questionnaire": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

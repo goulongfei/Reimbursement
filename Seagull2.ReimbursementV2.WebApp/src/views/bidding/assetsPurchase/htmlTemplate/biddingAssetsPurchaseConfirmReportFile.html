@@ -1,0 +1,54 @@
+﻿<div class="form-inline">
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="定标报告" style="text-align:right;">定标报告</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <span ng-repeat="file in viewModel.sureReportFile|orderBy : 'round' : false">
+                <span wf-uploader files="[file]" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></span>
+                <br />
+            </span>
+        </div>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="商务评标报告" style="text-align:right;">商务评标报告</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <span ng-repeat="evaluteFile in viewModel.businessEvaluateFileList|orderBy : 'round' : false">
+                <span ng-repeat="file in evaluteFile.clientFileInformationList">
+                    <span wf-uploader files="[file]" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></span>
+                    <br />
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="技术标评标报告" style="text-align:right;">技术标评标报告</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <span ng-repeat="evaluteFile in viewModel.technologyEvaluateFileList|orderBy : 'round' : false">
+                <span ng-repeat="file in evaluteFile.clientFileInformationList">
+                    <span wf-uploader files="[file]" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></span>
+                    <br />
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 form-group">
+        <label class="text-right col-xs-6 col-sm-3 col-md-2 control-label" title="其他附件" style="text-align:right;">其他附件</label>
+        <div class="col-xs-6 col-sm-9 col-md-10 form-group baseifo-input">
+            <span ng-repeat="file in viewModel.sureOtherFile|orderBy : 'round' : false">
+                <span wf-uploader files="[file]" opts="settings.fileopts" ready="settings.fileReady" read-only="true"></span>
+                <br />
+            </span>
+        </div>
+    </div>
+    <div class="clearfix visible-xs-block"></div>
+    <div class="clearfix"></div>
+
+</div>

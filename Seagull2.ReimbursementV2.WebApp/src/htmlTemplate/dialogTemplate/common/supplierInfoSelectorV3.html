@@ -1,0 +1,186 @@
+﻿<style type="text/css">
+    .changeColor {
+        color: blue;
+    }
+</style>
+<div class="staff-service">
+    <div class="appil-container">
+        <h4 class="control-heading bg-info">
+            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;搜索条件
+        </h4>
+        <div class="form-inline clearfix">
+            <!--行业领域-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="行业领域"> 行业领域</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <span supplier-category data="$parent.tradeCatagory" opts="tradeCatagoryOpts" ng-show="tradeCatagoryReadOnly===false"></span>
+                    <input class="meeting" ng-show="tradeCatagoryReadOnly===true" style="display:inline-block;" disabled ng-value="tradeCatagoryName" title="{{tradeCatagoryName}}" />
+                </div>
+            </div>
+            <!--供应商名称-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="供应商名称">供应商名称</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <input type="text" class="meeting" ng-model="$parent.supplierName" placeholder="供应商名称">
+                </div>
+            </div>
+            <!--合作项目-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="合作项目">合作项目</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <span supplier-project opts="projectOpts"></span>
+                </div>
+            </div>
+            <!--合作时间-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="合作时间">合作时间</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <input id="cooperationStartTime" style="width:30%" type="text" pick-a-date="$parent.cooperationStartTime" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }" class="form-control-text iecssl" />
+                    至
+                    <input id="cooperationEndTime" style="width:30%" type="text" pick-a-date="$parent.cooperationEndTime" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }" class="form-control-text iecssl" />
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <!--可合作城市-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 form-group control-label" title="可合作城市">可合作城市</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <span project-city opts="projectCityOpts"></span>
+                </div>
+            </div>
+            <!--入库时间-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="入库时间">入库时间</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <input id="enterStartTime" style="width:30%" type="text" pick-a-date="$parent.enterStartTime" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }" class="form-control-text iecssl" />
+                    至
+                    <input id="enterEndTime" style="width:30%" type="text" pick-a-date="$parent.enterEndTime" pick-a-date-options="{ format: 'yyyy-mm-dd',selectYears: true }" class="form-control-text iecssl" />
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <!--供应商级别-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="供应商级别">供应商级别</label>
+                <div class="col-xs-9 form-group baseifo-input">
+                    <span ng-repeat="item in supplierLevelList">
+                        <input type="checkbox" ng-change="levelChecked(item)" ng-model="item.checked" value="item.cnName">{{item.cnName}}&nbsp;&nbsp;
+                    </span>
+                </div>
+            </div>
+            <!--是否小微-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="是否小微">是否小微</label>
+                <div class="col-xs-9 form-group baseifo-input" ng-if="!$parent.isTinyEditable">
+                    <div class="switch-btn-box">
+                        <span class="btn checkbox-label-not"
+                              ng-class="{'checkbox-label-this':$parent.isTiny===true}"
+                              ng-click="isTinyChange(true)">是</span>
+                        <span class="btn checkbox-label-not"
+                              ng-class="{'checkbox-label-this':$parent.isTiny===false}"
+                              ng-click="isTinyChange(false)">否</span>
+                    </div>
+                </div>
+                <div class="col-xs-8 form-group baseifo-input" ng-if="$parent.isTinyEditable">
+                    <span>否</span>
+                </div>
+            </div>
+            <!--是否垄断-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="是否垄断">是否垄断</label>
+                <div class="col-xs-9 form-group baseifo-input" ng-if="$parent.isMonopolyEditable">
+                    <span>是</span>
+                </div>
+                <div class="col-xs-9 form-group baseifo-input" ng-if="!$parent.isMonopolyEditable">
+                    <div class="switch-btn-box">
+                        <span class="btn checkbox-label-not"
+                              ng-class="{'checkbox-label-this':$parent.isMonopoly===true}"
+                              ng-click="isMonopolyChange(true)">是</span>
+                        <span class="btn checkbox-label-not"
+                              ng-class="{'checkbox-label-this':$parent.isMonopoly===false}"
+                              ng-click="isMonopolyChange(false)">否</span>
+                    </div>
+                </div>
+            </div>
+            <!--是否战采-->
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group" style="margin-top:2px;">
+                <label class="col-xs-3 control-label" title="是否战采">是否战采</label>
+                <div class="col-xs-9 form-group baseifo-input" ng-if="$parent.isStrategyEditable">
+                    <span>是</span>
+                </div>
+                <div class="col-xs-9 form-group baseifo-input" ng-if="!$parent.isStrategyEditable">
+                    <div class="switch-btn-box">
+                        <span class="btn checkbox-label-not"
+                              ng-class="{'checkbox-label-this':$parent.isStrategy===true}"
+                              ng-click="isStrategyChange(true)">是</span>
+                        <span class="btn checkbox-label-not"
+                              ng-class="{'checkbox-label-this':$parent.isStrategy===false}"
+                              ng-click="isStrategyChange(false)">否</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 form-group" style="text-align:center;margin:3px;">
+                <button style="margin:10px;" class="btn btn-primary" ng-click="Search()">查 询</button>&nbsp;&nbsp;
+                <button style="margin:10px;" class="btn btn-primary" ng-click="Add(this.selectnum);">添 加</button>&nbsp;&nbsp;
+                <button style="margin:10px;" class="btn btn-primary" ng-click="ResetSearchConditions();reset();">重 置</button>
+            </div>
+        </div>
+        <h4 class="control-heading bg-info sidebar-open-btn">
+            <i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;供应商列表
+        </h4>
+        <div class="form-inline clearfix">
+            <div class="table-responsive" style="min-height:80% !important;">
+                <table class="table table-bordered table-striped" style="margin:0px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;vertical-align:middle;"></th>
+                            <th style="text-align:center;vertical-align:middle;">供应商名称<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('supplierName',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('supplierName',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">行业领域类别<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('detailsCategoryName',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('detailsCategoryName',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">&nbsp;行业领域&nbsp;<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('tradeArea',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('tradeArea',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">供应商级别<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('TradeAreaLevel',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('TradeAreaLevel',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">行业领域<br>入围次数<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('domainShortListTimes',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('domainShortListTimes',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">行业领域<br>合作次数<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('domainCooperationTimes',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('domainCooperationTimes',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">供应商<br>合作次数<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('cooperationTimes',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('cooperationTimes',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">总部地址<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('headquartersDetailAddress',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('headquartersDetailAddress',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">&nbsp;入库时间&nbsp;<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('createTime',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('createTime',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">资料更新时间<sup style="cursor:pointer" class="glyphicon glyphicon-arrow-up" ng-click="Search('modifyTime',false)"></sup><sup style="cursor:pointer" class="glyphicon glyphicon-arrow-down" ng-click="Search('modifyTime',true)"></sup></th>
+                            <th style="text-align:center;vertical-align:middle;">供应商<br>考察详情</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="detail in querySupplierList.data">
+                            <td style="text-align:left">
+                                <input type="radio" name="checksupplier" value="{{$index}}" ng-click="$parent.selectnum=$index" />
+                            </td>
+                            <td style="text-align:left">
+                                <span title="{{detail.supplierName}}"><a style="color:blue;" ng-click="checkSupplierDetails(detail.code);">{{detail.supplierName}}</a></span>
+                            </td>
+                            <td style="text-align:left">{{detail.detailsCategoryName}}</td>
+                            <td title="{{detail.tradeArea}}" style="text-align:left">{{detail.tradeArea |txtLimitLength:true:5:' ...'}}</td>
+                            <td style="text-align:left">{{detail.tradeAreaLevelName}}</td>
+                            <td style="text-align:right">
+                                <span><a style="color:blue;" ng-click="openDomainShortListTimesModal(detail);">{{detail.domainShortListTimes}}</a></span>
+                            </td>
+                            <td style="text-align:right">
+                                <span><a style="color:blue;" ng-click="openCooperationDetailsModal('tradeArea',detail);">{{detail.domainCooperationTimes}}</a></span>
+                            </td>
+                            <td style="text-align:right">
+                                <span><a style="color:blue;" ng-click="openCooperationDetailsModal('supplier',detail);">{{detail.cooperationTimes}}</a></span>
+                            </td>
+                            <td title="{{detail.headquartersDetailAddress}}" style="text-align:left">{{detail.headquartersDetailAddress |txtLimitLength:true:8:' ...'}}</td>
+                            <td style="text-align:left">{{detail.createTime | date:'yyyy-MM-dd'}}</td>
+                            <td style="text-align:left">{{detail.modifyTime | date:'yyyy-MM-dd'}}</td>
+                            <td style="text-align:left">
+                                <span><a style="color:blue;" ng-click="findInspectionConclusion(detail.code);">查看</a></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--分页-->
+            <div style="margin:0px;float:right" class="foot-page" tm-pagination="selectCommodityPaging"></div>
+        </div>
+    </div>
+</div>
+
+

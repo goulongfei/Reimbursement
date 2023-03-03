@@ -1,0 +1,93 @@
+﻿
+<div class="modal-body" style="max-height: 430px">
+    <div class="container appil-container" style="width:100%">
+        <!--选择-->
+        <div ng-show="readOnly !== true">
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;采购内容</h4>
+            <div class="form-inline clearfix">
+                <div class="table-responsive" style="max-height: 310px; overflow: auto;">
+                    <table class="table table-hover table-bordered table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="table-thead" style="text-align:center;">选择</th>
+                                <th class="table-thead" style="text-align:center;">序号</th>
+                                <th class="table-thead" style="text-align:center;">物品名称</th>
+                                <th class="table-thead" style="text-align:center;">预计价格</th>
+                                <th class="table-thead" style="text-align:center;">数量</th>
+                                <th class="table-thead" style="text-align:center;" ng-show="false">单位</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center" ng-repeat="item in data">
+                                <td style="text-align:center;">
+                                    <input type="checkbox" ng-model="item.checked" ng-change="selectOne(item.checked)">
+                                </td>
+                                <td style="text-align:center;">
+                                    {{$index+model.pageIndex+1}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.goodsName}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.perPrice}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.count}}
+                                </td>
+                                <td style="text-align:center;" ng-show="false">
+                                    {{item.measurementUnitName}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--查看-->
+        <div ng-show="readOnly === true">
+            <div class="form-inline clearfix">
+                <div class="table-responsive" style="max-height: 310px;overflow: auto;">
+                    <table class="table table-hover table-bordered table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="table-thead" style="text-align:center;">序号</th>
+                                <th class="table-thead" style="text-align:center;">物品名称</th>
+                                <th class="table-thead" style="text-align:center;">预计价格</th>
+                                <th class="table-thead" style="text-align:center;">数量</th>
+                                <th class="table-thead" style="text-align:center;" ng-show="false">单位</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center" ng-repeat="item in data">
+                                <td style="text-align:center;">
+                                    {{$index+1}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.goodsName}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.perPrice}}
+                                </td>
+                                <td style="text-align:center;">
+                                    {{item.count}}
+                                </td>
+                                <td style="text-align:center;" ng-show="false">
+                                    {{item.measurementUnitName}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--分页-->
+        <div style="margin:0px;float:right" class="foot-page" tm-pagination="model.paginationConf"></div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="closeThisDialog();">取消</button>
+    <button type="button" class="btn btn-primary" ng-click="model.confirm();" ng-show="readOnly!==true" ng-if="!readOnly">确定</button>
+</div>
+<style>
+</style>

@@ -1,0 +1,99 @@
+﻿<style>
+    .cursor {
+        cursor: pointer;
+    }
+</style>
+<div wf-title="title"></div>
+<div class="staff-service">
+    <div class="staff-service">
+        <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+        <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingImplementTechnologyEvaluateWf" wf-collect-data-fn="collectData"></div>
+        <!--工具栏结束-->
+        <!--流程导航开始-->
+        <div ng-include="'views/common/flow-nav.html'"></div>
+        <!--流程导航结束-->
+        <!--表单正文开始，打印-->
+        <div class="container appil-container">
+            <!--左侧导航-->
+            <div ng-if="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3" left-nav opts="settings.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+            <!--页面标题开始-->
+            <div class="page-header clearfix">
+                <span>{{title}}</span>
+                <small>单据编号：{{viewModel.flowNumber}}</small>
+            </div>
+            <!--页面标题结束-->
+            <!--采购基本信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 采购基本信息</h4>
+            <!--采购基本信息内容-->
+            <div ng-include="'views/bidding/implement/htmlTemplate/biddingImplementBaseInfoInvite.html'"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--标段信息标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 标段信息</h4>
+            <!--标段信息内容-->
+            <div bid-section-info data="viewModel.biddingSectionInfoList" opts="settings.bidSectionInfoOpts" read-only="true" sog-valide-status="标段信息"></div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+
+            <!--附件标题-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt" id=""></i> 附件</h4>
+            <!--附件内容-->
+            <div class="form-inline">
+                <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-4 control-label" title="历史技术评标文件">历史技术评标文件</label>
+                    <div class="col-xs-6 col-sm-6 col-md-8 form-group baseifo-input">
+                        <p ng-repeat="EvaluateFile in viewModel.historyTechnologyEvaluateFileList|orderBy : 'round' : false">
+                            <span ng-repeat="file in EvaluateFile.clientFileInformationList">
+                                <span wf-uploader files="[file]" opts="fileOpts" ready="settings.technologyEvaluateFileReady" read-only="true"></span>
+                                <br />
+                            </span>
+                            <br />
+                        </p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                    <label class="text-right col-xs-6 col-sm-6 col-md-4 control-label" title="技术评标文件">技术评标文件</label>
+                    <div class="col-xs-6 col-sm-9 col-md-8 form-group baseifo-input">
+                        <p ng-repeat="file in viewModel.technologyEvaluateFile.clientFileInformationList">
+                            <span wf-uploader files="[file]" opts="fileOpts" ready="settings.technologyEvaluateFileReady" read-only="true"></span>
+                            <br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block visible-sm-block"></div>
+            <div class="clearfix"></div>
+            <div ng-show="settings.supplierScopeOpts.model.industryDomainWithLabel">
+                <!--入围供应商标题-->
+                <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 入围供应商<span style="color:red;">*</span></h4>
+                <!--入围供应商内容-->
+                <div supplier-scope data="viewModel.replySupplierScopeList" opts="settings.supplierScopeOpts"
+                     sog-valide-status="入围供应商" readonly="true"></div>
+                <div class="clearfix visible-xs-block visible-sm-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 评论列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 评论列表</h4>
+            <div class="form-inline">
+                <div class="form-inline">
+                    <span sog-comment="opinions"></span>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="clearfix"></div>
+            </div>
+            <!-- 审批意见列表-->
+            <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 审批</h4>
+            <div class="form-inline">
+                <span sog-simple-opinions="opinions"></span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!--表单正文结束-->
+        <!--页脚开始，不打印-->
+        <div ng-include="'views/common/foot-copyright.html'"></div>
+        <!--页脚结束-->
+        <!--右侧通栏开始，不打印-->
+        <div ng-include="'views/common/right-navigator.html'"></div>
+    </div>
+</div>  

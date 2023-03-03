@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Table>
+  <Row>
+    <Description>查找当前用户项目信息和置业顾问信息</Description>
+    <Name>GetProjectsOfAgent</Name>
+    <Value>
+      SELECT DISTINCT sgg.GroupID,p.Code as ProjectCode,c.CnName+'-'+sgg.GroupName AS CnName,sa.Code,sa.CnName as SaleAgentName,sa.Phone,sa.SaleGroupSalePostion,sa.[SaleGroupSalePostionName],sa.CallSaleAgentType,  sa.[CompanyCode]
+      ,sa.[CompanyName] FROM
+      [Sale].[SaleAgentView] sa
+      INNER JOIN Sale.SaleStageGroup sgg ON sgg.GroupID =sa.StageGroupCode AND sa.Phone={0}
+      INNER JOIN ProDefine.StageArea saa ON saa.Code =sgg.StageAreaCode AND saa.VersionEndTime IS NULL
+      INNER JOIN ProDefine.ProjectInfo p ON p.code =saa.ProjectInfoCode AND p.VersionEndTime IS NULL
+      INNER JOIN LandObtained.ProjectCity c ON c.Code =p.ProjectCityCode AND c.VersionEndTime IS NULL
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+
+
+
+  <Row>
+    <Description>根据职业顾问电话和项目编码获客户的信息</Description>
+    <Name>GetCustomersByAgentPhoneInProject</Name>
+    <Value>
+      select
+      spc.SaleStageAreaGroupID AS ProjectCode,
+      spc.Code as SaleProjectCustomerCode,
+      t.MainCode as Phone,
+      isnull( svt.EventTime, '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,cpb.Code as customerCode,cpb.CnName,
+      spc.CustomerCategoryCode,
+      isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN  Relationship.PersonBase  cpb  ON cpb.Code=spc.CustomerCode
+      AND cpb.ValidStatus =1 
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN Common.Tel t ON t.FlagCode =spc.CustomerCode AND t.IsPreferred=1 AND t.TelCategoryCode='1'
+      left outer join SAle.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      WHERE sa.Phone ={0} AND spc.SaleStageAreaGroupID={1}
+
+      UNION
+      select
+      spc.SaleStageAreaGroupID AS ProjectCode,
+
+      spc.Code as SaleProjectCustomerCode,
+      t.MainCode as Phone,
+      isnull( svt.EventTime, '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,org.Code,org.CnName
+      ,  spc.CustomerCategoryCode
+      ,isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN Relationship.CompanyCustomer pc ON pc.Code=spc.CustomerCode AND pc.ValidStatus=1 AND pc.VersionEndTime IS null
+      INNER JOIN Common.Company  com  ON com.Code=spc.CustomerCode  AND com.ValidStatus =1 and com.VersionEndTime IS null
+      INNER JOIN Common.OrganizationInstitutions org on com.Code=org.Code and org.VersionEndTime IS null
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN Common.Tel t ON t.FlagCode =spc.CustomerCode AND t.IsPreferred=1 AND t.TelCategoryCode='2'
+      left outer join SAle.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      WHERE sa.Phone ={0} AND spc.SaleStageAreaGroupID={1}
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+
+  <Row>
+    <Description>根据条件查询置业顾问某项目的客户</Description>
+    <Name>GetCustomersInfo</Name>
+    <Value>
+      select
+      spc.SaleStageAreaGroupID AS ProjectCode,
+      spc.Code as SaleProjectCustomerCode,
+      t.MainCode as Phone,
+      isnull(CONVERT(varchar(100), svt.EventTime, 111), '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,cpb.Code as customerCode,cpb.CnName,
+      spc.CustomerCategoryCode,
+      isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      ,isnull(FU.FULevel,0) as FollowUpLevel
+      ,FU.AddTime
+      ,FU.ThisFUTime
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN  Relationship.PersonBase  cpb  ON cpb.Code=spc.CustomerCode
+      AND cpb.ValidStatus =1
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN Common.Tel t ON t.FlagCode =spc.CustomerCode AND t.IsPreferred=1 AND t.TelCategoryCode='1'
+      left outer join sale.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' AND spc.SaleStageAreaGroupID='{1}'
+      {2}
+
+      UNION
+      select
+      spc.SaleStageAreaGroupID AS ProjectCode,
+
+      spc.Code as SaleProjectCustomerCode,
+      t.MainCode as Phone,
+      isnull(CONVERT(varchar(100), svt.EventTime, 111), '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,cpb.Code,cpb.CnName
+      ,  spc.CustomerCategoryCode
+      ,isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      ,isnull(FU.FULevel,0) as FollowUpLevel
+      ,FU.AddTime
+      ,FU.ThisFUTime
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN Relationship.CompanyCustomer pc ON pc.Code=spc.CustomerCode AND pc.ValidStatus=1 AND pc.VersionEndTime IS null
+      INNER JOIN Common.Company  com  ON com.Code=spc.CustomerCode  AND com.ValidStatus =1 and com.VersionEndTime IS null
+      INNER JOIN Common.OrganizationInstitutions cpb on com.Code=cpb.Code and cpb.VersionEndTime IS null
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN Common.Tel t ON t.FlagCode =spc.CustomerCode AND t.IsPreferred=1 AND t.TelCategoryCode='2'
+      left outer join SAle.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' AND spc.SaleStageAreaGroupID='{1}'
+      {2}
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>根据条件查询置业顾问某项目的客户</Description>
+    <Name>GetCustomersInfoByPhone</Name>
+    <Value>
+      select DISTINCT
+      spc.SaleStageAreaGroupID AS ProjectCode,
+      spc.Code as SaleProjectCustomerCode,
+      t.phoneNum as Phone,
+      isnull(CONVERT(varchar(100), svt.EventTime, 111), '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,cpb.Code as customerCode,cpb.CnName,
+      spc.CustomerCategoryCode,
+      isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      ,isnull(FU.FULevel,0) as FollowUpLevel
+      ,FU.AddTime
+      ,FU.ThisFUTime
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN  Relationship.PersonBase  cpb  ON cpb.Code=spc.CustomerCode
+      AND cpb.ValidStatus =1
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN (SELECT d.MainCode AS phoneNum,w.FlagCode,w.TelCategoryCode,w.MainCode FROM  Common.Tel w LEFT JOIN  Common.Tel d ON w.FlagCode=d.FlagCode WHERE  d.IsPreferred=1) t ON t.FlagCode =spc.CustomerCode AND t.TelCategoryCode='1'
+      left outer join sale.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' --AND spc.SaleStageAreaGroupID='{1}'
+      {2}
+
+      UNION
+      select DISTINCT
+      spc.SaleStageAreaGroupID AS ProjectCode,
+
+      spc.Code as SaleProjectCustomerCode,
+      t.phoneNum as Phone,
+      isnull(CONVERT(varchar(100), svt.EventTime, 111), '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,cpb.Code,cpb.CnName
+      ,  spc.CustomerCategoryCode
+      ,isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      ,isnull(FU.FULevel,0) as FollowUpLevel
+      ,FU.AddTime
+      ,FU.ThisFUTime
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN Relationship.CompanyCustomer pc ON pc.Code=spc.CustomerCode AND pc.ValidStatus=1 AND pc.VersionEndTime IS null
+      INNER JOIN Common.Company  com  ON com.Code=spc.CustomerCode  AND com.ValidStatus =1 and com.VersionEndTime IS null
+      INNER JOIN Common.OrganizationInstitutions cpb on com.Code=cpb.Code and cpb.VersionEndTime IS null
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN (SELECT d.MainCode AS phoneNum,w.FlagCode,w.TelCategoryCode,w.MainCode FROM  Common.Tel w LEFT JOIN  Common.Tel d ON w.FlagCode=d.FlagCode WHERE  d.IsPreferred=1) t ON t.FlagCode =spc.CustomerCode AND t.TelCategoryCode='2'
+      left outer join SAle.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' --AND spc.SaleStageAreaGroupID='{1}'
+      {2}
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>获取客户状态信息</Description>
+    <Name>GetCustomersStatusInfo</Name>
+    <Value>
+      select * from [Sale].[SaleProjectCustomerView] where Code={0}
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>认知渠道</Description>
+    <Name>GetSaleAdvertisMedia</Name>
+    <Value>
+      SELECT sam.Code,
+      isnull(pt.CnName,'其他') + '-' + isnull(cost.CnName,'其他') + '-' +sam.CnName AS CnName
+      FROM  [Sale].SaleAdvertisMedia sam
+      LEFT OUTER JOIN Sale.PromotionType pt ON pt.Code = sam.PromotionCategory
+      LEFT OUTER JOIN Sale.PromotionTypeItem cost ON  cost.Code = sam.PromotionTypeItemCode
+      WHERE sam.ValidStatus=1 and sam.StageAreaGroupID={0}
+      union all
+      SELECT  mp.Code ,
+      pt.CnName + '-' + pti.CnName + '-' + mp.CnName AS CnName
+      FROM    Sale.MonthPromotePlan mp
+      INNER JOIN Sale.PromotionType pt ON pt.Code=mp.PromoteTypeCode
+      INNER JOIN Sale.PromotionTypeItem pti ON pti.Code=mp.CostTypeCode
+      WHERE    mp.VersionEndTime IS NULL
+      and mp.ValidStatus=1 and mp.IsChanel=1
+      and mpp.ProjectCode ={0}
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+  <Row>
+    <Description>查找置业顾问</Description>
+    <Name>GetSaleAgents</Name>
+    <Value>
+      SELECT  [Code]
+      ,[CnName]
+      ,[CompanyCode]
+      ,[CompanyName]
+      ,[Phone]
+      ,[SaleGroupSalePostionName]
+      FROM [Sale].[SaleAgentView] as b
+      where    b.[StageGroupCode] ={0}
+      and  (({2}='1' and b.[SaleGroupSalePostion] in ('3')) or ({2}='9' and b.[SaleGroupSalePostion] in ('3','1','9')))
+      and exists(
+      select 1 from [Sale].[SaleAgentView] as a where ((a.[SaleGroupSalePostion]='1'
+      and a.[CompanyCode]=b.[CompanyCode]) or {2}='9')    and a.[StageGroupCode]=b.[StageGroupCode]
+      and a.Phone={1}
+
+      )
+      order by [CompanyName],[SaleGroupSalePostionName],[CnName]
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+  <Row>
+    <Description>查找某项目的置业顾问和甲方乙方销售经理的详细信息</Description>
+    <Name>GetSaleAgentAndManagerInfoByPhoneInProject</Name>
+    <Value>
+      SELECT distinct  b.Phone as ManagerPhone,a.*
+      FROM
+      [Sale].[SaleAgentView] as a
+      left outer join
+      [Sale].[SaleAgentView] as b on   a.[CompanyCode]=b.[CompanyCode]
+      and b.[SaleGroupSalePostion]='1'
+      and b.[StageGroupCode]=a.[StageGroupCode]
+      where   a.[SaleGroupSalePostion] in ('1','2','3','9')  and  a.[StageGroupCode] ={0}   and a.Phone={1}
+      --and a.StartDate &lt; ={2} and dateadd(day,1,a.EndDate)>{2}
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+  <Row>
+    <Description>查找某项目的置业顾问实际来电来访量</Description>
+    <Name>GetSaleAgentCallVisitCountByProjectCode</Name>
+    <Value>
+
+      select distinct sa.CompanyCode,sa.CompanyName,sa.Code,sa.CnName ,isnull(comeCount.ComeCount,0) as ComeCount,isnull(callCount.CallCount,0)  as CallCount
+      from  Sale.SaleAgentView sa 
+     left join   Sale.SaleProjectCustomer spc ON sa.Code =spc.SaleAgentCode
+     
+      left join  (
+      select count(1) as ComeCount,sa.code
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgentView sa ON sa.Code =spc.SaleAgentCode
+      inner JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code and svt.CustomerSaleEventTypeCode in ('1','3')  and svt.EventTime >={1} and svt.EventTime &lt; dateadd(day,1,{2})
+      where spc.SaleStageAreaGroupID={0} and {3}
+      group by sa.code
+      ) as comeCount  on sa.Code=comeCount.code
+      left join (
+      select	count(1) as CallCount,sa.code
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgentView sa ON sa.Code =spc.SaleAgentCode
+      inner JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code and svt.CustomerSaleEventTypeCode in ('2','8')  and svt.EventTime >={1}  and svt.EventTime &lt; dateadd(day,1,{2})
+      WHERE  spc.SaleStageAreaGroupID={0} and {3}
+      group by sa.code
+      ) as callCount  on sa.Code=callCount.code
+      where sa.StageGroupCode={0} and {3}
+
+
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>根据条件查询置业顾问客户事件</Description>
+    <Name>GetCustomersEvent</Name>
+    <Value>
+      select
+      svt.CustomerSaleEventTypeCode,
+      COUNT(cst.CnName) AS [count]
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN  Relationship.PersonBase  cpb  ON cpb.Code=spc.CustomerCode
+      AND cpb.ValidStatus =1
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN Common.Tel t ON t.FlagCode =spc.CustomerCode AND t.IsPreferred=1 AND t.TelCategoryCode='1'
+      left outer join sale.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' AND spc.SaleStageAreaGroupID='{1}' {2}
+
+      GROUP BY svt.CustomerSaleEventTypeCode
+
+      UNION all
+      SELECT
+      svt.CustomerSaleEventTypeCode,
+      COUNT(cst.CnName) AS [count]
+
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN Relationship.CompanyCustomer pc ON pc.Code=spc.CustomerCode AND pc.ValidStatus=1 AND pc.VersionEndTime IS null
+      INNER JOIN Common.Company  com  ON com.Code=spc.CustomerCode  AND com.ValidStatus =1 and com.VersionEndTime IS null
+      INNER JOIN Common.OrganizationInstitutions cpb on com.Code=cpb.Code and cpb.VersionEndTime IS null
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN Common.Tel t ON t.FlagCode =spc.CustomerCode AND t.IsPreferred=1 AND t.TelCategoryCode='2'
+      left outer join SAle.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' AND spc.SaleStageAreaGroupID='{1}' {2}
+
+      GROUP BY svt.CustomerSaleEventTypeCode
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>旺小宝查询客户信息</Description>
+    <Name>GetCustomersInfoWXB</Name>
+    <Value>
+      t.phoneNum as phone,
+      cpb.CnName AS name,
+      cpb.GenderCode AS sex,
+      sa.CnName AS salerName,
+      sa.Phone AS salerPhone,
+      isnull(CONVERT(varchar(100), svt.EventTime, 111), '1900-01-01') as EventTime,
+      svt.Remarks,
+      cst.CnName AS CustomerSaleEventTypeName
+      ,cpb.Code as customerCode,cpb.CnName,
+      spc.CustomerCategoryCode,
+      isnull( spc.CreateTime, '1900-01-01') as CreateTime
+      ,sa.Phone as WorkerPhone
+      ,scl.CnName as UserLevel
+      ,isnull(FU.FULevel,0) as FollowUpLevel
+      ,FU.AddTime
+      ,FU.ThisFUTime
+      from Sale.SaleProjectCustomer spc
+      INNER JOIN Sale.SaleAgent sa ON sa.Code =spc.SaleAgentCode AND sa.VersionEndTIme IS NULL
+      INNER JOIN  Relationship.PersonBase  cpb  ON cpb.Code=spc.CustomerCode
+      AND cpb.ValidStatus =1
+      LEFT OUTER JOIN Sale.SaleCallComeToVisit svt ON svt.SaleProjectCustomerCode =spc.Code
+      AND svt.EventTime =(
+      SELECT MAX(EventTime) FROM Sale.SaleCallComeToVisit svt1 WHERE svt1.SaleProjectCustomerCode =spc.Code
+      )
+      LEFT OUTER JOIN Relationship.CustomerSaleEventType cst ON cst.Code =svt.CustomerSaleEventTypeCode
+      LEFT OUTER JOIN (SELECT d.MainCode AS phoneNum,w.FlagCode,w.TelCategoryCode,w.MainCode FROM  Common.Tel w LEFT JOIN  Common.Tel d ON w.FlagCode=d.FlagCode WHERE  d.IsPreferred=1) t ON t.FlagCode =spc.CustomerCode AND t.TelCategoryCode='1'
+      left outer join sale.SaleCustomerLeavel scl on scl.Code =spc.SaleCustomerLeavelCode
+      LEFT JOIN Sale.FollowUp AS FU ON FU.UserID=spc.Code
+      AND FU.AddTime=(SELECT MAX(AddTime) FROM sale.FollowUp  WHERE UserID=FU.UserID)
+      WHERE sa.Phone ='{0}' AND spc.SaleStageAreaGroupID='{1}'
+      {2}
+
+  
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>查找置业顾问</Description>
+    <Name>GetAllSaleAgent</Name>
+    <Value>
+      SELECT  [Code]
+      ,[CnName]
+      ,[CompanyCode]
+      ,[CompanyName]
+      ,[Phone]
+      ,[SaleGroupSalePostionName]
+      FROM [Sale].[SaleAgentView]
+      where  [StageGroupCode] ={0}
+
+      order BY [CompanyName]
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>查找置业顾问</Description>
+    <Name>GetSaleAgentList</Name>
+    <Value>
+      SELECT  [Code]
+      ,[CnName]
+      ,[CompanyCode]
+      ,[CompanyName]
+      ,[Phone]
+      ,[SaleGroupSalePostionName]
+      FROM [Sale].[SaleAgentView] as b
+      where    b.[StageGroupCode] ={0} and b.Phone={1}
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+   <Row>
+    <Description>客户信息</Description>
+    <Name>GetCustomerInfosWXB</Name>
+    <Value>
+      SELECT a.Code,a.Telephone AS phone,a.CnName AS name,GenderCode AS sex,c.CnName AS salerName,c.Phone AS salerPhone FROM Relationship.PersonBase a
+		LEFT JOIN sale.SaleProjectCustomer b ON a.Code=b.CustomerCode
+		LEFT JOIN sale.SaleAgent c ON b.SaleAgentCode=c.Code
+		 WHERE  b.SaleStageAreaGroupID={0} AND a.Telephone={1}
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+
+  <Row>
+    <Description>客户事件</Description>
+    <Name>GetCustomerEventWXB</Name>
+    <Value>
+      SELECT TOP 3 a.EventTime AS followTime,b.CnName AS followType,a.Remarks AS followContent FROM sale.SaleCustomerEvent a LEFT JOIN Relationship.CTypeDetail b
+	  ON a.CustomerSaleEventTypeCode=b.Code AND b.CTypeCategoryCode=32
+	  WHERE a.CustomerCode={0} ORDER BY a.EventTime DESC
+
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+  <Row>
+    <Description>查找置业顾问</Description>
+    <Name>GetSaleAgentByProjectCode</Name>
+    <Value>
+      SELECT 
+      [CnName] as name
+      ,[Phone] as phone
+
+      FROM [Sale].[SaleAgentView]
+      where  [StageGroupCode] ={0}
+
+      order BY [CompanyName]
+    </Value>
+    <ConnName>SubjectDB_ReaderOnly</ConnName>
+  </Row>
+</Table>

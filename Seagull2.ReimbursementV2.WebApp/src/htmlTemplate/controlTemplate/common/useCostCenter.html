@@ -1,0 +1,57 @@
+﻿<!--使用成本中心-->
+<div ng-if="!readonly">
+    <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>使用成本中心<small><span style="color:red;">&nbsp;&nbsp;提示：请选择正确的使用成本中心，将影响审批流，且在合同中不可修改。</span></small></h4>
+    <div class="table-responsive">
+        <button ng-click="addDetail()" class="btn btn-primary" style="cursor:pointer">+增加</button>
+        <button ng-click="deleteDetail()" class="btn btn-danger" style="cursor:pointer">-删除</button>
+        <table class="table table-striped table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th class="table-thead" style="text-align:center;width:10%;">
+                        <input type="checkbox" ng-checked="select_all" ng-model="select_all" ng-change="selectAll(select_all)">
+                    </th>
+                    <th class="table-thead" style="text-align:center;width:10%;">序号</th>
+                    <th class="table-thead" style="text-align:center;width:30%;">使用记账公司</th>
+                    <th class="table-thead" style="text-align:center;">使用成本中心</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in data">
+                    <td style="text-align:center;vertical-align:middle;">
+                        <input type="checkbox" ng-model="item.checked" ng-change="selectOne(item.checked)">
+                    </td>
+                    <td class="text-center">{{$index+1}}</td>
+                    <td>
+                        <div select-single-chargecompany opts="item.chargeCompanyOpts" data="item"></div>
+                    </td>
+                    <td>
+                        <select sog-valide-status="成本中心" class="meeting" ng-model="item.useCostCenterCode" ng-change="baseUseInfo.costCenterChange(item);" ng-options="p.code as p.name for p in item.costCenterList" ng-selected="p.code == item.useCostCenterCode">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div ng-if="readonly">
+    <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>使用成本中心</h4>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th class="table-thead" style="text-align:center;width:5%;">序号</th>
+                    <th class="table-thead" style="text-align:center;width:30%;">使用记账公司</th>
+                    <th class="table-thead" style="text-align:center;">使用成本中心</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in data">
+                    <td class="text-center">{{$index+1}}</td>
+                    <td class="text-center">{{item.useChargeCompanyName}}</td>
+                    <td class="text-center">{{item.useCostCenterName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

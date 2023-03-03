@@ -1,0 +1,75 @@
+﻿<div class="modal-body staff-service">
+    <div class="form-inline">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>筛选条件</h4>
+        <div class="modal-body" style="padding:0;">
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                <label class="col-xs-4  control-label" style="text-align: right;" title="供应商名称">供应商名称</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input type="text" class="meeting" ng-model="model.queryCondition.supplierName" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 form-group">
+                <label class="col-xs-4 control-label" style="text-align: right;" title="协议名称">协议名称</label>
+                <div class="col-xs-8 form-group baseifo-input">
+                    <input type="text" class="meeting" ng-model="model.queryCondition.contractName" />
+                </div>
+            </div>
+            <div class="col-xs-12 form-group">
+                <div class="col-xs-12 form-group baseifo-input" style="text-align:center;">
+                    <button type="button" class="btn btn-default" ng-click="setCondition()">筛选</button>
+                    <button type="button" class="btn btn-default" ng-click="renewConditon()">条件重置</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="form-inline">
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>战略框架协议</h4>
+        <div class="table-responsive" style="padding:0;">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;"></th>
+                        <th style="text-align:center;">序号</th>
+                        <th style="text-align:center;">供应商名称</th>
+                        <th style="text-align:center;">战略行业领域</th>
+                        <th style="text-align:center;">战略协议名称</th>
+                        <th style="text-align:center;">协议开始时间</th>
+                        <th style="text-align:center;">协议结束时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in model.strategyContractList">
+                        <td style="text-align:center;">
+                            <input type="radio" value="{{item}}" name="contractKey" ng-model="$parent.code" />
+                        </td>
+                        <td style="text-align: center;">
+                            <div>{{$index + 1}}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div>{{item.supplierName}}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div>{{item.tradeAreaName}}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div>{{item.contractFileName}}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div>{{item.contractStartTime | date:'yyyy-MM-dd'}}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div>{{item.contractEndTime | date:'yyyy-MM-dd'}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div tm-pagination="model.paginationConf"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="modal-footer" style="text-align:center">
+    <button type="button" class="btn btn-default" ng-click="closeThisDialog();">关闭</button>
+    <button type="button" class="btn btn-primary" ng-click="strategyContractOk(code);closeThisDialog();">确定</button>
+</div>

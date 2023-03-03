@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <Sql id="PlanAndActualTransactionAveragePrice">
+    select
+    t.Code,
+    t.IssueDate,
+    t.PropertyTypeCode,
+    t.PropertyTypeName,
+    t.BuildingCode,
+    t.BuildingName,
+    t.StyleCode,
+    t.StyleName,
+    SUM(t.DealPrice) as SaleAoument,
+    SUM(t.Area) as Area,
+    SUM(t.PriceValue*t.Area) as PlanAoument,
+    t.SaleYear,
+    t.DataTime
+    from (
+    select
+    psl.Code,
+    psl.IssueDate,
+    b.PropertyTypeCode,
+    b.PropertyTypeName,
+    b.BuildingCode,
+    isNull(b.BuildingName,b.SaleBuildingName)as BuildingName,
+    b.StyleCode,
+    b.StyleName,
+    pc.DealPrice,
+    (case b.TypeCode
+    when '0' then pa1.AreaValue
+    else  pa2.AreaValue
+    end) as Area,
+    p.PriceValue,
+    Datepart(Year,ContractAwardDate) as SaleYear,
+    ContractAwardDate as DataTime
+    from Sale.PredictSaleLicense as psl
+    inner join [Sale].[PredictSaleLicense_Building] as pslb on
+    psl.Code = pslb.PredictSaleLicenseCode  and psl.ValidStatus = 1
+    inner join Sale.SaleProductInfoView as b on
+    b.BuildingCode = pslb.BuildingCode
+    left outer join
+    [Sale].[SaleRecord_SaleProduct] as srsp on srsp.SaleProductCode= b.ProductCode
+    left outer join  Sale.SaleRecord as sr on srsp.SaleRecordCode = sr.Code and sr.ValidStatus = 1
+    left outer join  [Signs].[PurchaseContract] as pc on pc.SaleRecordCode = sr.Code  and pc.VersionEndTIme is null and pc.ValidStatus = 1
+    left outer join [ProDefine].[ProductArea] as pa1 on pa1.ProductCode = b.ProductCode and pa1.VersionEndTIme is null and pa1.[Key] ='1'
+    left outer join [ProDefine].[ProductArea] as pa2 on pa2.ProductCode = b.ProductCode and pa1.VersionEndTIme is null and pa2.[Key] ='1'
+    left outer join [ProDefine].[Price] as p on p.ProductCode = b.ProductCode and p.VersionEndTIme is null and p.[Key] ='1'
+    ) as t
+    group by  t.Code,
+    t.IssueDate,
+    t.PropertyTypeCode,
+    t.PropertyTypeName,
+    t.BuildingCode,
+    t.BuildingName,
+    t.StyleCode,
+    t.StyleName,
+    t.SaleYear,
+    t.DataTime
+    having t.Code={0}
+  </Sql>
+</Root>

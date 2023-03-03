@@ -1,0 +1,155 @@
+﻿<div class="staff-service">
+    <!--工具栏开始、不打印, 修改wf-tool-bars-url-base -->
+    <div wf-tool-bars="wfOperateOpts" wf-tool-bars-url-base="/BiddingStrategyGroupAnsweringQuestionWf" wf-collect-data-fn="collectData"></div>
+    <!--工具栏结束-->
+    <!--流程导航开始-->
+    <div ng-include="'views/common/flow-nav.html'"></div>
+    <!--流程导航结束-->
+    <!--表单正文开始，打印-->
+    <div class="container appil-container">
+        <!--左侧导航栏-->
+        <div ng-show="viewModel.formAction.actionStateCode==2 || viewModel.formAction.actionStateCode==3" left-nav opts="baseInfo.leftNavListOpts" data="viewModel.navOption.navigationList"></div>
+        <!--页面标题开始-->
+        <div class="page-header clearfix">
+            <span>招投标（集团战采）</span>
+            <small>单据编号：{{viewModel.flowNumber}}</small>
+        </div>
+        <!--页面标题结束-->
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购信息</h4>
+        <div ng-include="'views/strategyCommissioned/biddingStrategyGroup/htmlTemplate/biddingStrategyGroupBaseInfoReadOnly.html'"></div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <div class="clearfix"></div> <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i>采购时间安排<span style="color:red;">*</span></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">环节名称</th>
+                        <th style="text-align:center;">供应商回复截止时间</th>
+                        <th style="text-align:center;">供应商提问截止时间</th>
+                        <th style="text-align:center;">回标截止时间</th>
+                        <th style="text-align:center;">清标时间</th>
+                        <th style="text-align:center;">评标时间</th>
+                        <th style="text-align:center;">定标时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in baseInfo.purchaseDateArrangeInfoPEMus()">
+                        <td style="text-align:center;">采购时间安排</td>
+                        <td style="text-align:center;">{{item.inviteReplyDeadline | date:'yyyy-MM-dd HH:mm'}}</td>
+                        <td style="text-align:center;">{{item.questionDeadline | date:'yyyy-MM-dd HH:mm'}}</td>
+                        <td style="text-align:center;">{{item.replyDeadline | date:'yyyy-MM-dd HH:mm'}}</td>
+                        <td style="text-align:center;">{{item.clearBinddingDeadline | date:'yyyy-MM-dd'}}</td>
+                        <td style="text-align:center;">{{item.decideBiddingDeadline | date:'yyyy-MM-dd'}}</td>
+                        <td style="text-align:center;">{{item.decideBiddingDeadline | date:'yyyy-MM-dd'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 招标文件补充说明</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5px;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">招标文件补充说明</th>
+                        <th style="text-align:center;" class="table-thead">上传时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in viewModel.biddingReportFileList|orderBy : 'sortNo' : false">
+                        <td class="text-center" style="width:5px;">{{$index+1}}</td>
+                        <td class="text-center">
+                            <div wf-uploader files="item.clientFileInformationList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="text-align:center;width:10%;">{{item.modifyTime| date:'yyyy-MM-dd'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 供应商提问文件</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">提问截止时间</th>
+                        <th style="text-align:center;" class="table-thead" ng-repeat="item in baseInfo.questionTimes()">
+                            <div style="text-align:center;"> {{item}}</div>
+                            <div style="font-size:9px;margin-bottom:0px;font-weight:normal;">
+                                {{baseInfo.getLastQuestionDeadline($index)| date:'yyyy-MM-dd HH:mm'}}
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="supplier in viewModel.p_SupplierScopePEMus|orderBy : 'sortNo' : false">
+                        <td class="text-center">{{$index+1}}</td>
+                        <td style="text-align:center;width:10%;"><div open-supplier-info supplier="supplier"></div></td>
+                        <td class="text-center;" ng-repeat="file in baseInfo.searchQuestionInfos(supplier.supplierCode)|orderBy : 'round' : false">
+                            <div wf-uploader files="file.clientFileInformationList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 答疑文件</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:5%;" class="table-thead">序号</th>
+                        <th style="text-align:center;" class="table-thead">历史答疑文件</th>
+                        <th style="text-align:center;" class="table-thead">本次答疑文件</th>
+                        <th style="text-align:center;" class="table-thead">最新提问截止时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td style="text-align:center;">
+                            <div wf-uploader files="viewModel.answerInfoFileList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady"></div>
+                        </td>
+                        <td style="width:20%;" class="text-center">
+                            <div wf-uploader files="viewModel.p_AnswerInfoPEMus[viewModel.p_AnswerInfoPEMus.length - 1].clientFileInformationList" read-only="true" opts="baseInfo.fileopts" ready="baseInfo.fileReady" ng-show="baseInfo.isShowAnswer"></div>
+                        </td>
+                        <td style="width:30%;text-align:center;">
+                            <div ng-show="baseInfo.isShowAnswer">{{viewModel.p_AnswerInfoPEMus[viewModel.p_AnswerInfoPEMus.length - 1].questionDeadline| date:'yyyy-MM-dd HH:mm'}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix visible-xs-block"></div>
+        <div class="clearfix"></div>
+        <h4 class="control-heading bg-info"><i class="glyphicon glyphicon-list-alt"></i> 延长提问截止时间</h4>
+        <div class="form-inline">
+            <div class="col-xs-12 col-sm-12 col-md-6 form-group">
+                <label class="col-xs-6 col-sm-6 col-md-4 control-label" style="text-align:right" title="最新提问截止时间">最新提问截止时间</label>
+                <div class="col-xs-6 col-sm-6 col-md-8 form-group baseifo-input">
+                    {{baseInfo.extendTime| date:'yyyy-MM-dd HH:mm'}}
+                </div>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <div class="clearfix"></div>
+        </div>
+        <span style="color:red;">
+            提示：<br />
+            1、投标单位可在外网提交对招标文件的疑问<br />
+            2、【提问截止时间】到了之后，流程上会出现发送按钮<br />
+            3、如您答疑完成或无需答疑，您可以发送至供应商回标环节<br />
+        </span>
+    </div>
+    <!--表单正文结束-->
+    <!--页脚开始，不打印-->
+    <div ng-include="'views/common/foot-copyright.html'"></div>
+    <!--页脚结束-->
+    <!--右侧通栏开始，不打印-->
+    <div ng-include="'views/common/right-navigator.html'"></div>
+</div>

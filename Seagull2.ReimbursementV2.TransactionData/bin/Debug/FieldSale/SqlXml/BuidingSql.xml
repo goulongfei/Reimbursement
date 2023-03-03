@@ -1,0 +1,633 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <Sql id="sql">
+    select count(*) as TotalFloorCount,sum(a.HouseCount) as TotalHouseCount,sum(a.Area) as TotalArea,a.BuildingName
+    ,a.PropertyTypeName from
+    (
+    SELECT count(spv1.[ProductCode]) as HouseCount
+
+    ,spv1.[FloorCode]
+    ,spv1.[BuildingCode]
+    ,spv1.[SaleBuildingName] as BuildingName
+    ,spv1.[PropertyTypeName]
+    ,sum(spv2.ProductArea) as Area
+    FROM [Sale].[SaleProductInfoView]  spv1
+    inner join
+    [Sale].[SaleProductInfoView]  spv2
+    on spv1.[ProductCode] =spv2.ProductCode
+    where spv1.[ProjectCode] ={0}
+    and spv1.[StageAreaCode] = {1}
+    group by [PropertyTypeCode]
+    ,spv1.[FloorCode]
+    ,spv1.[BuildingCode]
+    ,spv1.[SaleBuildingName]
+    ,spv1.[PropertyTypeName]
+    ) as a
+    group by a.BuildingCode
+    ,a.BuildingName
+    ,a.PropertyTypeName
+
+  </Sql>
+  <Sql id="mySql">
+    select a.StageAreaCode,a.StageAreaName,a.BuildingCode,a.BuildingName,sum(b.AreaValue)  as Area
+    ,count(*) as Covers,h.cnName as HouseTypeName,h.Code as HouseTypeCode from [Sale].[SaleProductInfoView]  a
+    inner join ProDefine.ProductArea b
+    on a.productCode=b.productCode
+    where b.versionendtime is null
+    and a.[ProjectCode] ={0}
+    and a.[StageAreaCode] = {1}
+    and a.BuildingCode in ({2})
+    group by a.StageAreaCode,a.StageAreaName,a.BuildingCode,a.BuildingName,h.cnName,h.Code
+
+  </Sql>
+
+
+  <Sql id="GetBuildingSql">
+    SELECT     distinct      product.BuildingCode as BuildingCode,
+    product.SaleBuildingName as BuildingName, product.StageAreaCode as StageAreaCode, product.StageAreaName as StageAreaName,
+    product.ProjectCode, product.ProjectName, product.PropertyTypeCode,
+    product.PropertyTypeName as PropertyTypeName,
+    houseType.CnName AS HouseTypeName,
+    houseType.Code AS HouseTypeCode
+    FROM     [Sale].[SaleProductInfoView]  AS product LEFT OUTER JOIN
+    ProDefine.House AS house ON product.ProductCode = house.Code LEFT OUTER JOIN
+    ProDefine.HouseType AS houseType ON house.HouseTypeCode = houseType.Code
+    where {0}
+
+
+  </Sql>
+  <!--<Sql id="GetSaleAmountChargerSql">
+    SELECT  t.SaleDiscountType ,
+    t.SaleStatus ,
+    SUM(t.SaleAmount) AS SaleAmount ,
+    SUM(t.PayBack) AS PayBack ,
+    COUNT(t.ProductCode) AS SaleCount
+    FROM    ( SELECT ssa.VersionStartTime,   p.Code AS ProductCode ,
+    sd.DiscountItemCode as SaleDiscountTypeCode,
+
+    ( CASE WHEN sdt.CnName IS NULL THEN '正常销售'
+    ELSE sdt.CnName END ) AS SaleDiscountType ,
+    p.SaleProductStatusCode AS SaleStatus ,
+    ( charge.AccountsReceivable - charge.AccountsRefund ) AS SaleAmount ,
+    ( charge.PaymentReceivable - charge.PaymentRefund ) AS PayBack
+    FROM      sale.SaleProduct p
+    inner join Sale.SaleProductView sv on sv.ProductCode=p.Code
+    inner JOIN Sale.SaleRecord_SaleProduct ss ON p.Code = ss.SaleProductCode
+    inner JOIN Sale.SaleRecord record ON ss.SaleRecordCode = record.Code
+    inner join Sale.SaleRecord_SaleAgent  ssa on ssa.SaleRecordCode=record.Code
+    inner join Sale.SaleAgent  sa on sa.Code=ssa.SaleAgentCode
+
+
+    inner JOIN sale.SaleChargeView charge ON charge.BusinessNumber = record.ChargeCode
+    LEFT outer JOIN sale.SaleRecord_DiscountItem sd ON sd.SaleRecordCode = record.Code
+    Left outer join Sale.SaleDiscountItemType sdt on sd.DiscountItemCode =sdt.Code
+
+
+    WHERE
+    sa.CompanyCode ={2}
+    and
+    sv.StageAreaCode ={0}
+    and  ssa.VersionStartTime &lt; {1}
+    ) AS t
+    GROUP BY t.SaleDiscountType ,
+    t.SaleStatus
+    ORDER BY t.SaleDiscountType,t.SaleStatus
+
+
+  </Sql>-->
+
+  <Sql id="GetBuildingAreaSqlByStageAreaCode">
+    select  T.BuildingCode,sum(T.Area) as Area,count(*) as [Count],
+    sum(T.Area*T.PriceValue)  as ValuePrice
+    from (
+    select K.BuildingCode,K.ProductCode,K.PriceValue,
+    isnull(K.ActArea,K.PreArea) as Area
+    from
+    (
+    SELECT
+    p.BuildingCode,p.ProductCode,b.PriceValue,
+
+    (
+    select top 1 a.[AreaValue] from [ProDefine].[ProductArea] a
+    where a.[ProductCode] =p.[ProductCode]
+    and a.[Key]='5' and a.[VersionEndTime] is null
+
+
+    ) as ActArea,
+    (
+    select top 1 a.[AreaValue] from [ProDefine].[ProductArea] a
+    where a.[ProductCode] =p.[ProductCode]
+    and a.[Key]='1' and a.[VersionEndTime] is null
+
+
+
+    ) as PreArea
+    from
+    Sale.SaleProductView p
+    inner join
+    [ProDefine].[Price] b
+    on p.[ProductCode] =b.[ProductCode]
+    where
+    p.StageAreaCode={0} and
+    b.[Key]='1' and b.[VersionEndTime] is null
+    ) as K) as T
+    group by  T.BuildingCode
+
+  </Sql>
+  <Sql id="GetOverDayPayRecord">
+
+
+    WITH TempQuery AS
+    (
+    select scl.CnName AS Level,  t.MainCode AS PhoneNumber, peron.CnName AS CustomerName,sg.GroupID,ss.SaleRecordCode,pc.SalePayWayCode,pv.ProjectCode,pv.ProjectName,pv.StageareaCode,pv.BuildingCode,
+    pv.SaleBuildingName + '#' + pv.SaleUnitName + '#' + pv.SaleProductName as HouseNo,pv.ProductCode,
+    pc.ContractAwardDate as SignDate,pv.StageAreaName
+    from Sale.SaleProduct p
+    JOIN Sale.SaleRecord_SaleProduct ss ON p.Code=ss.SaleProductCode
+    JOIN sale.SaleRecord record ON ss.SaleRecordCode=record.Code
+    INNER JOIN Charge.AccountsReceivable ar ON record.ChargeCode=ar.BusinessNumber
+    inner join Signs.PurchaseContract pc on pc.SaleRecordCode =ss.SaleRecordCode
+    inner  JOIN   [Sale].[SaleProductInfoView]  pv ON p.Code=pv.ProductCode
+    inner join Sale.SaleStageGroup  sg on sg.StageAreaCode =pv.StageAreaCode
+
+    INNER JOIN sale.SaleHouseBuyer shb ON (shb.SaleRecordCode=record.Code AND shb.ValidStatus=1)
+    INNER JOIN sale.SaleHouseBuyer_Customer shc ON shc.SaleHouseBuyerCode=shb.Code
+    INNER JOIN sale.SaleProjectCustomer spc ON spc.Code=shc.SaleProjectCustomerCode
+    LEFT JOIN Common.Person peron ON (peron.Code=spc.CustomerCode AND peron.VersionEndTime IS NULL  AND peron.ValidStatus=1 )
+    LEFT  JOIN Common.Tel AS T ON (spc.CustomerCode=T.FlagCode   AND T.ValidStatus=1 )
+    LEFT  JOIN Sale.SaleProjectCustomer_Agent SPCR ON (SPCR.ProjectCustomerCode=spc.Code )
+    LEFT outer join Sale.SaleCustomerLeavel scl on (spc.SaleCustomerLeavelCode=scl.Code and scl.ValidStatus=1)
+
+    where  p.SaleProductStatusCode in ('4','6')
+    and record.ValidStatus =1 and  pc.VersionEndTime is null and sg.GroupID in ({0})
+    AND (DATEDIFF(DAY,ar.Deadline,{1})=1 OR DATEDIFF(DAY,ar.Deadline,{1})=30)
+    and  ar.ValidStatus = 1
+    AND ar.Amount>isnull((
+    SELECT sum(pr.ActualReceivedAmount) FROM Charge.PaymentChargeRecordItem pr WHERE pr.AccountsReceivableCode=ar.Code
+    and pr.ValidStatus = 1 ),0)
+    )
+
+
+    SELECT DISTINCT *
+    FROM TempQuery
+    WHERE SaleRecordCode not in
+    (
+    select distinct [SaleRecordCode]
+    from [Sale].[OverPayBackReason]
+    group by [SaleRecordCode],[CreateTime]
+    having count([SaleRecordCode]) > 1 or (count([SaleRecordCode])=1 and dateadd(day,30,[CreateTime]) > getdate())
+
+
+    )
+    and {2}
+
+
+
+
+
+  </Sql>
+
+  <Sql id="GetSubscribeCancel">
+
+      select  DISTINCT sg.GroupID,ss.SaleRecordCode,pc.SalePayWayCode,pv.ProjectCode,pv.ProjectName,pv.StageareaCode,pv.StageareaName,
+      pv.SaleBuildingName + '#' + pv.SaleUnitName + '#' + pv.SaleProductName as HouseNo,pv.ProductCode,
+      pc.SubscribeDate,dateadd(DAY,1,pc.SubscribeEndData) as PreSignDate,
+     pv.StageareaName
+      from Sale.SaleProduct p
+      INNER JOIN Sale.SaleRecord_SaleProduct ss ON p.Code=ss.SaleProductCode
+      INNER JOIN sale.SaleRecord record ON ss.SaleRecordCode=record.Code
+      INNER JOIN Charge.AccountsReceivable b2 ON record.ChargeCode=b2.BusinessNumber
+      INNER JOIN Sale.SaleHouseBuyer SHB2 ON  SHB2.IsUsed=1 AND SHB2.ValidStatus=1 AND shb2.SaleRecordCode=ss.SaleRecordCode
+      INNER JOIN Sale.SaleHouseBuyer_Customer SHC2 ON SHC2.SaleHouseBuyerCode=SHB2.Code
+      inner join Sale.SaleSubscribe pc on (pc.SaleRecordCode =ss.SaleRecordCode AND pc.ValidStatus=1 AND pc.[Status] =0 and pc.VersionEndTime is null)
+      INNER JOIN    [Sale].[SaleProductInfoView]              pv ON p.Code=pv.ProductCode
+      INNER JOIN Sale.SaleStageGroup  sg on sg.StageAreaCode =pv.StageAreaCode
+      INNER JOIN ProDefine.ProjectInfo pp on pp.Code =pv.ProjectCode
+      where  p.SaleProductStatusCode in ('3')
+      and record.ValidStatus =1 and  pc.VersionEndTime is null and record.Code in ({1})
+      AND NOT  EXISTS
+      (
+      --去掉签约人员,和房屋购买人不一致的记录
+      select 1
+      FROM Signs.PurchaseContract a
+      INNER JOIN Sale.SaleRecord s ON a.SaleRecordCode=s.Code AND s.ValidStatus=1
+      INNER JOIN sale.SaleRecord_SaleProduct sp ON s.Code=sp.SaleRecordCode
+      INNER JOIN Charge.AccountsReceivable b ON s.ChargeCode=b.BusinessNumber
+      INNER JOIN Sale.SaleHouseBuyer SHB ON  SHB.IsUsed=1 AND SHB.ValidStatus=1 AND shb.SaleRecordCode=sp.SaleRecordCode
+      INNER JOIN Sale.SaleHouseBuyer_Customer SHC ON SHC.SaleHouseBuyerCode=SHB.Code
+      WHERE
+      a.VersionEndTIme IS NULL
+      AND sp.SaleProductCode=p.Code
+      AND SHC.SaleHouseBuyerCode!=SHC2.SaleHouseBuyerCode
+      )
+
+
+
+
+
+
+  </Sql>
+
+  <Sql id="GetSignSummon">
+
+    select DISTINCT
+    Newid() as ID,
+    sg.GroupID,
+    ss.SaleRecordCode,
+    pc.SalePayWayCode,
+    pv.ProjectCode,
+    pv.ProjectName,
+    pv.StageareaCode,
+    pv.StageAreaName,
+    isnull(pv.SaleBuildingName,'') + '-' +  isnull(pv.SaleUnitName,'') + '-' +
+    isnull(pv.SaleProductName,'') as HouseNo,
+    pv.ProductCode,
+    pc.SubscribeDate as SubscribeDate
+    ,pc.SubscribeEndData as PreSignDate
+    from Sale.SaleProduct p
+    JOIN Sale.SaleRecord_SaleProduct ss ON p.Code=ss.SaleProductCode
+    JOIN sale.SaleRecord record ON ss.SaleRecordCode=record.Code
+    inner  JOIN  [Sale].[SaleProductInfoView]   pv ON p.Code=pv.ProductCode
+    inner join Sale.SaleStageGroup  sg on sg.StageAreaCode =pv.StageAreaCode
+    inner  join  SALE.SaleSubscribe pc ON (record.Code=pc.SaleRecordCode
+    AND pc.ValidStatus=1 AND pc.[Status] =0 and  pc.VersionEndTime is null)
+    where record.ValidStatus =1 and  pc.VersionEndTime is null and sg.GroupID in ({0})  AND
+    not EXISTS(select 1 from signs.PurchaseContract as pcpc
+    inner join sale.salerecord as srsr on pcpc.salerecordcode = srsr.code
+    inner join sale.SaleRecord_SaleProduct as a on (srsr.code = a.SaleRecordCode and a.SaleProductCode=ss.SaleProductCode))
+    and (datediff(day,pc.SubscribeEndData,{1}) =1)
+
+  </Sql>
+
+  <Sql id="GetSaleReleaseBuilding">
+    select distinct sp.BuildingCode as Code from sale.salerelease a inner join [Sale].[Release_SalesProduct] b
+    on a.Code=b.SaleReleaseCode
+    inner join sale.saleproduct p on p.code=b.SaleProductCode
+    inner join Sale.SaleProductView sp on  sp.ProductCode=p.code
+    where {0}
+  </Sql>
+
+
+
+  <Sql id="GetProjectBuildingArea">
+
+    select  T.BuildingCode,sum(T.Area) as Area,T.StageAreaCode
+    from (
+    select K.BuildingCode,K.ProductCode,K.PriceValue,
+    isnull(K.ActArea,K.PreArea) as Area,k.StageAreaCode
+    from
+    (
+    SELECT
+    p.BuildingCode,p.ProductCode,b.PriceValue,
+    (
+    select top 1 a.[AreaValue] from [ProDefine].[ProductArea] a
+    where a.[ProductCode] =p.[ProductCode]
+    and a.[Key]='5' and a.[VersionEndTime] is null
+    ) as ActArea,
+    (
+    select top 1 a.[AreaValue] from [ProDefine].[ProductArea] a
+    where a.[ProductCode] =p.[ProductCode]
+    and a.[Key]='1' and a.[VersionEndTime] is null
+
+    ) as PreArea,p.StageAreaCode
+    from
+    [Sale].[SaleProductInfoView]    p
+    inner join
+    [ProDefine].[Price] b
+    on p.[ProductCode] =b.[ProductCode]
+    where
+    p.ProjectCode={0} and
+    b.[Key]='1' and b.[VersionEndTime] is null
+    ) as K) as T
+    group by  T.StageAreaCode,T.BuildingCode
+
+  </Sql>
+
+  <Sql id="GetBuildingsByStageCode">
+
+    select a.BuildingCode,a.BuildingName,a.PropertyTypeName,a.PropertyTypeCode,a.StructureCode,a.StructureName,
+    sum(ProductArea) as TotalArea,a.HouseTypeCode,
+    sum(ProductPrice*ProductArea) as TotalAmount,
+    count(1) as HouseCount
+    from (
+
+    select b.*,  (case b.HouseTypeCode when '0' then ISNULL(pa2.AreaValue, 0) else ISNULL(pa1.AreaValue, 0) end ) as ProductArea,
+    ISNULL(price.PriceValue, 0) AS ProductPrice
+    from (
+    SELECT   ProDefine.House.Code AS ProductCode, LandObtained.[LogicBuilding].Code AS BuildingCode,
+    LandObtained.[LogicBuilding].CnName AS BuildingName,
+    LandObtained.[LogicBuilding].PropertyTypeCode,
+      LandObtained.PropertyType.CnName AS PropertyTypeName,
+    ProDefine.House.CnName as ProductName,ProDefine.House.HouseTypeCode, structure.Code as  StructureCode,structure.CnName as StructureName
+    FROM      ProDefine.House
+    INNER JOIN
+    ProDefine.House_BuildingUnitFloor ON ProDefine.House.ValidStatus = 1 AND
+    ProDefine.House.Code = ProDefine.House_BuildingUnitFloor.HouseCode
+
+    INNER JOIN
+    ProDefine.BuildingUnitFloor ON ProDefine.BuildingUnitFloor.ValidStatus = 1 AND
+    ProDefine.House_BuildingUnitFloor.BuildingUnitFloorCode = ProDefine.BuildingUnitFloor.Code
+    and
+    ProDefine.BuildingUnitFloor.VersionEndTime is null
+    INNER JOIN
+
+    ProDefine.BuildingUnit ON ProDefine.BuildingUnitFloor.BuildingUnitCode = ProDefine.BuildingUnit.Code AND
+    ProDefine.BuildingUnit.ValidStatus = 1
+    and
+    ProDefine.BuildingUnit.VersionEndTime is null
+    INNER JOIN
+    LandObtained.[LogicBuilding] ON ProDefine.BuildingUnit.BuildingCode =LandObtained.[LogicBuilding].Code AND
+    LandObtained.[LogicBuilding].ValidStatus = 1
+    and
+    LandObtained.[LogicBuilding].VersionEndTime is null
+    INNER JOIN
+    LandObtained.PropertyType ON LandObtained.PropertyType.Code = LandObtained.[LogicBuilding].PropertyTypeCode
+    INNER JOIN
+    ProDefine.ProductInfoExtend AS ext ON ext.Code =  ProDefine.House.Code INNER JOIN
+    ProDefine.HouseStructure AS structure ON structure.Code = ext.HouseStructure
+    where ProDefine.House.VersionEndTime is null
+    and  LandObtained.[LogicBuilding].StageAreaCode ={0}
+
+
+
+    ) as b
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa1 ON pa1.ProductCode = b.ProductCode AND pa1.[Key] = '5' AND pa1.VersionEndTime IS NULL
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa2 ON pa2.ProductCode = b.ProductCode AND pa2.[Key] = '1' AND pa2.VersionEndTime IS NULL
+    LEFT OUTER JOIN
+    ProDefine.Price AS price ON price.ProductCode = b.ProductCode AND price.[Key] = '1' AND price.VersionEndTime IS NULL
+
+
+    ) as a
+    group by a.BuildingCode,a.BuildingName,a.PropertyTypeName,a.PropertyTypeCode,a.StructureCode,a.StructureName,a.HouseTypeCode
+    order by  a.BuildingName
+
+  </Sql>
+
+  <Sql id="GetBuildingsInfoByStageCode">
+    select a.IsSaled,a.BuildingCode,a.BuildingName,a.PropertyTypeName,a.PropertyTypeCode,
+    sum(a.ProductArea) as TotalArea,
+    sum(a.PlanPrice*ProductArea) as PlanTotalAmount,SUM(a.DealPrice) AS SaleAmount,
+    count(1) as HouseCount
+    from (
+    select b.*,(case b.HouseTypeCode when '0' then ISNULL(pa2.AreaValue, 0) else ISNULL(pa1.AreaValue, 0) end ) as ProductArea,
+    ISNULL(price.PriceValue, 0) AS PlanPrice
+    from (
+    SELECT pc.ValidStatus AS IsSaled,ProDefine.House.Code AS ProductCode, LandObtained.[LogicBuilding].Code AS BuildingCode,
+    LandObtained.[LogicBuilding].CnName AS BuildingName,
+    LandObtained.[LogicBuilding].PropertyTypeCode,
+    LandObtained.PropertyType.CnName AS PropertyTypeName,
+    ProDefine.House.CnName as ProductName,ProDefine.House.HouseTypeCode,
+    pc.DealPrice
+    FROM      ProDefine.House
+    INNER JOIN
+    ProDefine.House_BuildingUnitFloor ON ProDefine.House.ValidStatus = 1 AND
+    ProDefine.House.Code = ProDefine.House_BuildingUnitFloor.HouseCode
+
+    INNER JOIN
+    ProDefine.BuildingUnitFloor ON ProDefine.BuildingUnitFloor.ValidStatus = 1 AND
+    ProDefine.House_BuildingUnitFloor.BuildingUnitFloorCode = ProDefine.BuildingUnitFloor.Code
+    and
+    ProDefine.BuildingUnitFloor.VersionEndTime is null
+    INNER JOIN
+
+    ProDefine.BuildingUnit ON ProDefine.BuildingUnitFloor.BuildingUnitCode = ProDefine.BuildingUnit.Code AND
+    ProDefine.BuildingUnit.ValidStatus = 1
+    and
+    ProDefine.BuildingUnit.VersionEndTime is null
+    INNER JOIN
+    LandObtained.[LogicBuilding] ON ProDefine.BuildingUnit.BuildingCode =LandObtained.[LogicBuilding].Code AND
+    LandObtained.[LogicBuilding].ValidStatus = 1
+    and
+    LandObtained.[LogicBuilding].VersionEndTime is null
+    INNER JOIN
+    LandObtained.PropertyType ON LandObtained.PropertyType.Code = LandObtained.[LogicBuilding].PropertyTypeCode
+
+    LEFT OUTER JOIN Sale.SaleRecord_SaleProduct ss ON ss.SaleProductCode = ProDefine.House.Code
+
+    LEFT OUTER JOIN Signs.PurchaseContract pc ON pc.SaleRecordCode = ss.SaleRecordCode AND pc.VersionEndTIme IS NULL
+
+
+    where ProDefine.House.VersionEndTime is NULL
+    AND ProDefine.House.ValidStatus = 1 AND ProDefine.House.VersionEndTIme IS NULL
+    AND LandObtained.PropertyType.ValidStatus = 1
+    and  LandObtained.[LogicBuilding].StageAreaCode ={0}
+    --and  LandObtained.[LogicBuilding].StageAreaCode ='1CED39A6-6D72-4E5F-A6E0-5C38B06DFE98'
+    ) as b
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa1 ON pa1.ProductCode = b.ProductCode AND pa1.[Key] = '5' AND pa1.VersionEndTime IS NULL
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa2 ON pa2.ProductCode = b.ProductCode AND pa2.[Key] = '1' AND pa2.VersionEndTime IS NULL
+    LEFT OUTER JOIN
+    ProDefine.Price AS price ON price.ProductCode = b.BuildingCode AND price.[Key] = '1' AND price.VersionEndTime IS NULL
+    ) as a
+    group by a.BuildingCode,a.BuildingName,a.PropertyTypeName,a.PropertyTypeCode,a.IsSaled
+    order by a.BuildingName;
+
+  </Sql>
+
+  <Sql id="GetSaleResourcesByuBuildingCodes">
+    select a.BuildingCode,a.BuildingName,a.PropertyTypeName,a.PropertyTypeCode,
+    sum(ProductArea) as TotalArea,a.StyleCode,a.StyleName,
+    count(1) as HouseCount
+    from (
+
+    select b.*,  (case b.HouseTypeCode when '0' then ISNULL(pa2.AreaValue, 0) else ISNULL(pa1.AreaValue, 0) end ) as ProductArea
+    from (
+    SELECT   ProDefine.House.Code AS ProductCode, LandObtained.[LogicBuilding].Code AS BuildingCode,
+    LandObtained.[LogicBuilding].CnName AS BuildingName,
+    LandObtained.[LogicBuilding].PropertyTypeCode,
+    LandObtained.PropertyType.CnName AS PropertyTypeName,style.Code AS StyleCode, style.CnName AS StyleName,
+    ProDefine.House.CnName as ProductName,ProDefine.House.HouseTypeCode
+    FROM      ProDefine.House
+    INNER JOIN
+    ProDefine.House_BuildingUnitFloor ON ProDefine.House.ValidStatus = 1 AND
+    ProDefine.House.Code = ProDefine.House_BuildingUnitFloor.HouseCode
+
+    INNER JOIN
+    ProDefine.BuildingUnitFloor ON ProDefine.BuildingUnitFloor.ValidStatus = 1 AND
+    ProDefine.House_BuildingUnitFloor.BuildingUnitFloorCode = ProDefine.BuildingUnitFloor.Code
+    and
+    ProDefine.BuildingUnitFloor.VersionEndTime is null
+    INNER JOIN
+
+    ProDefine.BuildingUnit ON ProDefine.BuildingUnitFloor.BuildingUnitCode = ProDefine.BuildingUnit.Code AND
+    ProDefine.BuildingUnit.ValidStatus = 1
+    and
+    ProDefine.BuildingUnit.VersionEndTime is null
+    INNER JOIN
+    LandObtained.[LogicBuilding] ON ProDefine.BuildingUnit.BuildingCode =LandObtained.[LogicBuilding].Code AND
+    LandObtained.[LogicBuilding].ValidStatus = 1
+    and
+    LandObtained.[LogicBuilding].VersionEndTime is null
+    INNER JOIN
+    LandObtained.PropertyType ON LandObtained.PropertyType.Code = LandObtained.[LogicBuilding].PropertyTypeCode
+    LEFT OUTER JOIN
+    ProDefine.ProductInfoExtend AS ext ON ext.Code =  ProDefine.House.Code
+    LEFT OUTER JOIN
+
+    ProDefine.HouseStyle AS style ON style.Code = ext.HouseStyle
+    where ProDefine.House.VersionEndTime is null
+    and  LandObtained.[LogicBuilding].Code in ({0})
+   --- and  LandObtained.[LogicBuilding].StageAreaCode ='1CED39A6-6D72-4E5F-A6E0-5C38B06DFE98'
+
+
+    ) as b
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa1 ON pa1.ProductCode = b.ProductCode AND pa1.[Key] = '5' AND pa1.VersionEndTime IS NULL
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa2 ON pa2.ProductCode = b.ProductCode AND pa2.[Key] = '1' AND pa2.VersionEndTime IS NULL
+
+
+    ) as a
+    group by a.BuildingCode,a.BuildingName,a.PropertyTypeName,a.PropertyTypeCode,a.StyleCode,a.StyleName
+    order by  a.BuildingName
+  </Sql>
+
+  <Sql id="GetCanSaleResourcesByBuildingCodes">
+    select a.StageAreaCode,
+    sum(ProductArea) as TotalArea,a.StyleCode,a.StyleName,
+    count(1) as HouseCount
+    from (
+
+    select b.*,  (case b.HouseTypeCode when '0' then ISNULL(pa2.AreaValue, 0) else ISNULL(pa1.AreaValue, 0) end ) as ProductArea
+    from (
+    SELECT   ProDefine.House.Code AS ProductCode, LandObtained.[LogicBuilding].Code AS BuildingCode,
+    LandObtained.[LogicBuilding].CnName AS BuildingName,
+    LandObtained.[LogicBuilding].PropertyTypeCode,LandObtained.[LogicBuilding].StageAreaCode,
+    LandObtained.PropertyType.CnName AS PropertyTypeName,style.Code AS StyleCode, style.CnName AS StyleName,
+    ProDefine.House.CnName as ProductName,ProDefine.House.HouseTypeCode
+    FROM      ProDefine.House
+    INNER JOIN
+    ProDefine.House_BuildingUnitFloor ON ProDefine.House.ValidStatus = 1 AND
+    ProDefine.House.Code = ProDefine.House_BuildingUnitFloor.HouseCode
+
+    INNER JOIN
+    ProDefine.BuildingUnitFloor ON ProDefine.BuildingUnitFloor.ValidStatus = 1 AND
+    ProDefine.House_BuildingUnitFloor.BuildingUnitFloorCode = ProDefine.BuildingUnitFloor.Code
+    and
+    ProDefine.BuildingUnitFloor.VersionEndTime is null
+    INNER JOIN
+
+    ProDefine.BuildingUnit ON ProDefine.BuildingUnitFloor.BuildingUnitCode = ProDefine.BuildingUnit.Code AND
+    ProDefine.BuildingUnit.ValidStatus = 1
+    and
+    ProDefine.BuildingUnit.VersionEndTime is null
+    INNER JOIN
+    LandObtained.[LogicBuilding] ON ProDefine.BuildingUnit.BuildingCode =LandObtained.[LogicBuilding].Code AND
+    LandObtained.[LogicBuilding].ValidStatus = 1
+    and
+    LandObtained.[LogicBuilding].VersionEndTime is null
+    INNER JOIN
+    LandObtained.PropertyType ON LandObtained.PropertyType.Code = LandObtained.[LogicBuilding].PropertyTypeCode
+
+
+    LEFT OUTER JOIN
+    ProDefine.ProductInfoExtend AS ext ON ext.Code =  ProDefine.House.Code
+    LEFT OUTER JOIN ProDefine.HouseStyle AS style ON style.Code = ext.HouseStyle
+
+    where ProDefine.House.VersionEndTime is null
+    and  LandObtained.[LogicBuilding].Code in ({0})
+    and exists(
+    select 1 from  Sale.PredictSaleLicense_Building  plb
+    inner join Sale.PredictSaleLicense  pl on plb.PredictSaleLicenseCode =pl.Code and   pl.ValidStatus = 1
+    where plb.BuildingCode = LandObtained.[LogicBuilding].Code
+    )
+
+    ) as b
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa1 ON pa1.ProductCode = b.ProductCode AND pa1.[Key] = '5' AND pa1.VersionEndTime IS NULL
+    LEFT OUTER JOIN
+    ProDefine.ProductArea AS pa2 ON pa2.ProductCode = b.ProductCode AND pa2.[Key] = '1' AND pa2.VersionEndTime IS NULL
+
+
+    ) as a
+    group by a.StageAreaCode,a.StyleCode,a.StyleName
+    order by  a.StyleName
+
+
+  </Sql>
+  <Sql id="GetSaleAmountChargerDetailSql">
+    SELECT  a.ContractAwardDate ,
+    a.SaleProductStatusCode ,
+    SUM(a.DealPrice) AS SaleAmount ,
+    COUNT(*) AS HouseCount ,
+    SUM(a.AccountsReceivable) AS AccountsReceivable ,
+    SUM(a.PaymentReceivable) AS PaymentReceivable ,
+    SUM(a.ProductArea) AS SaleArea
+    FROM    ( SELECT    b.* ,
+    ( CASE b.TypeCode
+    WHEN '0' THEN ISNULL(pa2.AreaValue, 0)
+    ELSE ISNULL(pa1.AreaValue, 0)
+    END ) AS ProductArea
+    FROM      ( SELECT    V.ProductCode ,
+    V.TypeCode ,
+    pc.DealPrice ,
+    pc.ContractAwardDate ,
+    sp.SaleProductStatusCode ,
+    ( charge.AccountsReceivable
+    - charge.AccountsRefund ) AS AccountsReceivable ,
+    ( charge.PaymentReceivable
+    - charge.PaymentRefund ) AS PaymentReceivable
+    FROM      (SELECT * FROM Sale.SaleProductInfoView WHERE StageAreaCode IN ({0})) AS V
+    INNER JOIN Sale.SaleRecord_SaleProduct ss ON ss.SaleProductCode = V.ProductCode
+    INNER JOIN Signs.PurchaseContract pc ON pc.SaleRecordCode = ss.SaleRecordCode
+    AND pc.VersionEndTIme IS NULL
+    INNER JOIN Sale.SaleRecord record ON ss.SaleRecordCode = record.Code
+    INNER JOIN Sale.SaleProduct sp ON sp.Code = V.ProductCode
+    INNER JOIN Sale.SaleHouseBuyer shb ON shb.SaleRecordCode = record.Code
+    INNER JOIN Sale.SaleHouseBuyer_Customer shbc ON shbc.[SaleHouseBuyerCode] = shb.Code
+    INNER JOIN Sale.SaleProjectCustomer spc ON spc.Code = shbc.SaleProjectCustomerCode
+    INNER JOIN Sale.SaleAgent sa ON sa.Code = spc.SaleAgentCode
+    INNER JOIN ( SELECT    ar.BusinessNumber ,
+    SUM(ar.Amount) AS AccountsReceivable ,
+    SUM(ISNULL(af.Amount,
+    0)) AS AccountsRefund ,
+    SUM(CASE
+    WHEN pcr.Code IS NULL
+    THEN 0
+    ELSE ar.Amount
+    END) AS PaymentReceivable ,
+    SUM(CASE
+    WHEN prr.Code IS NULL
+    THEN 0
+    ELSE ar.Amount
+    END) AS PaymentRefund
+    FROM      Charge.AccountsReceivable
+    AS ar
+    INNER JOIN Sale.Sale_Cost
+    AS sc ON sc.CostCode = ar.CostCategoryCode
+    AND sc.CostType IN (
+    '3', '4', '5',
+    '6' )
+    AND sc.UseType = '11'
+    LEFT OUTER JOIN Charge.AccountsRefund
+    AS af ON af.AccountsReceivableCode = ar.Code
+    AND af.ValidStatus = 1
+    LEFT OUTER JOIN Charge.PaymentChargeRecordItem
+    AS pcr ON pcr.AccountsReceivableCode = ar.Code
+    AND pcr.ValidStatus = 1
+    LEFT OUTER JOIN Charge.PaymentRefundRecordItem
+    AS prr ON prr.AccountsRefundCode = pcr.Code
+    AND prr.ValidStatus = 1
+    WHERE     ( ar.ValidStatus = 1 )
+    AND ( ar.BusinessNumber IS NOT NULL )
+    GROUP BY  ar.BusinessNumber
+    ) charge ON charge.BusinessNumber = record.ChargeCode
+    WHERE
+    sa.CompanyCode = {1}
+    AND pc.ContractAwardDate &lt; {2}
+   AND
+                                sp.SaleProductStatusCode IN ( 4, 6, 16 )
+                    ) AS b
+                    LEFT OUTER JOIN ProDefine.ProductArea AS pa1 ON pa1.ProductCode = b.ProductCode
+                                                              AND pa1.[Key] = '5'
+                                                              AND pa1.VersionEndTime IS NULL
+                    LEFT OUTER JOIN ProDefine.ProductArea AS pa2 ON pa2.ProductCode = b.ProductCode
+                                                              AND pa2.[Key] = '1'
+                                                              AND pa2.VersionEndTime IS NULL
+        ) AS a
+GROUP BY a.ContractAwardDate ,a.SaleProductStatusCode
+  </Sql>
+</Root>
