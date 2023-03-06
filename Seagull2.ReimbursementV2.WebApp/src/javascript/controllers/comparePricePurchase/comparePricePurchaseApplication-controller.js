@@ -22,18 +22,11 @@
            
             // 基本信息
             $scope.baseInfo = {
-                init: function () {
-                    angular.forEach($scope.viewModel.supplierScopeList, function (item) {
-                        if (item.isInstock == true)
-                            item.isInstock = "true";
-                        if (item.isInstock == false)
-                            item.isInstock = "false";
-                    });
-                },
                 // 附件设置项
                 fileopts: {
                     'resourceId': $scope.viewModel.resourceID,
-                },           
+                },  
+                         
        
                 //采购金额变化
                 purchaseAmountChange: function (newValue, oldValue) {

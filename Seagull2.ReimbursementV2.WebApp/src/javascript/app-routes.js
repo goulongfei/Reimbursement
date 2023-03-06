@@ -1,82 +1,84 @@
-﻿define(function (require) {
-    //前置页
-    require('javascript/routes/fontPageRoutes');
-    //直委战采（集中采购）
-    require('javascript/routes/strategyCentralizedCommissionedRoutes');
-    //直委战采（集团战略采购）
-    require('javascript/routes/strategyGroupCommissionedRoutes');
-   // 直接委托(工程类)
-    require('javascript/routes/directCommissionedEngineeringRoutes');
-    //直接委托(非项目服务类)
-    require('javascript/routes/directCommissionedNotProjectRoutes');
-    //直接委托(项目定义服务类)
-    require('javascript/routes/directCommissionedProjectDefineRoutes');
-    //直接委托(营销类)
-    require('javascript/routes/directCommissionedMarketingRoutes');
-    //直接委托(土地开发类)
-    require('javascript/routes/directCommissionedLandDevelopRoutes');
-    //直接委托(固定资产采购类)
-    require('javascript/routes/directCommissionedAssetsPurchaseRoutes');
-    //直接委托(项目实施类)
-    require('javascript/routes/directCommissionedImplementRoutes');
-    //直接委托(第三方维保类)
-    require('javascript/routes/directCommissionedMaintenanceRoutes');
-    //直接委托(非开发运营类)
-    require('javascript/routes/directCommissionedBusinessOperationsRoutes');
-    //无合同采购
-    require('javascript/routes/nonContractPurchaseRoutes');
-    //无合同采购(非开发运营类)
-    require('javascript/routes/nonContractPurchaseBusinessOperationsRoutes');
-    //比价采购
-    require('javascript/routes/comparePricePurchaseRoutes');
-    //招投标(营销类)
-    require('javascript/routes/biddingMarketingRoutes');
-    //招投标(第三方维保类)
-    require('javascript/routes/biddingMaintenanceRoutes');
-    //招投标（集中采购）
-    require('javascript/routes/biddingCentralizedPurchasingRoutes');
-    //招投标(土地开发类)
-    require('javascript/routes/biddingLandDevelopRoutes');
-    //招投标(固定资产采购类)
-    require('javascript/routes/biddingAssetsPurchaseRoutes');
-    //招投标(非项目服务类)
-    require('javascript/routes/biddingNotProjectRoutes');
-    //招投标(工程采购类)
-    require('javascript/routes/biddingEngineeringRoutes');
-    //招投标(项目实施类)
-    require('javascript/routes/biddingImplementRoutes');
-    //招投标(项目定义类)
-    require('javascript/routes/biddingProjectDefineRoutes');
-    //招投标（集团战采）
-    require('javascript/routes/biddingStrategyGroupRoutes');
-    //招投标(非开发运营类)
-    require('javascript/routes/biddingBusinessOperationsRoutes');
-    //询价(营销类)
-    require('javascript/routes/inquiryPriceMarketingRoutes');
-    //修改采购时间
-    require('javascript/routes/modifyPurchaseTimeRoutes');
-    //采购计划
-    require('javascript/routes/purchasePlanRoutes');
-    //企查查
-    require('javascript/routes/enterpriseCheckRoutes');
-    //添加推广项目
-    require('javascript/routes/addProjectGeneralizeRoutes');
-    //后台辅助
-    require('javascript/routes/backstageAssistRoutes');
-    //报表查看
-    require('javascript/routes/purchaseReportRoutes');
-    //采购策划
-    require('javascript/routes/purchaseSchemeRoutes');
-    //采购清单列表
-    require('javascript/routes/purchaseDetailedListRoutes');
-    //采购作废
-    require('javascript/routes/purchaseAbortRoutes');
-    //京东购账户
-    require('javascript/routes/JdMallUsersRoutes');
-    //京东购账户日志
-    require('javascript/routes/JdMallUserLogRoutes');
-    //组织联系人
-    require('javascript/routes/OrganizationContactsRoutes');
-    //战采延期申请
-    require('javascript/routes/overDueStrategyDelayRequestApplicationRoutes');
+﻿define(['app'],function (app) {
+    app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+        var csspathBase = "https://cdn.sinoocean-test.com/libs/seagull2-workflow-responsive/1.1.1/";
+
+        // 比价采购-采购申请
+        $stateProvider.state('comparePricePurchaseApplication', {
+            url: '/comparePricePurchaseApplication',
+            useWorkflow: true,
+            workflowUrlBase: '/ComparePricePurchaseApplicationWf',
+            workflowScene: {
+                'Application': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApplication.html',
+                    controller: 'comparePricePurchaseApplication_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApplication-controller.js'
+                },
+                'ApplicationReadOnly': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApplicationReadOnly.html',
+                    controller: 'comparePricePurchaseApplicationReadOnly_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApplicationReadOnly-controller.js'
+                },
+                'DefaultScene': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApplication.html',
+                    controller: 'comparePricePurchaseApplication_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApplication-controller.js'
+                },
+                'DefaultReadOnlyScene': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApplicationReadOnly.html',
+                    controller: 'comparePricePurchaseApplicationReadOnly_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApplicationReadOnly-controller.js'
+                },
+                'DefaultCirculationScene': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApplicationReadOnly.html',
+                    controller: 'comparePricePurchaseApplicationReadOnly_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApplicationReadOnly-controller.js'
+                }
+            },
+            startupWorkflow: true,
+            requiredLogin: true,
+            dependencies: ['css!' + csspathBase + '/form', 'ie8css!' + csspathBase + '/form_ie8']
+        });
+
+        // 比价采购-审批
+        $stateProvider.state('comparePricePurchaseApproval', {
+            url: '/comparePricePurchaseApproval',
+            useWorkflow: true,
+            workflowUrlBase: '/ComparePricePurchaseApprovalWf',
+            workflowScene: {
+                'Approval': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApproval.html',
+                    controller: 'comparePricePurchaseApproval_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApproval-controller.js'
+                },
+                'ApprovalEdit': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApproval.html',
+                    controller: 'comparePricePurchaseApproval_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApproval-controller.js'
+                },
+                'ApprovalReadOnly': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApprovalReadOnly.html',
+                    controller: 'comparePricePurchaseApprovalReadOnly_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApprovalReadOnly-controller.js'
+                },
+                'DefaultScene': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApproval.html',
+                    controller: 'comparePricePurchaseApproval_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApproval-controller.js'
+                },
+                'DefaultReadOnlyScene': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApprovalReadOnly.html',
+                    controller: 'comparePricePurchaseApprovalReadOnly_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApprovalReadOnly-controller.js'
+                },
+                'DefaultCirculationScene': {
+                    templateUrl: './views/comparePricePurchase/comparePricePurchaseApprovalReadOnly.html',
+                    controller: 'comparePricePurchaseApprovalReadOnly_controller',
+                    controllerUrl: './javascript/controllers/comparePricePurchase/comparePricePurchaseApprovalReadOnly-controller.js'
+                },
+            },
+            startupWorkflow: true,
+            requiredLogin: true,
+            dependencies: ['css!' + csspathBase + '/form', 'ie8css!' + csspathBase + '/form_ie8']
+        });        
+    }]);
 });
